@@ -15,5 +15,5 @@ app.use(airQualityRouter);
 app.use(solarRouter);
 
 app.listen(port, () => {
-    console.log("test");
+    console.log("server is now opened");
 });
