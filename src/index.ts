@@ -1,5 +1,5 @@
-import express, { Express, Request, Response } from "express";
-import { PORT } from "@/config";
+// Configs
+import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 // Routers
@@ -15,7 +15,4 @@ app.use(utilRouter);
 app.use(solarRouter);
 app.use(airQualityRouter);
 
-
-app.listen(PORT, () => {
-    console.log("server is now opened");
-});
+export default app;
