@@ -1,13 +1,19 @@
-import axios from "axios"
+import axios from "axios";
 import { GOOGLE_KEY } from "@/config";
-import { Coordinates } from "solar-typing/src/general"
-import { BuildingInsights, LayerId, Layer, SolarLayers, GeoTiff } from "solar-typing/src/solar"
+import { Coordinates } from "solar-typing/src/general";
+import {
+    BuildingInsights,
+    LayerId,
+    Layer,
+    SolarLayers,
+    GeoTiff,
+} from "solar-typing/src/solar";
 
-import { Client, } from "@googlemaps/google-maps-services-js"
+import { Client } from "@googlemaps/google-maps-services-js";
 import { renderPalette } from "@/misc/solar";
-import { ironPalette, sunlightPalette} from "@/misc/constants";
+import { ironPalette, sunlightPalette } from "@/misc/constants";
 import * as geotiff from "geotiff";
-import geokeysToProj4 from "geotiff-geokeys-to-proj4"
+import geokeysToProj4 from "geotiff-geokeys-to-proj4";
 import proj4 from "proj4";
 
 const client = new Client({});
@@ -16,13 +22,13 @@ export async function getClosestBuildingInsights(coord: Coordinates) {
     // https://developers.google.com/maps/documentation/solar/reference/rest/v1/buildingInsights/findClosest
     return await axios({
         method: "get",
-        responseType: 'json',
+        responseType: "json",
         url: "https://solar.googleapis.com/v1/buildingInsights:findClosest",
         params: {
             key: GOOGLE_KEY,
             "location.latitude": coord.lat.toFixed(5),
-            "location.longitude": coord.lng.toFixed(5)
-        }
+            "location.longitude": coord.lng.toFixed(5),
+        },
     })
         .then((response) => {
             return response.data as BuildingInsights;
@@ -37,7 +43,7 @@ export async function getSolarLayers(coord: Coordinates, radius: number) {
     // https://developers.google.com/maps/documentation/solar/data-layers
     return await axios({
         method: "get",
-        responseType: 'json',
+        responseType: "json",
         url: "https://solar.googleapis.com/v1/dataLayers:get",
         params: {
             key: GOOGLE_KEY,
@@ -46,7 +52,7 @@ export async function getSolarLayers(coord: Coordinates, radius: number) {
             radiusMeters: radius.toString(),
             view: "FULL_LAYERS",
             requiredQuality: "HIGH",
-        }
+        },
     })
         .then((response) => {
             return response.data as SolarLayers;
@@ -60,15 +66,18 @@ export async function getSolarLayers(coord: Coordinates, radius: number) {
 export async function getGeotiff(url: string) {
     return await axios({
         method: "get",
-        responseType: 'arraybuffer',
+        responseType: "arraybuffer",
         url: url,
         params: {
-            key: GOOGLE_KEY
-        }
+            key: GOOGLE_KEY,
+        },
     })
         .then(async (response) => {
             const buffer: Buffer = response.data;
-            const arraybuffer: ArrayBuffer = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+            const arraybuffer: ArrayBuffer = buffer.buffer.slice(
+                buffer.byteOffset,
+                buffer.byteOffset + buffer.byteLength,
+            );
 
             const tiff = await geotiff.fromArrayBuffer(arraybuffer);
             const image = await tiff.getImage();
@@ -91,13 +100,15 @@ export async function getGeotiff(url: string) {
             return {
                 width: rasters.width,
                 height: rasters.height,
-                rasters: [...Array(rasters.length).keys()].map((i) => Array.from(rasters[i] as geotiff.TypedArray)),
+                rasters: [...Array(rasters.length).keys()].map((i) =>
+                    Array.from(rasters[i] as geotiff.TypedArray),
+                ),
                 bounds: {
                     north: ne.y,
                     south: sw.y,
                     east: ne.x,
                     west: sw.x,
-                }
+                },
             } as GeoTiff;
         })
         .catch((error) => {

@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 import { GOOGLE_KEY } from "@/config";
 import { GeoTiff } from "solar-typing/src/solar";
 import * as geotiff from "geotiff";
@@ -91,7 +91,15 @@ export function colorToRGB(color: string): { r: number; g: number; b: number } {
     };
 }
 
-export function rgbToColor({ r, g, b }: { r: number; g: number; b: number }): string {
+export function rgbToColor({
+    r,
+    g,
+    b,
+}: {
+    r: number;
+    g: number;
+    b: number;
+}): string {
     const f = (x: number) => {
         const hex = Math.round(x).toString(16);
         return hex.length == 1 ? `0${hex}` : hex;

@@ -1,22 +1,26 @@
 import { GOOGLE_KEY } from "@/config";
-import { Coordinates, validCoordinates } from "solar-typing/src/general"
-import {} from "solar-typing/src/solar"
-import { Client, GeocodeResponse, ReverseGeocodeResponse } from "@googlemaps/google-maps-services-js"
+import { Coordinates, validCoordinates } from "solar-typing/src/general";
+import {} from "solar-typing/src/solar";
+import {
+    Client,
+    GeocodeResponse,
+    ReverseGeocodeResponse,
+} from "@googlemaps/google-maps-services-js";
 
 const client = new Client({});
 
 export async function getGeocoding(formattedAddress: string) {
-    return await client.geocode({ 
+    return await client
+        .geocode({
             params: {
                 key: GOOGLE_KEY,
-                address: formattedAddress
-            }
-        }
-    )
+                address: formattedAddress,
+            },
+        })
         .then((res: GeocodeResponse) => {
             const coord: Coordinates = {
                 lat: res.data.results[0].geometry.location.lat,
-                lng: res.data.results[0].geometry.location.lng
+                lng: res.data.results[0].geometry.location.lng,
             };
             if (validCoordinates(coord) && coord.lat != 0 && coord.lng != 0) {
                 return coord;
@@ -27,22 +31,22 @@ export async function getGeocoding(formattedAddress: string) {
         .catch((error) => {
             console.log(error);
             return null;
-        })
+        });
 }
 
 export async function getReverseGeocoding(coord: Coordinates) {
-    return await client.reverseGeocode({ 
+    return await client
+        .reverseGeocode({
             params: {
                 key: GOOGLE_KEY,
-                latlng: coord
-            }
-        }
-    )
+                latlng: coord,
+            },
+        })
         .then((res: ReverseGeocodeResponse) => {
             return res.data.results[0].formatted_address;
         })
         .catch((error) => {
             console.log(error);
             return null;
-        })  
+        });
 }
