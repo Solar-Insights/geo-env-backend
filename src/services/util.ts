@@ -5,7 +5,7 @@ import { Client, GeocodeResponse } from "@googlemaps/google-maps-services-js"
 
 const client = new Client({});
 
-export async function getGeocoding(formattedAddress: string) {
+export async function getGeocoding(formattedAddress: string | undefined) {
     const coord: Coordinates = { lat: 0, lng: 0 };
     await client.geocode(
         { 
