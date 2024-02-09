@@ -54,7 +54,7 @@ export async function getSolarLayers(coord: Coordinates, radius: number) {
         });
 }
 
-export async function getSingleLayer(layerId: LayerId, urls: SolarLayers) {
+export async function getSingleSolarLayer(layerId: LayerId, urls: SolarLayers) {
     const get: Record<LayerId, () => Promise<Layer>> = {
         annualFlux: async () => {
             const [mask, data] = await Promise.all([
