@@ -1,19 +1,21 @@
 import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
+import { PORT } from "@/config";
 import bodyParser from "body-parser";
+import cors from "cors";
 // Routers
+import utilRouter from "@/routes/util";
 import solarRouter from "@/routes/solar";
 import airQualityRouter from "@/routes/airQuality";
 
-dotenv.config();
-
 const app = express();
-const port = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(bodyParser.json());
-app.use(airQualityRouter);
+app.use(utilRouter);
 app.use(solarRouter);
+app.use(airQualityRouter);
 
-app.listen(port, () => {
+
+app.listen(PORT, () => {
     console.log("server is now opened");
 });
