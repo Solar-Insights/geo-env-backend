@@ -1,11 +1,14 @@
 import axios from "axios"
 import { GOOGLE_KEY } from "@/config";
 import { Coordinates } from "solar-typing/src/general"
-import { BuildingInsights, LayerId, Layer, SolarLayers } from "solar-typing/src/solar"
+import { BuildingInsights, LayerId, Layer, SolarLayers, GeoTiff } from "solar-typing/src/solar"
 
 import { Client, } from "@googlemaps/google-maps-services-js"
 import { downloadGeoTIFF, renderPalette } from "@/misc/solar";
 import { ironPalette, sunlightPalette} from "@/misc/constants";
+import * as geotiff from "geotiff";
+import * as geokeysToProj4 from "geotiff-geokeys-to-proj4";
+import proj4 from "proj4";
 
 const client = new Client({});
 
@@ -47,6 +50,52 @@ export async function getSolarLayers(coord: Coordinates, radius: number) {
     })
         .then((response) => {
             return response.data as SolarLayers;
+        })
+        .catch((error) => {
+            console.log(error);
+            return null;
+        });
+}
+
+export async function getGeotiff(url: string) {
+    return await axios({
+        method: "get",
+        responseType: 'arraybuffer',
+        url: url,
+        params: {
+            key: GOOGLE_KEY
+        }
+    })
+        .then(async (response) => {
+            const arraybuffer: ArrayBuffer = response.data;
+            const tiff = await geotiff.fromArrayBuffer(arraybuffer);
+            const image = await tiff.getImage();
+            const rasters = await image.readRasters();
+
+            const geoKeys = image.getGeoKeys();
+            const projObj = geokeysToProj4.toProj4(geoKeys);
+            const projection = proj4(projObj.proj4, "WGS84");
+            const box = image.getBoundingBox();
+            const sw = projection.forward({
+                x: box[0] * projObj.coordinatesConversionParameters.x,
+                y: box[1] * projObj.coordinatesConversionParameters.y,
+            });
+            const ne = projection.forward({
+                x: box[2] * projObj.coordinatesConversionParameters.x,
+                y: box[3] * projObj.coordinatesConversionParameters.y,
+            });
+
+            return {
+                width: rasters.width,
+                height: rasters.height,
+                rasters: [...Array(rasters.length).keys()].map((i) => Array.from(rasters[i] as geotiff.TypedArray)),
+                bounds: {
+                    north: ne.y,
+                    south: sw.y,
+                    east: ne.x,
+                    west: sw.x,
+                }
+            } as GeoTiff;
         })
         .catch((error) => {
             console.log(error);

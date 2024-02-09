@@ -1,8 +1,8 @@
 import express from "express";
 import { generalErrorResponse } from "@/errorHandling/errorResponse";
 import { Coordinates } from "solar-typing/src/general"
-import { BuildingInsights, SolarLayers } from "solar-typing/src/solar"
-import { getClosestBuildingInsights, getSolarLayers, getSingleSolarLayer } from "@/services/solar"
+import { BuildingInsights, GeoTiff, SolarLayers } from "solar-typing/src/solar"
+import { getClosestBuildingInsights, getSolarLayers, getSingleSolarLayer, getGeotiff } from "@/services/solar"
 
 const solarRouter = express.Router();
 
@@ -35,6 +35,21 @@ solarRouter.get("/solar/solar-layers", async (req, res) => {
     if (solarLayers !== null) {
         res.status(200).json({
             solarLayers: solarLayers
+        });
+    } else {
+        res.status(300).json(
+            generalErrorResponse("something wrong happened")
+        );
+    }
+});
+
+solarRouter.get("/solar/geotiff", async (req, res) => {
+    const url = req.query.url as string;
+
+    const geotiff: GeoTiff | null = await getGeotiff(url); 
+    if (geotiff !== null) {
+        res.status(200).json({
+            geotiff: geotiff
         });
     } else {
         res.status(300).json(
