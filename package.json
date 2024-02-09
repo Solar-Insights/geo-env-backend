@@ -24,6 +24,7 @@
     "devDependencies": {
         "@types/express": "^4.17.21",
         "@types/node": "^20.11.16",
+        "@types/proj4": "^2.5.5",
         "prettier": "^3.2.5",
         "tsx": "^4.7.0",
         "typescript": "^5.3.3",
