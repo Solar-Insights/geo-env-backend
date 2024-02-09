@@ -1,12 +1,12 @@
 import { GOOGLE_KEY } from "@/config";
 import { Coordinates, validCoordinates } from "solar-typing/src/general"
 import {} from "solar-typing/src/solar"
-import { Client, GeocodeResponse } from "@googlemaps/google-maps-services-js"
+import { Client, GeocodeResponse, ReverseGeocodeResponse } from "@googlemaps/google-maps-services-js"
 
 const client = new Client({});
 
-export async function getGeocoding(formattedAddress: string | undefined) {
-    const coord: Coordinates = { lat: 0, lng: 0 };
+export async function getGeocoding(formattedAddress: string) {
+    let coord: Coordinates = { lat: 0, lng: 0 };
     await client.geocode(
         { 
             params: {
@@ -15,9 +15,9 @@ export async function getGeocoding(formattedAddress: string | undefined) {
             }
         }
     )
-        .then((geocodingRequest: GeocodeResponse) => {
-            coord.lat = geocodingRequest.data.results[0].geometry.location.lat;
-            coord.lng = geocodingRequest.data.results[0].geometry.location.lng;
+        .then((res: GeocodeResponse) => {
+            coord.lat = res.data.results[0].geometry.location.lat;
+            coord.lng = res.data.results[0].geometry.location.lng;
         })
         .catch((error) => {
             console.log(error);
@@ -29,4 +29,24 @@ export async function getGeocoding(formattedAddress: string | undefined) {
         console.log(coord)
         return null;
     }
+}
+
+export async function getReverseGeocoding(coord: Coordinates) {
+    let formattedAddress: string | null = null;
+    await client.reverseGeocode(
+        { 
+            params: {
+                key: GOOGLE_KEY,
+                latlng: coord
+            }
+        }
+    )
+        .then((res: ReverseGeocodeResponse) => {
+            formattedAddress = res.data.results[0].formatted_address;
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+
+    return formattedAddress;    
 }
