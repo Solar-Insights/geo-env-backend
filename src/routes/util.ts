@@ -8,8 +8,8 @@ const utilRouter = express.Router();
 
 utilRouter.get("/util/geocoding", async (req, res) => {
     const formattedAddress = req.query.address as string;
+    
     const coord: Coordinates | null = await getGeocoding(formattedAddress); 
-
     if (coord !== null) {
         res.status(200).json({
             coordinates: coord
@@ -28,7 +28,6 @@ utilRouter.get("/util/reverse-geocoding", async (req, res) => {
     };
 
     const formattedAddress: string | null = await getReverseGeocoding(coord); 
-
     if (formattedAddress !== null) {
         res.status(200).json({
             address: formattedAddress

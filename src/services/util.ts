@@ -6,9 +6,7 @@ import { Client, GeocodeResponse, ReverseGeocodeResponse } from "@googlemaps/goo
 const client = new Client({});
 
 export async function getGeocoding(formattedAddress: string) {
-    let coord: Coordinates = { lat: 0, lng: 0 };
-    await client.geocode(
-        { 
+    return await client.geocode({ 
             params: {
                 key: GOOGLE_KEY,
                 address: formattedAddress
@@ -16,25 +14,24 @@ export async function getGeocoding(formattedAddress: string) {
         }
     )
         .then((res: GeocodeResponse) => {
-            coord.lat = res.data.results[0].geometry.location.lat;
-            coord.lng = res.data.results[0].geometry.location.lng;
+            const coord: Coordinates = {
+                lat: res.data.results[0].geometry.location.lat,
+                lng: res.data.results[0].geometry.location.lng
+            };
+            if (validCoordinates(coord) && coord.lat != 0 && coord.lng != 0) {
+                return coord;
+            } else {
+                return null;
+            }
         })
         .catch((error) => {
             console.log(error);
+            return null;
         })
-
-    if (validCoordinates(coord) && coord.lat != 0 && coord.lng != 0) {
-        return coord;
-    } else {
-        console.log(coord)
-        return null;
-    }
 }
 
 export async function getReverseGeocoding(coord: Coordinates) {
-    let formattedAddress: string | null = null;
-    await client.reverseGeocode(
-        { 
+    return await client.reverseGeocode({ 
             params: {
                 key: GOOGLE_KEY,
                 latlng: coord
@@ -42,11 +39,10 @@ export async function getReverseGeocoding(coord: Coordinates) {
         }
     )
         .then((res: ReverseGeocodeResponse) => {
-            formattedAddress = res.data.results[0].formatted_address;
+            return res.data.results[0].formatted_address;
         })
         .catch((error) => {
             console.log(error);
-        })
-
-    return formattedAddress;    
+            return null;
+        })  
 }

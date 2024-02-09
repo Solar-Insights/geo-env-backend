@@ -16,7 +16,7 @@ export async function getClosestBuildingInsights(coord: Coordinates) {
             "location.latitude": coord.lat.toFixed(5),
             "location.longitude": coord.lng.toFixed(5)
         }
-      })
+    })
         .then((response) => {
             return response.data as BuildingInsights;
         })
