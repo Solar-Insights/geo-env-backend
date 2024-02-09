@@ -2,7 +2,7 @@ import express from "express";
 import { generalErrorResponse } from "@/errorHandling/errorResponse";
 import { Coordinates } from "solar-typing/src/general"
 import { BuildingInsights, GeoTiff, SolarLayers } from "solar-typing/src/solar"
-import { getClosestBuildingInsights, getSolarLayers, getSingleSolarLayer, getGeotiff } from "@/services/solar"
+import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/services/solar"
 
 const solarRouter = express.Router();
 
@@ -44,8 +44,8 @@ solarRouter.get("/solar/solar-layers", async (req, res) => {
 });
 
 solarRouter.get("/solar/geotiff", async (req, res) => {
-    const url = req.query.url as string;
-
+    const url = decodeURIComponent(req.query.url as string);
+    
     const geotiff: GeoTiff | null = await getGeotiff(url); 
     if (geotiff !== null) {
         res.status(200).json({
