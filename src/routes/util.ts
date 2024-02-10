@@ -6,7 +6,7 @@ import { getGeocoding, getReverseGeocoding } from "@/services/util";
 
 const utilRouter = express.Router();
 
-utilRouter.get("/util/geocoding", async (req, res) => {
+utilRouter.get("/util/geocoding", async (req, res, next) => {
     const formattedAddress = req.query.address as string;
 
     const coord: Coordinates | null = await getGeocoding(formattedAddress);
@@ -19,7 +19,7 @@ utilRouter.get("/util/geocoding", async (req, res) => {
     }
 });
 
-utilRouter.get("/util/reverse-geocoding", async (req, res) => {
+utilRouter.get("/util/reverse-geocoding", async (req, res, next) => {
     const coord: Coordinates = {
         lat: Number(req.query.lat),
         lng: Number(req.query.lng),

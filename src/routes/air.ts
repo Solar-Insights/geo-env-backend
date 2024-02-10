@@ -6,13 +6,13 @@ import { getAirQualityData } from "@/services/air";
 
 const airRouter = express.Router();
 
-airRouter.get("/", (req, res) => {
+airRouter.get("/", (req, res, next) => {
     res.json({
         body: "this server is currently working!",
     });
 });
 
-airRouter.get("/air/air-quality-data", async (req, res) => {
+airRouter.get("/air/air-quality-data", async (req, res, next) => {
     const coord: Coordinates = {
         lat: Number(req.query.lat),
         lng: Number(req.query.lng),
