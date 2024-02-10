@@ -8,7 +8,7 @@ const utilRouter = express.Router();
 
 utilRouter.get("/util/geocoding", async (req, res, next) => {
     const formattedAddress = req.query.address as string;
-    
+
     await getGeocoding(formattedAddress)
         .then((data) => {
             res.status(200).json({

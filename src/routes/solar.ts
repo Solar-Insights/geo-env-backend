@@ -2,11 +2,7 @@ import express from "express";
 import { generalErrorResponse } from "@/errorHandling/errorResponse";
 import { Coordinates } from "solar-typing/src/general";
 import { BuildingInsights, GeoTiff, SolarLayers } from "solar-typing/src/solar";
-import {
-    getClosestBuildingInsights,
-    getSolarLayers,
-    getGeotiff,
-} from "@/services/solar";
+import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/services/solar";
 
 const solarRouter = express.Router();
 

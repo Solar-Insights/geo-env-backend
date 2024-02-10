@@ -1,13 +1,7 @@
 import axios from "axios";
 import { GOOGLE_KEY } from "@/config";
 import { Coordinates } from "solar-typing/src/general";
-import {
-    BuildingInsights,
-    LayerId,
-    Layer,
-    SolarLayers,
-    GeoTiff,
-} from "solar-typing/src/solar";
+import { BuildingInsights, LayerId, Layer, SolarLayers, GeoTiff } from "solar-typing/src/solar";
 
 import { Client } from "@googlemaps/google-maps-services-js";
 import { renderPalette } from "@/misc/solar";
@@ -34,7 +28,7 @@ export async function getClosestBuildingInsights(coord: Coordinates) {
             return response.data as BuildingInsights;
         })
         .catch((error) => {
-            throw(error);
+            throw error;
         });
 }
 
@@ -57,7 +51,7 @@ export async function getSolarLayers(coord: Coordinates, radius: number) {
             return response.data as SolarLayers;
         })
         .catch((error) => {
-            throw(error);
+            throw error;
         });
 }
 
@@ -98,9 +92,7 @@ export async function getGeotiff(url: string) {
             return {
                 width: rasters.width,
                 height: rasters.height,
-                rasters: [...Array(rasters.length).keys()].map((i) =>
-                    Array.from(rasters[i] as geotiff.TypedArray),
-                ),
+                rasters: [...Array(rasters.length).keys()].map((i) => Array.from(rasters[i] as geotiff.TypedArray)),
                 bounds: {
                     north: ne.y,
                     south: sw.y,
@@ -110,6 +102,6 @@ export async function getGeotiff(url: string) {
             } as GeoTiff;
         })
         .catch((error) => {
-            throw(error);
+            throw error;
         });
 }

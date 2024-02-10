@@ -1,11 +1,7 @@
 import { GOOGLE_KEY } from "@/config";
 import { Coordinates, validCoordinates } from "solar-typing/src/general";
 import {} from "solar-typing/src/solar";
-import {
-    Client,
-    GeocodeResponse,
-    ReverseGeocodeResponse,
-} from "@googlemaps/google-maps-services-js";
+import { Client, GeocodeResponse, ReverseGeocodeResponse } from "@googlemaps/google-maps-services-js";
 
 const client = new Client({});
 
@@ -29,7 +25,7 @@ export async function getGeocoding(formattedAddress: string) {
             }
         })
         .catch((error) => {
-            throw(error);
+            throw error;
         });
 }
 
@@ -45,6 +41,6 @@ export async function getReverseGeocoding(coord: Coordinates) {
             return res.data.results[0].formatted_address;
         })
         .catch((error) => {
-            throw(error);
+            throw error;
         });
 }
