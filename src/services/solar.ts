@@ -23,7 +23,7 @@ export async function getClosestBuildingInsights(coord: Coordinates) {
     return await axios({
         method: "get",
         responseType: "json",
-        url: "https://solar.googleapis.com/v1/buildingInsights:findClosest",
+        url: "https://solar.googleapis.com/v1/buildingInsights:",
         params: {
             key: GOOGLE_KEY,
             "location.latitude": coord.lat.toFixed(5),
@@ -33,9 +33,8 @@ export async function getClosestBuildingInsights(coord: Coordinates) {
         .then((response) => {
             return response.data as BuildingInsights;
         })
-        .catch((error) => {
-            console.log(error);
-            return null;
+        .catch((err) => {
+            throw(err);
         });
 }
 

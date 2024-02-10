@@ -10,24 +10,25 @@ import {
 
 const solarRouter = express.Router();
 
-solarRouter.get("/solar/closest-building-insights", async (req, res) => {
+solarRouter.get("/solar/closest-building-insights", async (req, res, next) => {
     const coord: Coordinates = {
         lat: Number(req.query.lat),
         lng: Number(req.query.lng),
     };
 
-    const buildingInsights: BuildingInsights | null =
-        await getClosestBuildingInsights(coord);
-    if (buildingInsights !== null) {
-        res.status(200).json({
-            buildingInsights: buildingInsights,
+    await getClosestBuildingInsights(coord)
+        .then((data) => {
+            res.status(200).json({
+                buildingInsights: data,
+            });
+        })
+        .catch((error) => {
+            error.type = "api-error";
+            next(error);
         });
-    } else {
-        res.status(300).json(generalErrorResponse("something wrong happened"));
-    }
 });
 
-solarRouter.get("/solar/solar-layers", async (req, res) => {
+solarRouter.get("/solar/solar-layers", async (req, res, next) => {
     const radius: number = Number(req.query.radius);
     const coord: Coordinates = {
         lat: Number(req.query.lat),
@@ -44,7 +45,7 @@ solarRouter.get("/solar/solar-layers", async (req, res) => {
     }
 });
 
-solarRouter.get("/solar/geotiff", async (req, res) => {
+solarRouter.get("/solar/geotiff", async (req, res, next) => {
     const url = decodeURIComponent(req.query.url as string);
 
     const geotiff: GeoTiff | null = await getGeotiff(url);
