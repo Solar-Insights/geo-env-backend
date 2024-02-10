@@ -33,7 +33,6 @@ export async function getAirQualityData(coord: Coordinates) {
             return response.data as AirQualityData;
         })
         .catch((error) => {
-            console.log(error);
-            return null;
+            throw(error);
         });
 }

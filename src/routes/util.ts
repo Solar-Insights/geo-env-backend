@@ -8,15 +8,17 @@ const utilRouter = express.Router();
 
 utilRouter.get("/util/geocoding", async (req, res, next) => {
     const formattedAddress = req.query.address as string;
-
-    const coord: Coordinates | null = await getGeocoding(formattedAddress);
-    if (coord !== null) {
-        res.status(200).json({
-            coordinates: coord,
+    
+    await getGeocoding(formattedAddress)
+        .then((data) => {
+            res.status(200).json({
+                coordinates: data,
+            });
+        })
+        .catch((error) => {
+            error.type = "api-error";
+            next(error);
         });
-    } else {
-        res.status(300).json(generalErrorResponse("something wrong happened"));
-    }
 });
 
 utilRouter.get("/util/reverse-geocoding", async (req, res, next) => {
@@ -25,14 +27,16 @@ utilRouter.get("/util/reverse-geocoding", async (req, res, next) => {
         lng: Number(req.query.lng),
     };
 
-    const formattedAddress: string | null = await getReverseGeocoding(coord);
-    if (formattedAddress !== null) {
-        res.status(200).json({
-            address: formattedAddress,
+    await getReverseGeocoding(coord)
+        .then((data) => {
+            res.status(200).json({
+                address: data,
+            });
+        })
+        .catch((error) => {
+            error.type = "api-error";
+            next(error);
         });
-    } else {
-        res.status(300).json(generalErrorResponse("something wrong happened"));
-    }
 });
 
 export default utilRouter;

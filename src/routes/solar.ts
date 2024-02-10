@@ -35,27 +35,31 @@ solarRouter.get("/solar/solar-layers", async (req, res, next) => {
         lng: Number(req.query.lng),
     };
 
-    const solarLayers: SolarLayers | null = await getSolarLayers(coord, radius);
-    if (solarLayers !== null) {
-        res.status(200).json({
-            solarLayers: solarLayers,
+    await getSolarLayers(coord, radius)
+        .then((data) => {
+            res.status(200).json({
+                solarLayers: data,
+            });
+        })
+        .catch((error) => {
+            error.type = "api-error";
+            next(error);
         });
-    } else {
-        res.status(300).json(generalErrorResponse("something wrong happened"));
-    }
 });
 
 solarRouter.get("/solar/geotiff", async (req, res, next) => {
     const url = decodeURIComponent(req.query.url as string);
 
-    const geotiff: GeoTiff | null = await getGeotiff(url);
-    if (geotiff !== null) {
-        res.status(200).json({
-            geotiff: geotiff,
+    await getGeotiff(url)
+        .then((data) => {
+            res.status(200).json({
+                geotiff: data,
+            });
+        })
+        .catch((error) => {
+            error.type = "api-error";
+            next(error);
         });
-    } else {
-        res.status(300).json(generalErrorResponse("something wrong happened"));
-    }
 });
 
 export default solarRouter;

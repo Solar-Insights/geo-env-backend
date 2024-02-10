@@ -18,14 +18,16 @@ airRouter.get("/air/air-quality-data", async (req, res, next) => {
         lng: Number(req.query.lng),
     };
 
-    const airQualityData = await getAirQualityData(coord);
-    if (airQualityData !== null) {
-        res.status(200).json({
-            airQualityData: airQualityData,
+    await getAirQualityData(coord)
+        .then((data) => {
+            res.status(200).json({
+                airQualityData: data,
+            });
+        })
+        .catch((error) => {
+            error.type = "api-error";
+            next(error);
         });
-    } else {
-        res.status(300).json(generalErrorResponse("something wrong happened"));
-    }
 });
 
 export default airRouter;

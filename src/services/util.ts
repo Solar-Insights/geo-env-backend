@@ -25,12 +25,11 @@ export async function getGeocoding(formattedAddress: string) {
             if (validCoordinates(coord) && coord.lat != 0 && coord.lng != 0) {
                 return coord;
             } else {
-                return null;
+                throw new RangeError("Coordinates are not within of the permissible range of values");
             }
         })
         .catch((error) => {
-            console.log(error);
-            return null;
+            throw(error);
         });
 }
 
@@ -46,7 +45,6 @@ export async function getReverseGeocoding(coord: Coordinates) {
             return res.data.results[0].formatted_address;
         })
         .catch((error) => {
-            console.log(error);
-            return null;
+            throw(error);
         });
 }
