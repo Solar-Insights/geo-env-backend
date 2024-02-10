@@ -7,7 +7,7 @@
     "scripts": {
         "start": "npx tsx src/server.ts",
         "test": "npx vitest",
-        "prettier": "npx prettier --tab-width 4 -uw --cache --ignore-path .gitignore ."
+        "prettier": "npx prettier --tab-width 4 --print-width 120 -uw --cache --ignore-path .gitignore ."
     },
     "dependencies": {
         "@googlemaps/google-maps-services-js": "^3.3.42",
