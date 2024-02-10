@@ -1,7 +1,5 @@
 import express from "express";
-import { generalErrorResponse } from "@/errorHandling/errorResponse";
 import { Coordinates } from "solar-typing/src/general";
-import {} from "solar-typing/src/airQuality";
 import { getAirQualityData } from "@/services/air";
 
 const airRouter = express.Router();

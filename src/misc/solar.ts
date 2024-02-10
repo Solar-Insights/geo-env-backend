@@ -1,8 +1,4 @@
-import axios from "axios";
-import { GOOGLE_KEY } from "@/config";
 import { GeoTiff } from "solar-typing/src/solar";
-import * as geotiff from "geotiff";
-import proj4 from "proj4";
 
 export function renderRGB(rgb: GeoTiff, mask?: GeoTiff) {
     // https://www.w3schools.com/tags/canvas_createimagedata.asp

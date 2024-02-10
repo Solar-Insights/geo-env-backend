@@ -1,6 +1,4 @@
 import express from "express";
-import { generalErrorResponse } from "@/errorHandling/errorResponse";
-import {} from "solar-typing/src/solar";
 import { Coordinates } from "solar-typing/src/general";
 import { getGeocoding, getReverseGeocoding } from "@/services/util";
 

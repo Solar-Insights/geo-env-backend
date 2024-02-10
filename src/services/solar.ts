@@ -1,11 +1,8 @@
 import axios from "axios";
 import { GOOGLE_KEY } from "@/config";
 import { Coordinates } from "solar-typing/src/general";
-import { BuildingInsights, LayerId, Layer, SolarLayers, GeoTiff } from "solar-typing/src/solar";
-
+import { BuildingInsights, SolarLayers, GeoTiff } from "solar-typing/src/solar";
 import { Client } from "@googlemaps/google-maps-services-js";
-import { renderPalette } from "@/misc/solar";
-import { ironPalette, sunlightPalette } from "@/misc/constants";
 import * as geotiff from "geotiff";
 import geokeysToProj4 from "geotiff-geokeys-to-proj4";
 import proj4 from "proj4";

@@ -1,6 +1,5 @@
 import { GOOGLE_KEY } from "@/config";
 import { Coordinates, validCoordinates } from "solar-typing/src/general";
-import {} from "solar-typing/src/solar";
 import { Client, GeocodeResponse, ReverseGeocodeResponse } from "@googlemaps/google-maps-services-js";
 
 const client = new Client({});
