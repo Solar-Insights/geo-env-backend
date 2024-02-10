@@ -7,9 +7,8 @@ import { getAirQualityData } from "@/services/air";
 const airRouter = express.Router();
 
 airRouter.get("/", (req, res) => {
-    console.log(1234);
     res.json({
-        test: "test",
+        body: "this server is currently working!",
     });
 });
 
