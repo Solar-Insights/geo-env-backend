@@ -9,13 +9,13 @@ export async function getGeocoding(formattedAddress: string) {
         .geocode({
             params: {
                 key: GOOGLE_KEY,
-                address: formattedAddress,
-            },
+                address: formattedAddress
+            }
         })
         .then((res: GeocodeResponse) => {
             const coord: Coordinates = {
                 lat: res.data.results[0].geometry.location.lat,
-                lng: res.data.results[0].geometry.location.lng,
+                lng: res.data.results[0].geometry.location.lng
             };
             if (validCoordinates(coord) && coord.lat != 0 && coord.lng != 0) {
                 return coord;
@@ -33,8 +33,8 @@ export async function getReverseGeocoding(coord: Coordinates) {
         .reverseGeocode({
             params: {
                 key: GOOGLE_KEY,
-                latlng: coord,
-            },
+                latlng: coord
+            }
         })
         .then((res: ReverseGeocodeResponse) => {
             return res.data.results[0].formatted_address;

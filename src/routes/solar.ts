@@ -7,13 +7,13 @@ const solarRouter = express.Router();
 solarRouter.get("/solar/closest-building-insights", async (req, res, next) => {
     const coord: Coordinates = {
         lat: Number(req.query.lat),
-        lng: Number(req.query.lng),
+        lng: Number(req.query.lng)
     };
 
     await getClosestBuildingInsights(coord)
         .then((data) => {
             res.status(200).json({
-                buildingInsights: data,
+                buildingInsights: data
             });
         })
         .catch((error) => {
@@ -26,13 +26,13 @@ solarRouter.get("/solar/solar-layers", async (req, res, next) => {
     const radius: number = Number(req.query.radius);
     const coord: Coordinates = {
         lat: Number(req.query.lat),
-        lng: Number(req.query.lng),
+        lng: Number(req.query.lng)
     };
 
     await getSolarLayers(coord, radius)
         .then((data) => {
             res.status(200).json({
-                solarLayers: data,
+                solarLayers: data
             });
         })
         .catch((error) => {
@@ -47,7 +47,7 @@ solarRouter.get("/solar/geotiff", async (req, res, next) => {
     await getGeotiff(url)
         .then((data) => {
             res.status(200).json({
-                geotiff: data,
+                geotiff: data
             });
         })
         .catch((error) => {

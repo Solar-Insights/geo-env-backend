@@ -16,8 +16,8 @@ export async function getClosestBuildingInsights(coord: Coordinates) {
         params: {
             key: GOOGLE_KEY,
             "location.latitude": coord.lat.toFixed(5),
-            "location.longitude": coord.lng.toFixed(5),
-        },
+            "location.longitude": coord.lng.toFixed(5)
+        }
     })
         .then((response) => {
             return response.data as BuildingInsights;
@@ -39,8 +39,8 @@ export async function getSolarLayers(coord: Coordinates, radius: number) {
             "location.longitude": coord.lng.toFixed(5),
             radiusMeters: radius.toString(),
             view: "FULL_LAYERS",
-            requiredQuality: "HIGH",
-        },
+            requiredQuality: "HIGH"
+        }
     })
         .then((response) => {
             return response.data as SolarLayers;
@@ -56,8 +56,8 @@ export async function getGeotiff(url: string) {
         responseType: "arraybuffer",
         url: url,
         params: {
-            key: GOOGLE_KEY,
-        },
+            key: GOOGLE_KEY
+        }
     })
         .then(async (response) => {
             return await makeGeotiff(response);

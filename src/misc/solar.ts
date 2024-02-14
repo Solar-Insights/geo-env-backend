@@ -37,7 +37,7 @@ export function renderPalette({
     colors,
     min,
     max,
-    index,
+    index
 }: {
     data: GeoTiff;
     mask?: GeoTiff;
@@ -57,10 +57,10 @@ export function renderPalette({
             rasters: [
                 indices.map((i: number) => palette[i].r),
                 indices.map((i: number) => palette[i].g),
-                indices.map((i: number) => palette[i].b),
-            ],
+                indices.map((i: number) => palette[i].b)
+            ]
         },
-        mask,
+        mask
     );
 }
 
@@ -76,7 +76,7 @@ export function createPalette(hexColors: string[], size = 256) {
             return {
                 r: lerp(rgb[j].r, rgb[k].r, index - j),
                 g: lerp(rgb[j].g, rgb[k].g, index - j),
-                b: lerp(rgb[j].b, rgb[k].b, index - j),
+                b: lerp(rgb[j].b, rgb[k].b, index - j)
             };
         });
 }
@@ -86,7 +86,7 @@ export function colorToRGB(color: string): { r: number; g: number; b: number } {
     return {
         r: parseInt(hex.substring(0, 2), 16),
         g: parseInt(hex.substring(2, 4), 16),
-        b: parseInt(hex.substring(4, 6), 16),
+        b: parseInt(hex.substring(4, 6), 16)
     };
 }
 
@@ -113,10 +113,7 @@ export function clamp(x: number, min: number, max: number) {
 
 export async function makeGeotiff(data: any) {
     const buffer: Buffer = data.data;
-    const arraybuffer: ArrayBuffer = buffer.buffer.slice(
-        buffer.byteOffset,
-        buffer.byteOffset + buffer.byteLength,
-    );
+    const arraybuffer: ArrayBuffer = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
 
     const tiff = await geotiff.fromArrayBuffer(arraybuffer);
     const image = await tiff.getImage();
@@ -129,11 +126,11 @@ export async function makeGeotiff(data: any) {
     const box = image.getBoundingBox();
     const sw = projection.forward({
         x: box[0] * projObj.coordinatesConversionParameters.x,
-        y: box[1] * projObj.coordinatesConversionParameters.y,
+        y: box[1] * projObj.coordinatesConversionParameters.y
     });
     const ne = projection.forward({
         x: box[2] * projObj.coordinatesConversionParameters.x,
-        y: box[3] * projObj.coordinatesConversionParameters.y,
+        y: box[3] * projObj.coordinatesConversionParameters.y
     });
 
     return {
@@ -144,7 +141,7 @@ export async function makeGeotiff(data: any) {
             north: ne.y,
             south: sw.y,
             east: ne.x,
-            west: sw.x,
-        },
+            west: sw.x
+        }
     } as GeoTiff;
 }

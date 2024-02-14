@@ -13,21 +13,21 @@ export async function getAirQualityData(coord: Coordinates) {
         responseType: "json",
         url: "https://airquality.googleapis.com/v1/currentConditions:lookup",
         params: {
-            key: GOOGLE_KEY,
+            key: GOOGLE_KEY
         },
         data: {
             location: {
                 latitude: coord.lat,
-                longitude: coord.lng,
+                longitude: coord.lng
             },
             universalAqi: true,
             extraComputations: [
                 "DOMINANT_POLLUTANT_CONCENTRATION",
                 "POLLUTANT_CONCENTRATION",
                 "POLLUTANT_ADDITIONAL_INFO",
-                "HEALTH_RECOMMENDATIONS",
-            ],
-        },
+                "HEALTH_RECOMMENDATIONS"
+            ]
+        }
     })
         .then((response) => {
             return response.data as AirQualityData;

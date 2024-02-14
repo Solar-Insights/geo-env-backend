@@ -10,7 +10,7 @@ utilRouter.get("/util/geocoding", async (req, res, next) => {
     await getGeocoding(formattedAddress)
         .then((data) => {
             res.status(200).json({
-                coordinates: data,
+                coordinates: data
             });
         })
         .catch((error) => {
@@ -22,13 +22,13 @@ utilRouter.get("/util/geocoding", async (req, res, next) => {
 utilRouter.get("/util/reverse-geocoding", async (req, res, next) => {
     const coord: Coordinates = {
         lat: Number(req.query.lat),
-        lng: Number(req.query.lng),
+        lng: Number(req.query.lng)
     };
 
     await getReverseGeocoding(coord)
         .then((data) => {
             res.status(200).json({
-                address: data,
+                address: data
             });
         })
         .catch((error) => {
