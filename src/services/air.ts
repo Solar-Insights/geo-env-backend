@@ -1,7 +1,7 @@
 import axios from "axios";
 import { GOOGLE_KEY } from "@/config";
-import { Coordinates } from "solar-typing/src/general";
-import { AirQualityData } from "solar-typing/src/airQuality";
+import { Coordinates } from "geo-env-typing/geo";
+import { AirQualityData } from "geo-env-typing/air";
 import { Client } from "@googlemaps/google-maps-services-js";
 
 const client = new Client({});

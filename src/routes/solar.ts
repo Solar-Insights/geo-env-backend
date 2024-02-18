@@ -1,5 +1,5 @@
 import express from "express";
-import { Coordinates } from "solar-typing/src/general";
+import { Coordinates } from "geo-env-typing/geo";
 import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/services/solar";
 
 const solarRouter = express.Router();

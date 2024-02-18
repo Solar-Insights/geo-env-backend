@@ -1,4 +1,4 @@
-import { GeoTiff } from "solar-typing/src/solar";
+import { GeoTiff } from "geo-env-typing/solar";
 import * as geotiff from "geotiff";
 import geokeysToProj4 from "geotiff-geokeys-to-proj4";
 import proj4 from "proj4";

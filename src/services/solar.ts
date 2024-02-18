@@ -1,7 +1,7 @@
 import axios from "axios";
 import { GOOGLE_KEY } from "@/config";
-import { Coordinates } from "solar-typing/src/general";
-import { BuildingInsights, SolarLayers } from "solar-typing/src/solar";
+import { Coordinates } from "geo-env-typing/geo";
+import { BuildingInsights, SolarLayers } from "geo-env-typing/solar";
 import { Client } from "@googlemaps/google-maps-services-js";
 import { makeGeotiff } from "@/misc/solar";
 
