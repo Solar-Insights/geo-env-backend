@@ -4,31 +4,33 @@ import geokeysToProj4 from "geotiff-geokeys-to-proj4";
 import proj4 from "proj4";
 
 export function renderRGB(rgb: GeoTiff, mask?: GeoTiff) {
-    // https://www.w3schools.com/tags/canvas_createimagedata.asp
-    const canvas = document.createElement("canvas");
-    canvas.width = mask ? mask.width : rgb.width;
-    canvas.height = mask ? mask.height : rgb.height;
+    // https://www.w3schools.com/tags/canvasElement_createimagedata.asp
+    const canvasElement: HTMLCanvasElement = document.createElement("canvas");
+    canvasElement.width = mask ? mask.width : rgb.width;
+    canvasElement.height = mask ? mask.height : rgb.height;
 
-    const dw = rgb.width / canvas.width;
-    const dh = rgb.height / canvas.height;
+    const renderingContext: CanvasRenderingContext2D = canvasElement.getContext("2d")!;
+    const image = renderingContext.getImageData(0, 0, canvasElement.width, canvasElement.height);
+    const dw = rgb.width / canvasElement.width;
+    const dh = rgb.height / canvasElement.height;
 
-    const ctx = canvas.getContext("2d")!;
-    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    for (let y = 0; y < canvas.height; y++) {
-        for (let x = 0; x < canvas.width; x++) {
-            const imgIdx = y * canvas.width * 4 + x * 4;
+    for (let y = 0; y < canvasElement.height; y++) {
+        for (let x = 0; x < canvasElement.width; x++) {
+            const imgIdx = y * canvasElement.width * 4 + x * 4;
             const rgbIdx = Math.floor(y * dh) * rgb.width + Math.floor(x * dw);
-            const maskIdx = y * canvas.width + x;
-            img.data[imgIdx + 0] = rgb.rasters[0][rgbIdx]; // Red
-            img.data[imgIdx + 1] = rgb.rasters[1][rgbIdx]; // Green
-            img.data[imgIdx + 2] = rgb.rasters[2][rgbIdx]; // Blue
-            img.data[imgIdx + 3] = mask // Alpha
+            const maskIdx = y * canvasElement.width + x;
+            image.data[imgIdx + 0] = rgb.rasters[0][rgbIdx]; // Red
+            image.data[imgIdx + 1] = rgb.rasters[1][rgbIdx]; // Green
+            image.data[imgIdx + 2] = rgb.rasters[2][rgbIdx]; // Blue
+            image.data[imgIdx + 3] = mask // Alpha
                 ? mask.rasters[0][maskIdx] * 255
                 : 255;
         }
     }
-    ctx.putImageData(img, 0, 0);
-    return canvas;
+
+    renderingContext.putImageData(image, 0, 0);
+
+    return canvasElement;
 }
 
 export function renderPalette({
@@ -64,7 +66,7 @@ export function renderPalette({
     );
 }
 
-export function createPalette(hexColors: string[], size = 256) {
+export function createPalette(hexColors: string[], size: number) {
     const rgb = hexColors.map(colorToRGB);
     const step = (rgb.length - 1) / (size - 1);
     return Array(size)
@@ -121,16 +123,16 @@ export async function makeGeotiff(data: any) {
 
     const geoKeys = image.getGeoKeys();
 
-    const projObj = geokeysToProj4.toProj4(geoKeys);
-    const projection = proj4(projObj.proj4, "WGS84");
+    const projectionParameters = geokeysToProj4.toProj4(geoKeys);
+    const projection = proj4(projectionParameters.proj4, "WGS84");
     const box = image.getBoundingBox();
-    const sw = projection.forward({
-        x: box[0] * projObj.coordinatesConversionParameters.x,
-        y: box[1] * projObj.coordinatesConversionParameters.y
+    const swCoords = projection.forward({
+        x: box[0] * projectionParameters.coordinatesConversionParameters.x,
+        y: box[1] * projectionParameters.coordinatesConversionParameters.y
     });
-    const ne = projection.forward({
-        x: box[2] * projObj.coordinatesConversionParameters.x,
-        y: box[3] * projObj.coordinatesConversionParameters.y
+    const neCoords = projection.forward({
+        x: box[2] * projectionParameters.coordinatesConversionParameters.x,
+        y: box[3] * projectionParameters.coordinatesConversionParameters.y
     });
 
     return {
@@ -138,10 +140,10 @@ export async function makeGeotiff(data: any) {
         height: rasters.height,
         rasters: [...Array(rasters.length).keys()].map((i) => Array.from(rasters[i] as geotiff.TypedArray)),
         bounds: {
-            north: ne.y,
-            south: sw.y,
-            east: ne.x,
-            west: sw.x
+            north: neCoords.y,
+            south: swCoords.y,
+            east: neCoords.x,
+            west: swCoords.x
         }
     } as GeoTiff;
 }
