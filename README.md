@@ -1,18 +1,21 @@
 # Project
-geo-env-backend is an Express + TypeScript project aiming to provide an easy-to-use and easy-to-setup server-template for developpers wanting to use geographic, solar and air-quality data. The first version of the project is still under development and uses solely the different Google APIs. 
+
+geo-env-backend is an Express + TypeScript project aiming to provide an easy-to-use and easy-to-setup server-template for developpers wanting to use geographic, solar and air-quality data. The first version of the project is still under development and uses solely the different Google APIs.
 
 # Running the Express server
-The following section describes a step-by-step guide to launch your server locally, for testing and development purposes. 
+
+The following section describes a step-by-step guide to launch your server locally, for testing and development purposes.
 
 1. Install all dependencies using `npm install`
 2. In a `.env` file at the route of the project, setup all the variables found inside the `src/config.ts` file
-   - The `GOOGLE_KEY` should have authorisation to use the Air Quality, Geocoding, Places and Solar API for all routes to be available. For local use, application restriction is not absolutely required, **as long as you keep your API key secure**. For production use, see the next section regarding deployment
+    - The `GOOGLE_KEY` should have authorisation to use the Air Quality, Geocoding, Places and Solar API for all routes to be available. For local use, application restriction is not absolutely required, **as long as you keep your API key secure**. For production use, see the next section regarding deployment
 3. Run `npm run start`
 4. HTTP requests can now be sent to the routes provided in `src/routes/*` to retrieve data
 5. A `500` status will be returned if an error was encountered at any point during the request
 
 # Deploy the Express server
-The following section describes **an extremely simplified way** of deploying your server using Heroku. Before making the server accessible to the public, you need to make sure that your code is functionnal and safe, but also that any credentials are properly secured. This **step-by-step process should not be followed blindfully**, as deploying a server can be costly, especially if security is considered lightly. 
+
+The following section describes **an extremely simplified way** of deploying your server using Heroku. Before making the server accessible to the public, you need to make sure that your code is functionnal and safe, but also that any credentials are properly secured. This **step-by-step process should not be followed blindfully**, as deploying a server can be costly, especially if security is considered lightly.
 
 1. Create a new application on the `Heroku` console and assign it the ressources needed to operate the server
 2. In the `Deploy` tab, under `Deployment method` use GitHub to connect to the repository that contains the server
