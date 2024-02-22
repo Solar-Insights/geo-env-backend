@@ -5,7 +5,7 @@
     "main": "src/main.ts",
     "type": "module",
     "scripts": {
-        "start": "npx tsx src/server.ts",
+        "start": "npx tsx src/index.ts",
         "test": "vitest run",
         "prettier": "prettier --trailing-comma none --tab-width 4 --print-width 120 -uw --cache --ignore-path .gitignore ."
     },

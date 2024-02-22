@@ -1,21 +1,7 @@
-// Configs
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import { errLogger, errResponder, failSafeHandler } from "@/middlewares/error";
-import healthRouter from "@/routes/health";
-import geoRouter from "@/routes/geo";
-import solarRouter from "@/routes/solar";
-import airRouter from "@/routes/air";
+import { setupApp, setupServer } from "@/setup";
 
-const app = express();
-app.use(cors());
-app.use(bodyParser.json());
+const app = setupApp();
 
-app.use(healthRouter);
-app.use(geoRouter);
-app.use(solarRouter);
-app.use(airRouter);
-app.use(errLogger, errResponder, failSafeHandler);
+setupServer(app);
 
 export default app;
