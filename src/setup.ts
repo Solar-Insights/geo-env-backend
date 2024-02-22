@@ -1,4 +1,5 @@
 import express, { Express } from "express";
+import { Server } from "http";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { errLogger, errResponder, failSafeHandler } from "@/middlewares/error";
@@ -20,7 +21,7 @@ export function setupApp() {
 }
 
 export function setupServer(app: Express) {
-    app.listen(PORT, () => {
-        console.log("server is now opened");
+    return app.listen(PORT, () => {
+        console.log("server is open");
     });
 }
