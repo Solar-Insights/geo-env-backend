@@ -3,6 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { errLogger, errResponder, failSafeHandler } from "@/middlewares/error";
+import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
 import solarRouter from "@/routes/solar";
 import airRouter from "@/routes/air";
@@ -11,6 +12,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+app.use(healthRouter);
 app.use(geoRouter);
 app.use(solarRouter);
 app.use(airRouter);
