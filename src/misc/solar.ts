@@ -101,7 +101,7 @@ export function rgbToColor({ r, g, b }: { r: number; g: number; b: number }): st
 }
 
 export function lerp(x: number, y: number, t: number) {
-    return (1 - t) * x + (t * y);
+    return (1 - t) * x + t * y;
 }
 
 export function normalize(x: number, max: number = 1, min: number = 0) {
