@@ -1,4 +1,3 @@
-import { setupApp, setupServer } from "@/setup";
+import { ServerFactory } from "@/serverFactory";
 
-const app = setupApp();
-const server = setupServer(app);
+const { app, server } = ServerFactory.create().withDefaultValues().build();

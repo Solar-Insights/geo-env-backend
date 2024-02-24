@@ -1,9 +1,11 @@
 import { describe, test, assert } from "vitest";
-import { RoutesFixture } from "./routesFixture";
+import { ServerFactory } from "../../src/serverFactory";
 
-const routeFixture = RoutesFixture.create().withDefaultValues().build();
+import airRouter from "../../src/routes/air";
 
-describe("", () => {
+const server = ServerFactory.create().withDefaultValues().build();
+
+describe("", async () => {
     test("When true, then returns true", () => {
         assert.isTrue(true);
     });
