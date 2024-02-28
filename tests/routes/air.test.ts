@@ -1,14 +1,13 @@
 import { describe, test, assert } from "vitest";
 import request from "supertest"
 import nock from "nock";
-
-import { ServerFactory } from "../../src/serverFactory";
-import {  GOOGLE_KEY } from "../../src/config";
+import { ServerFactory } from "@/serverFactory";
+import {  GOOGLE_KEY } from "@/config";
 import { dummyAirQualityData } from "geo-env-typing/air";
 import { dummyLatLng } from "geo-env-typing/geo";
 import { UtilGenerator } from "geo-env-typing/generators/utilGenerators";
 
-const { app, server } = ServerFactory.create().withDefaultValues().build();
+const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();
 const GoogleAirApiUrl = "https://airquality.googleapis.com/v1/";
 const ExpressGetAirQualityDataUrl = "/air/air-quality-data";
 
@@ -31,7 +30,7 @@ describe(`GET ${ExpressGetAirQualityDataUrl}`, async () => {
         })
         .query({ key: GOOGLE_KEY })
     
-    test("whenMakingRequestWithValidParameters, then returns 200 with air quality data", () => {
+    test("whenRequestIsSucessfull, then returns 200 with air quality data", () => {
         nockInstance.reply(200, dummyData);
     
         return request(app)
@@ -43,7 +42,7 @@ describe(`GET ${ExpressGetAirQualityDataUrl}`, async () => {
             })
     })
 
-    test("whenMakingRequestWithThatFails, then returns 500 with api-error type", () => {
+    test("whenRequestFails, then returns 500 with api-error type", () => {
         nockInstance.replyWithError("");
     
         return request(app)
