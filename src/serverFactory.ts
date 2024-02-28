@@ -13,6 +13,7 @@ import airRouter from "@/routes/air";
 export class ServerFactory {
     app!: Express;
     server!: Server;
+    testEnv: Boolean = false;
 
     private constructor() {}
 
@@ -20,9 +21,16 @@ export class ServerFactory {
         return new ServerFactory();
     }
 
+    public onTestEnvironnement() {
+        this.testEnv = true;
+        return this;
+    }
+
     public withDefaultValues() {
         this.app = this.createAppWithDefaultValues();
-        this.server = this.createServerWithDefaultValues(this.app);
+        if (!this.testEnv) {
+            this.server = this.createServerWithDefaultValues(this.app);
+        }
         return this;
     }
 
