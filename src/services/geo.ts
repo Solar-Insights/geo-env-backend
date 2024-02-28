@@ -1,5 +1,5 @@
 import { GOOGLE_KEY } from "@/config";
-import { Coordinates, validCoordinates } from "geo-env-typing/geo";
+import { LatLng, validCoordinates } from "geo-env-typing/geo";
 import { Client, GeocodeResponse, ReverseGeocodeResponse } from "@googlemaps/google-maps-services-js";
 
 const client = new Client({});
@@ -13,7 +13,7 @@ export async function getGeocoding(formattedAddress: string) {
             }
         })
         .then((res: GeocodeResponse) => {
-            const coord: Coordinates = {
+            const coord: LatLng = {
                 lat: res.data.results[0].geometry.location.lat,
                 lng: res.data.results[0].geometry.location.lng
             };
@@ -28,7 +28,7 @@ export async function getGeocoding(formattedAddress: string) {
         });
 }
 
-export async function getReverseGeocoding(coord: Coordinates) {
+export async function getReverseGeocoding(coord: LatLng) {
     return await client
         .reverseGeocode({
             params: {

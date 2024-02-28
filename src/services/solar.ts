@@ -1,13 +1,13 @@
 import axios from "axios";
 import { GOOGLE_KEY } from "@/config";
-import { Coordinates } from "geo-env-typing/geo";
+import { LatLng } from "geo-env-typing/geo";
 import { BuildingInsights, SolarLayers } from "geo-env-typing/solar";
 import { Client } from "@googlemaps/google-maps-services-js";
 import { makeGeotiff } from "@/misc/solar";
 
 const client = new Client({});
 
-export async function getClosestBuildingInsights(coord: Coordinates) {
+export async function getClosestBuildingInsights(coord: LatLng) {
     // https://developers.google.com/maps/documentation/solar/reference/rest/v1/buildingInsights/findClosest
     return await axios({
         method: "get",
@@ -27,7 +27,7 @@ export async function getClosestBuildingInsights(coord: Coordinates) {
         });
 }
 
-export async function getSolarLayers(coord: Coordinates, radius: number) {
+export async function getSolarLayers(coord: LatLng, radius: number) {
     // https://developers.google.com/maps/documentation/solar/data-layers
     return await axios({
         method: "get",

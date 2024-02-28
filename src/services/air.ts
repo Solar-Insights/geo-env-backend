@@ -1,12 +1,12 @@
 import axios from "axios";
 import { GOOGLE_KEY } from "@/config";
-import { Coordinates } from "geo-env-typing/geo";
+import { LatLng } from "geo-env-typing/geo";
 import { AirQualityData } from "geo-env-typing/air";
 import { Client } from "@googlemaps/google-maps-services-js";
 
 const client = new Client({});
 
-export async function getAirQualityData(coord: Coordinates) {
+export async function getAirQualityData(coord: LatLng) {
     // https://developers.google.com/maps/documentation/air-quality/reference/rest/v1/currentConditions/lookup#request-body
     return await axios({
         method: "post",
