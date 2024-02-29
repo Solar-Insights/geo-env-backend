@@ -1,5 +1,5 @@
 import { describe, test, assert, vi } from "vitest";
-import request from "supertest"
+import request from "supertest";
 import { ServerFactory } from "@/serverFactory";
 import { dummyLatLng } from "geo-env-typing/geo";
 import { UtilGenerator } from "geo-env-typing/generators/utilGenerators";
@@ -7,13 +7,13 @@ import { StringGenerator } from "geo-env-typing/generators/stringGenerator";
 import { ApiError } from "@/misc/customErrors";
 
 const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();
-const geo = await import("@/services/geo")
+const geo = await import("@/services/geo");
 vi.mock("@/services/geo");
 
 describe("GET /geo/geocoding", async () => {
     const dummyCoord = dummyLatLng();
     const dummyAddress = StringGenerator.generateWord();
-    const url = `/geo/geocoding?${new URLSearchParams({ "address": dummyAddress }).toString()}`;
+    const url = `/geo/geocoding?${new URLSearchParams({ address: dummyAddress }).toString()}`;
     const apiError = new ApiError(url);
 
     test("whenRequestIsSucessfull, then returns 200 with coordinates", async () => {
@@ -23,22 +23,25 @@ describe("GET /geo/geocoding", async () => {
             .get(url)
             .expect(200)
             .then((response) => {
-                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.coordinates, dummyCoord))
-            })
-    })
+                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.coordinates, dummyCoord));
+            });
+    });
 
     test("whenRequestFails, then returns 500 with api error", () => {
-        geo.getGeocoding = vi.fn()
-            .mockImplementation(() => { throw apiError })
+        geo.getGeocoding = vi
+            .fn()
+            .mockImplementation(() => {
+                throw apiError;
+            })
             .mockRejectedValue({});
 
         return request(app)
             .get(url)
             .expect(500)
             .then((response) => {
-                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, apiError.toObject()))
-            })
-    })
+                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, apiError.toObject()));
+            });
+    });
 });
 
 describe("GET /geo/reverse-geocoding", async () => {
@@ -54,20 +57,23 @@ describe("GET /geo/reverse-geocoding", async () => {
             .get(url)
             .expect(200)
             .then((response) => {
-                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.address, dummyAddress))
-            })
-    })
+                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.address, dummyAddress));
+            });
+    });
 
     test("whenRequestFails, then returns 500 with api error", () => {
-        geo.getReverseGeocoding = vi.fn()
-            .mockImplementation(() => { throw apiError })
+        geo.getReverseGeocoding = vi
+            .fn()
+            .mockImplementation(() => {
+                throw apiError;
+            })
             .mockRejectedValue({});
 
         return request(app)
             .get(url)
             .expect(500)
             .then((response) => {
-                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, apiError.toObject()))
-            })
-    })
+                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, apiError.toObject()));
+            });
+    });
 });
