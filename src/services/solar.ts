@@ -2,10 +2,7 @@ import axios from "axios";
 import { GOOGLE_KEY } from "@/config";
 import { LatLng } from "geo-env-typing/geo";
 import { BuildingInsights, SolarLayers } from "geo-env-typing/solar";
-import { Client } from "@googlemaps/google-maps-services-js";
 import { makeGeotiff } from "@/misc/solar";
-
-const client = new Client({});
 
 export async function getClosestBuildingInsights(coord: LatLng) {
     // https://developers.google.com/maps/documentation/solar/reference/rest/v1/buildingInsights/findClosest
@@ -53,7 +50,7 @@ export async function getSolarLayers(coord: LatLng, radius: number) {
 export async function getGeotiff(url: string) {
     return await axios({
         method: "get",
-        responseType: "arraybuffer",
+        responseType: "json",
         url: url,
         params: {
             key: GOOGLE_KEY
