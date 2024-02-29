@@ -14,6 +14,7 @@ describe("GET /geo/geocoding", async () => {
     const dummyCoord = dummyLatLng();
     const dummyAddress = StringGenerator.generateWord();
     const url = `/geo/geocoding?${new URLSearchParams({ "address": dummyAddress }).toString()}`;
+    const apiError = new ApiError(url);
 
     test("whenRequestIsSucessfull, then returns 200 with coordinates", async () => {
         geo.getGeocoding = vi.fn().mockResolvedValue(dummyCoord);
@@ -26,9 +27,7 @@ describe("GET /geo/geocoding", async () => {
             })
     })
 
-    test("whenRequestFails, then returns 500 with error message", () => {
-        const apiError = new ApiError(url);
-
+    test("whenRequestFails, then returns 500 with api error", () => {
         geo.getGeocoding = vi.fn()
             .mockImplementation(() => { throw apiError })
             .mockRejectedValue({});
@@ -46,6 +45,7 @@ describe("GET /geo/reverse-geocoding", async () => {
     const dummyCoord = dummyLatLng();
     const dummyAddress = StringGenerator.generateSentence();
     const url = `/geo/reverse-geocoding?${new URLSearchParams(dummyCoord as any).toString()}`;
+    const apiError = new ApiError(url);
 
     test("whenRequestIsSucessfull, then returns 200 with address", async () => {
         geo.getReverseGeocoding = vi.fn().mockResolvedValue(dummyAddress);
@@ -58,9 +58,7 @@ describe("GET /geo/reverse-geocoding", async () => {
             })
     })
 
-    test("whenRequestFails, then returns 500 with error message", () => {
-        const apiError = new ApiError(url);
-
+    test("whenRequestFails, then returns 500 with api error", () => {
         geo.getReverseGeocoding = vi.fn()
             .mockImplementation(() => { throw apiError })
             .mockRejectedValue({});

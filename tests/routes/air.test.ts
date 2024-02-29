@@ -16,6 +16,7 @@ describe(`GET /air/air-quality-data`, async () => {
     const dummyData = dummyAirQualityData()
     const dummyCoord = dummyLatLng();
     const url = `/air/air-quality-data?${new URLSearchParams(dummyCoord as any).toString()}`;
+    const apiError = new ApiError(url);
 
     const nockInstance = nock(GoogleAirApiUrl)
         .post("/currentConditions:lookup", {
@@ -44,10 +45,8 @@ describe(`GET /air/air-quality-data`, async () => {
             })
     })
 
-    test("whenRequestFails, then returns 500 with error message", () => {
-        const apiError = new ApiError(url);
-        
-        nockInstance.replyWithError("");
+    test("whenRequestFails, then returns 500 with api error", () => {
+        nockInstance.replyWithError(apiError);
     
         return request(app)
             .get(url)
