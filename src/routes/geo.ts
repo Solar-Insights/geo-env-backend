@@ -1,6 +1,7 @@
 import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
 import { getGeocoding, getReverseGeocoding } from "@/services/geo";
+import { ApiError } from "@/misc/customErrors";
 
 const geoRouter = express.Router();
 
@@ -14,8 +15,7 @@ geoRouter.get("/geo/geocoding", async (req, res, next) => {
             });
         })
         .catch((error) => {
-            error.type = "api-error";
-            next(error);
+            next(new ApiError(req.url));
         });
 });
 
@@ -32,8 +32,7 @@ geoRouter.get("/geo/reverse-geocoding", async (req, res, next) => {
             });
         })
         .catch((error) => {
-            error.type = "api-error";
-            next(error);
+            next(new ApiError(req.url));
         });
 });
 

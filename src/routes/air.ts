@@ -1,6 +1,7 @@
 import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
 import { getAirQualityData } from "@/services/air";
+import { ApiError } from "@/misc/customErrors";
 
 const airRouter = express.Router();
 
@@ -23,8 +24,7 @@ airRouter.get("/air/air-quality-data", async (req, res, next) => {
             });
         })
         .catch((error) => {
-            error.type = "api-error";
-            next(error);
+            next(new ApiError(req.url));
         });
 });
 

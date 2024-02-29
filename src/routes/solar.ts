@@ -1,6 +1,7 @@
 import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
 import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/services/solar";
+import { ApiError } from "@/misc/customErrors";
 
 const solarRouter = express.Router();
 
@@ -17,8 +18,7 @@ solarRouter.get("/solar/closest-building-insights", async (req, res, next) => {
             });
         })
         .catch((error) => {
-            error.type = "api-error";
-            next(error);
+            next(new ApiError(req.url));
         });
 });
 
@@ -36,8 +36,7 @@ solarRouter.get("/solar/solar-layers", async (req, res, next) => {
             });
         })
         .catch((error) => {
-            error.type = "api-error";
-            next(error);
+            next(new ApiError(req.url));
         });
 });
 
@@ -51,8 +50,7 @@ solarRouter.get("/solar/geotiff", async (req, res, next) => {
             });
         })
         .catch((error) => {
-            error.type = "api-error";
-            next(error);
+            next(new ApiError(req.url));
         });
 });
 
