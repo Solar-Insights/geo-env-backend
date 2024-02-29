@@ -6,15 +6,17 @@ import {  GOOGLE_KEY } from "@/config";
 import { dummyAirQualityData } from "geo-env-typing/air";
 import { dummyLatLng } from "geo-env-typing/geo";
 import { UtilGenerator } from "geo-env-typing/generators/utilGenerators";
+import { ApiError } from "@/misc/customErrors";
 
 const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();
 
 const GoogleAirApiUrl = "https://airquality.googleapis.com/v1/";
-const ExpressGetAirQualityDataUrl = "/air/air-quality-data";
 
-describe(`GET ${ExpressGetAirQualityDataUrl}`, async () => {
+describe(`GET /air/air-quality-data`, async () => {
     const dummyData = dummyAirQualityData()
     const dummyCoord = dummyLatLng();
+    const url = `/air/air-quality-data?${new URLSearchParams(dummyCoord as any).toString()}`;
+
     const nockInstance = nock(GoogleAirApiUrl)
         .post("/currentConditions:lookup", {
             location: {
@@ -35,8 +37,7 @@ describe(`GET ${ExpressGetAirQualityDataUrl}`, async () => {
         nockInstance.reply(200, dummyData);
     
         return request(app)
-            .get(ExpressGetAirQualityDataUrl)
-            .query(dummyCoord)
+            .get(url)
             .expect(200)
             .then((response) => {
                 assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.airQualityData, dummyData))
@@ -44,14 +45,15 @@ describe(`GET ${ExpressGetAirQualityDataUrl}`, async () => {
     })
 
     test("whenRequestFails, then returns 500 with error message", () => {
+        const apiError = new ApiError(url);
+        
         nockInstance.replyWithError("");
     
         return request(app)
-            .get(ExpressGetAirQualityDataUrl)
-            .query(dummyCoord)
+            .get(url)
             .expect(500)
             .then((response) => {
-                assert.isTrue(response.body.error === "The request could not be resolved, the API endpoint encountered an error.")
+                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, apiError.toObject()))
             })
     })
 });

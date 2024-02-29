@@ -4,24 +4,22 @@ import { ServerFactory } from "@/serverFactory";
 import { dummyLatLng } from "geo-env-typing/geo";
 import { UtilGenerator } from "geo-env-typing/generators/utilGenerators";
 import { StringGenerator } from "geo-env-typing/generators/stringGenerator";
+import { ApiError } from "@/misc/customErrors";
 
 const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();
 const geo = await import("@/services/geo")
 vi.mock("@/services/geo");
 
-const ExpressGeocodingUrl = "/geo/geocoding";
-const ExpressReverseGeocodingUrl = "/geo/reverse-geocoding";
-
-describe(`GET ${ExpressGeocodingUrl}`, async () => {
+describe("GET /geo/geocoding", async () => {
     const dummyCoord = dummyLatLng();
-    const dummyAddress = StringGenerator.generateSentence();
+    const dummyAddress = StringGenerator.generateWord();
+    const url = `/geo/geocoding?${new URLSearchParams({ "address": dummyAddress }).toString()}`;
 
     test("whenRequestIsSucessfull, then returns 200 with coordinates", async () => {
         geo.getGeocoding = vi.fn().mockResolvedValue(dummyCoord);
 
         return request(app)
-            .get(ExpressGeocodingUrl)
-            .query(dummyAddress)
+            .get(url)
             .expect(200)
             .then((response) => {
                 assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.coordinates, dummyCoord))
@@ -29,30 +27,31 @@ describe(`GET ${ExpressGeocodingUrl}`, async () => {
     })
 
     test("whenRequestFails, then returns 500 with error message", () => {
+        const apiError = new ApiError(url);
+
         geo.getGeocoding = vi.fn()
-            .mockImplementation(() => { throw "" })
+            .mockImplementation(() => { throw apiError })
             .mockRejectedValue({});
 
         return request(app)
-            .get(ExpressGeocodingUrl)
-            .query(dummyAddress)
+            .get(url)
             .expect(500)
             .then((response) => {
-                assert.isTrue(response.body.error === "The request could not be resolved, the API endpoint encountered an error.")
+                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, apiError.toObject()))
             })
     })
 });
 
-describe(`GET ${ExpressReverseGeocodingUrl}`, async () => {
+describe("GET /geo/reverse-geocoding", async () => {
     const dummyCoord = dummyLatLng();
     const dummyAddress = StringGenerator.generateSentence();
+    const url = `/geo/reverse-geocoding?${new URLSearchParams(dummyCoord as any).toString()}`;
 
     test("whenRequestIsSucessfull, then returns 200 with address", async () => {
         geo.getReverseGeocoding = vi.fn().mockResolvedValue(dummyAddress);
 
         return request(app)
-            .get(ExpressReverseGeocodingUrl)
-            .query(dummyCoord)
+            .get(url)
             .expect(200)
             .then((response) => {
                 assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.address, dummyAddress))
@@ -60,16 +59,17 @@ describe(`GET ${ExpressReverseGeocodingUrl}`, async () => {
     })
 
     test("whenRequestFails, then returns 500 with error message", () => {
+        const apiError = new ApiError(url);
+
         geo.getReverseGeocoding = vi.fn()
-            .mockImplementation(() => { throw "" })
+            .mockImplementation(() => { throw apiError })
             .mockRejectedValue({});
 
         return request(app)
-            .get(ExpressReverseGeocodingUrl)
-            .query(dummyCoord)
+            .get(url)
             .expect(500)
             .then((response) => {
-                assert.isTrue(response.body.error === "The request could not be resolved, the API endpoint encountered an error.")
+                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, apiError.toObject()))
             })
     })
 });
