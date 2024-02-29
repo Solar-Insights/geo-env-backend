@@ -8,6 +8,7 @@ import { dummyLatLng } from "geo-env-typing/geo";
 import { UtilGenerator } from "geo-env-typing/generators/utilGenerators";
 
 const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();
+
 const GoogleAirApiUrl = "https://airquality.googleapis.com/v1/";
 const ExpressGetAirQualityDataUrl = "/air/air-quality-data";
 
@@ -42,15 +43,15 @@ describe(`GET ${ExpressGetAirQualityDataUrl}`, async () => {
             })
     })
 
-    test("whenRequestFails, then returns 500 with api-error type", () => {
+    test("whenRequestFails, then returns 500 with error message", () => {
         nockInstance.replyWithError("");
     
         return request(app)
             .get(ExpressGetAirQualityDataUrl)
             .query(dummyCoord)
             .expect(500)
-            .catch((error) => {
-                assert.isTrue(error.type === "api-error");
+            .then((response) => {
+                assert.isTrue(response.body.error === "The request could not be resolved, the API endpoint encountered an error.")
             })
     })
 });
