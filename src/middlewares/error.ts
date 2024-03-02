@@ -2,7 +2,7 @@ import { ErrorRequestHandler } from "express";
 import { ApiError, UnresolvedError } from "@/misc/customErrors";
 
 export const errLogger: ErrorRequestHandler = (err, req, res, next) => {
-    //console.error(err);
+    console.error(err);
     next(err);
 };
 
