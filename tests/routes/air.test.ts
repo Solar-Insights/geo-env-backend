@@ -5,7 +5,7 @@ import { ServerFactory } from "@/serverFactory";
 import { GOOGLE_KEY } from "@/config";
 import { dummyAirQualityData } from "geo-env-typing/air";
 import { dummyLatLng } from "geo-env-typing/geo";
-import { UtilGenerator } from "geo-env-typing/generators/utilGenerators";
+import { UtilGenerator } from "geo-env-typing/generators";
 import { ApiError } from "@/misc/customErrors";
 
 const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();

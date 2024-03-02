@@ -1,7 +1,6 @@
 import { describe, test, assert } from "vitest";
 import request from "supertest";
 import { ServerFactory } from "@/serverFactory";
-import { ApiError } from "@/misc/customErrors";
 
 const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();
 

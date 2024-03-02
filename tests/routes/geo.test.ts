@@ -2,8 +2,7 @@ import { describe, test, assert, vi } from "vitest";
 import request from "supertest";
 import { ServerFactory } from "@/serverFactory";
 import { dummyLatLng } from "geo-env-typing/geo";
-import { UtilGenerator } from "geo-env-typing/generators/utilGenerators";
-import { StringGenerator } from "geo-env-typing/generators/stringGenerator";
+import { UtilGenerator, StringGenerator } from "geo-env-typing/generators";
 import { ApiError } from "@/misc/customErrors";
 
 const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();

@@ -5,10 +5,8 @@ import { ServerFactory } from "@/serverFactory";
 import { GOOGLE_KEY } from "@/config";
 import { dummyBuildingInsights, dummyGeoTiff, dummySolarLayers } from "geo-env-typing/solar";
 import { dummyLatLng } from "geo-env-typing/geo";
-import { UtilGenerator } from "geo-env-typing/generators/utilGenerators";
-import { NumberGenerator } from "geo-env-typing/generators/numberGenerator";
+import { UtilGenerator, NumberGenerator, StringGenerator } from "geo-env-typing/generators";
 import { ApiError } from "@/misc/customErrors";
-import { StringGenerator } from "geo-env-typing/generators/stringGenerator";
 
 const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();
 const solar = await import("@/misc/solar");
