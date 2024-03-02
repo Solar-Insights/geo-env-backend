@@ -30,7 +30,7 @@ jobs:
 
       - name: .env variables
         run: |
-          type nul > .env
+          New-Item .env
           echo GOOGLE_KEY=${{ secrets.GOOGLE_KEY }} >> .env
           echo PORT=${{ secrets.PORT }} >> .env
 
