@@ -45,7 +45,7 @@ export class ServerFactory {
 
     private createServerWithDefaultValues(app: Express) {
         return app.listen(PORT, () => {
-            console.log("server is open");
+            console.log(`server is open at http://localhost:${PORT}`);
         });
     }
 
