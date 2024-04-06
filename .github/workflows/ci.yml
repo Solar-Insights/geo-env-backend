@@ -9,7 +9,7 @@ on:
 jobs:
   testing-env:
     runs-on: windows-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
 
     strategy:
       fail-fast: false
@@ -41,7 +41,7 @@ jobs:
     if: success()
     needs: [testing-env]
     runs-on: windows-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     permissions: 
       contents: write
 
