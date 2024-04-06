@@ -6,10 +6,10 @@ import { GOOGLE_KEY } from "@/config";
 import { dummyBuildingInsights, dummyGeoTiff, dummySolarLayers } from "geo-env-typing/solar";
 import { dummyLatLng } from "geo-env-typing/geo";
 import { UtilGenerator, NumberGenerator, StringGenerator } from "geo-env-typing/generators";
-import { ApiError } from "@/misc/customErrors";
+import { ApiError } from "@/middlewares/customErrors";
 
 const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();
-const solar = await import("@/misc/solar");
+const solar = await import("@/services/solar");
 vi.mock("@/misc/solar");
 
 const GoogleSolarApiUrl = "https://solar.googleapis.com/v1/";

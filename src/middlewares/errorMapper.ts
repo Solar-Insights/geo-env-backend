@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from "express";
-import { ApiError, UnresolvedError } from "@/misc/customErrors";
+import { ApiError, ExpressError, UnresolvedError } from "@/middlewares/customErrors";
 
 export const errLogger: ErrorRequestHandler = (err, req, res, next) => {
     console.error(err);
@@ -7,11 +7,9 @@ export const errLogger: ErrorRequestHandler = (err, req, res, next) => {
 };
 
 export const errResponder: ErrorRequestHandler = (err, req, res, next) => {
-    if (err instanceof ApiError) {
-        res.status(500).json(err);
-    } else {
-        next(err);
-    }
+    const isCustomError = err instanceof ExpressError;
+    if (isCustomError) res.status(err.code).json(err);
+    else next(err);
 };
 
 export const failSafeHandler: ErrorRequestHandler = (err, req, res, next) => {

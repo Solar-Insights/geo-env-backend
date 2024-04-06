@@ -3,10 +3,10 @@ import request from "supertest";
 import { ServerFactory } from "@/serverFactory";
 import { dummyLatLng } from "geo-env-typing/geo";
 import { UtilGenerator, StringGenerator } from "geo-env-typing/generators";
-import { ApiError } from "@/misc/customErrors";
+import { ApiError } from "@/middlewares/customErrors";
 
 const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();
-const geo = await import("@/services/geo");
+const geo = await import("@/api/geo");
 vi.mock("@/services/geo");
 
 describe("GET /geo/geocoding", async () => {
