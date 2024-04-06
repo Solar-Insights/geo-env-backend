@@ -1,7 +1,8 @@
 import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
-import { getGeocoding, getReverseGeocoding } from "@/services/geo";
-import { ApiError } from "@/misc/customErrors";
+import { getGeocoding, getReverseGeocoding } from "@/api/geo";
+import { ApiError } from "@/middlewares/customErrors";
+import { validateRequestCoordinates } from "@/middlewares/requestValidators";
 
 const geoRouter = express.Router();
 
@@ -19,7 +20,7 @@ geoRouter.get("/geo/geocoding", async (req, res, next) => {
         });
 });
 
-geoRouter.get("/geo/reverse-geocoding", async (req, res, next) => {
+geoRouter.get("/geo/reverse-geocoding", validateRequestCoordinates, async (req, res, next) => {
     const coord: Coordinates = {
         lat: Number(req.query.lat),
         lng: Number(req.query.lng)

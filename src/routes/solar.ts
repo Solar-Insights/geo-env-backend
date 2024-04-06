@@ -1,11 +1,12 @@
 import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
-import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/services/solar";
-import { ApiError } from "@/misc/customErrors";
+import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/api/solar";
+import { ApiError } from "@/middlewares/customErrors";
+import { validateRequestCoordinates } from "@/middlewares/requestValidators";
 
 const solarRouter = express.Router();
 
-solarRouter.get("/solar/closest-building-insights", async (req, res, next) => {
+solarRouter.get("/solar/closest-building-insights", validateRequestCoordinates, async (req, res, next) => {
     const coord: Coordinates = {
         lat: Number(req.query.lat),
         lng: Number(req.query.lng)
@@ -22,7 +23,7 @@ solarRouter.get("/solar/closest-building-insights", async (req, res, next) => {
         });
 });
 
-solarRouter.get("/solar/solar-layers", async (req, res, next) => {
+solarRouter.get("/solar/solar-layers", validateRequestCoordinates, async (req, res, next) => {
     const radius: number = Number(req.query.radius);
     const coord: Coordinates = {
         lat: Number(req.query.lat),

@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 
 import { PORT } from "@/config";
-import { errLogger, errResponder, failSafeHandler } from "@/middlewares/error";
+import { errLogger, errResponder, failSafeHandler } from "@/middlewares/errorMapper";
 import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
 import solarRouter from "@/routes/solar";
