@@ -50,7 +50,7 @@ export async function getSolarLayers(coord: LatLng, radius: number) {
 export async function getGeotiff(url: string) {
     return await axios({
         method: "get",
-        responseType: 'arraybuffer',
+        responseType: "arraybuffer",
         url: url,
         params: {
             key: GOOGLE_KEY
