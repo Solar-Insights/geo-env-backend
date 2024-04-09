@@ -44,8 +44,9 @@ export class ServerFactory {
     }
 
     private createServerWithDefaultValues(app: Express) {
-        return app.listen(PORT, () => {
-            console.log(`server is open at http://localhost:${PORT}`);
+        const portToUse = Number.isNaN(PORT) ? 8080 : PORT;
+        return app.listen(portToUse, () => {
+            console.log(`server is open on port ${portToUse}`);
         });
     }
 
