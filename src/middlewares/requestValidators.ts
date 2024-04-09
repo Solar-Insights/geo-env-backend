@@ -16,4 +16,6 @@ export const validateRequestCoordinates: RequestHandler = (req, res, next) => {
             )
         );
     }
+    
+    next();
 };
