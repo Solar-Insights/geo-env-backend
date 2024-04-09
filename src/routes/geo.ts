@@ -21,6 +21,8 @@ geoRouter.get("/geo/geocoding", async (req, res, next) => {
 });
 
 geoRouter.get("/geo/reverse-geocoding", validateRequestCoordinates, async (req, res, next) => {
+    console.log("reverse geocoding");
+    console.log(req);
     const coord: Coordinates = {
         lat: Number(req.query.lat),
         lng: Number(req.query.lng)
