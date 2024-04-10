@@ -6,7 +6,7 @@ import { validateRequestCoordinates, authRequiredPermissions } from "@/middlewar
 
 const solarRouter = express.Router();
 
-solarRouter.get("/solar/closest-building-insights", authRequiredPermissions(["read:solar-data"]), validateRequestCoordinates, async (req, res, next) => {
+solarRouter.get("/solar/closest-building-insights", validateRequestCoordinates, async (req, res, next) => {
     const coord: Coordinates = {
         lat: Number(req.query.lat),
         lng: Number(req.query.lng)
@@ -23,7 +23,7 @@ solarRouter.get("/solar/closest-building-insights", authRequiredPermissions(["re
         });
 });
 
-solarRouter.get("/solar/solar-layers", authRequiredPermissions(["read:solar-data"]), validateRequestCoordinates, async (req, res, next) => {
+solarRouter.get("/solar/solar-layers", validateRequestCoordinates, async (req, res, next) => {
     const radius: number = Number(req.query.radius);
     const coord: Coordinates = {
         lat: Number(req.query.lat),
@@ -41,7 +41,7 @@ solarRouter.get("/solar/solar-layers", authRequiredPermissions(["read:solar-data
         });
 });
 
-solarRouter.get("/solar/geotiff", authRequiredPermissions(["read:solar-data"]), async (req, res, next) => {
+solarRouter.get("/solar/geotiff", async (req, res, next) => {
     const url = decodeURIComponent(req.query.url as string);
 
     await getGeotiff(url)

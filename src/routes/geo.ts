@@ -6,7 +6,7 @@ import { validateRequestCoordinates, authRequiredPermissions } from "@/middlewar
 
 const geoRouter = express.Router();
 
-geoRouter.get("/geo/geocoding", authRequiredPermissions(["read:geo-data"]), async (req, res, next) => {
+geoRouter.get("/geo/geocoding", async (req, res, next) => {
     const formattedAddress = req.query.address as string;
 
     await getGeocoding(formattedAddress)
@@ -20,7 +20,7 @@ geoRouter.get("/geo/geocoding", authRequiredPermissions(["read:geo-data"]), asyn
         });
 });
 
-geoRouter.get("/geo/reverse-geocoding", authRequiredPermissions(["read:geo-data"]), validateRequestCoordinates, async (req, res, next) => {
+geoRouter.get("/geo/reverse-geocoding", validateRequestCoordinates, async (req, res, next) => {
     const coord: Coordinates = {
         lat: Number(req.query.lat),
         lng: Number(req.query.lng)
