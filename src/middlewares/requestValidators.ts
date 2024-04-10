@@ -1,6 +1,14 @@
 import { InvalidParameterError } from "@/middlewares/customErrors";
 import { RequestHandler } from "express";
+import { claimIncludes } from "express-oauth2-jwt-bearer";
 import { Coordinates, validCoordinates } from "geo-env-typing/geo";
+
+export const authRequiredPermissions = (permission: string | string[]) => {
+    if (typeof permission === 'string') {
+      permission = [permission]
+    }
+    return claimIncludes('permissions', ...permission)
+  }
 
 export const validateRequestCoordinates: RequestHandler = (req, res, next) => {
     const coord: Coordinates = {
