@@ -1,6 +1,6 @@
 import { ServerFactory } from "@/serverFactory";
 
-const factory: ServerFactory = ServerFactory.createFactory().createApp()
+export const serverFactory: ServerFactory = ServerFactory.createFactory().createApp()
     .withAuth()
     .withDefaultMiddlewares()
     .withAllRouters()

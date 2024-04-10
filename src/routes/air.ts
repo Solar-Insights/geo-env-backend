@@ -2,11 +2,11 @@ import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
 import { getAirQualityData } from "@/api/air";
 import { ApiError } from "@/middlewares/customErrors";
-import { validateRequestCoordinates } from "@/middlewares/requestValidators";
+import { validateRequestCoordinates, authRequiredPermissions } from "@/middlewares/requestValidators";
 
 const airRouter = express.Router();
 
-airRouter.get("/air/air-quality-data", validateRequestCoordinates, async (req, res, next) => {
+airRouter.get("/air/air-quality-data", authRequiredPermissions(["read:air-data"]), validateRequestCoordinates, async (req, res, next) => {
     const coord: Coordinates = {
         lat: Number(req.query.lat),
         lng: Number(req.query.lng)
