@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
 
-import { PORT, BACKEND_URL, AUTH0_BASE_URL } from "@/config";
+import { PORT, BACKEND_URL, AUTH0_BASE_URL, AUTH_MODE } from "@/config";
 import { errLogger, errResponder, failSafeHandler } from "@/middlewares/errorMapper";
 import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
@@ -29,12 +29,16 @@ export class ServerFactory {
     }
 
     public withAuth() {
-        if (this.canUseAuth0()) {
-            console.log("setting up auth0..");
-            const auth0Middleware = this.makeAuth0Middleware();
-            this.app.use(auth0Middleware);
+        console.log("setting up auth0..");
+        if (AUTH_MODE) {
+            if (this.canUseAuth0()) {
+                const auth0Middleware = this.makeAuth0Middleware();
+                this.app.use(auth0Middleware);
+            } else {
+                console.log("could not find the required environment variables to setup up auth0");
+            }
         } else {
-            console.log("did not setup auth0..");
+            console.log("no auth mode detected: aborting the setup of auth0..");
         }
 
         return this;
@@ -59,6 +63,14 @@ export class ServerFactory {
         console.log("setting up body parser..");
         this.app.use(bodyParser.json());
 
+        return this;
+    }
+
+    public withAllRouters() {
+        this.withHealthRouter();
+        this.withGeoRouter();
+        this.withSolarRouter();
+        this.withAirRouter();
         return this;
     }
 
