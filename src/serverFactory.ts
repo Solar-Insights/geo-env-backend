@@ -9,7 +9,6 @@ import { errLogger, errResponder, failSafeHandler } from "@/middlewares/errorMap
 import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
 import solarRouter from "@/routes/solar";
-import airRouter from "@/routes/air";
 
 export class ServerFactory {
     app!: Express;
@@ -70,7 +69,6 @@ export class ServerFactory {
         this.withHealthRouter();
         this.withGeoRouter();
         this.withSolarRouter();
-        this.withAirRouter();
         return this;
     }
 
@@ -89,12 +87,6 @@ export class ServerFactory {
     public withSolarRouter() {
         console.log("setting up solar router..");
         this.app.use(solarRouter);
-        return this;
-    }
-
-    public withAirRouter() {
-        console.log("setting up air router..");
-        this.app.use(airRouter);
         return this;
     }
 

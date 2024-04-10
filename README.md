@@ -1,6 +1,6 @@
 # Project
 
-geo-env-backend is an Express + TypeScript project aiming to provide an easy-to-use and easy-to-setup server-template for developpers wanting to use geographic, solar and air-quality data. The first version of the project is still under development and uses solely the different Google APIs.
+geo-env-backend is an Express + TypeScript project aiming to provide an easy-to-use and easy-to-setup server-template for developpers wanting to use geographic and solar data. The first version of the project is still under development and uses solely the different Google APIs.
 
 # Running the Express server
 
@@ -8,7 +8,7 @@ The following section describes a step-by-step guide to launch your server local
 
 1. Install all dependencies using `npm install`
 2. In a `.env` file at the route of the project, setup all the variables found inside the `src/config.ts` file
-    - The `GOOGLE_KEY` should have authorisation to use the Air Quality, Geocoding, Places and Solar API for all routes to be available. For local use, application restriction is not absolutely required, **as long as you keep your API key secure**. For production use, see the next section regarding deployment
+    - The `GOOGLE_KEY` should have authorisation to use the Geocoding, Places and Solar API for all routes to be available. For local use, application restriction is not absolutely required, **as long as you keep your API key secure**. For production use, see the next section regarding deployment
 3. Run `npm run start`
 4. HTTP requests can now be sent to the routes provided in `src/routes/*` to retrieve data
 5. A `500` status will be returned if an error was encountered at any point during the request
