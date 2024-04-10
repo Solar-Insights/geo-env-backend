@@ -1,3 +1,12 @@
 import { ServerFactory } from "@/serverFactory";
 
-const { app, server } = ServerFactory.create().withDefaultValues().build();
+const factory: ServerFactory = ServerFactory.createFactory().createApp()
+    .withAuth()
+    .withDefaultMiddlewares()
+    .withHealthRouter()
+    .withSolarRouter()
+    .withAirRouter()
+    .withErrorMiddlewares()
+    .createServer();
+
+
