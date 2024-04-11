@@ -8,7 +8,7 @@ export const authRequiredPermissions = (permission: string | string[]) => {
       permission = [permission]
     }
     return claimIncludes('permissions', ...permission)
-  }
+}
 
 export const validateRequestCoordinates: RequestHandler = (req, res, next) => {
     const coord: Coordinates = {
