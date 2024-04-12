@@ -18,9 +18,10 @@ solarRouter.get(
 
         await getClosestBuildingInsights(coord)
             .then((data) => {
-                res.status(200).json({
+                res.status(200).locals.data = {
                     buildingInsights: data
-                });
+                };
+                next();
             })
             .catch((error) => {
                 next(new ApiError(req.url));
@@ -41,9 +42,10 @@ solarRouter.get(
 
         await getSolarLayers(coord, radius)
             .then((data) => {
-                res.status(200).json({
+                res.status(200).locals.data = {
                     solarLayers: data
-                });
+                };
+                next();
             })
             .catch((error) => {
                 next(new ApiError(req.url));
@@ -59,9 +61,10 @@ solarRouter.get(
 
         await getGeotiff(url)
             .then((data) => {
-                res.status(200).json({
+                res.status(200).locals.data = {
                     geotiff: data
-                });
+                };
+                next();
             })
             .catch((error) => {
                 next(new ApiError(req.url));

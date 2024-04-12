@@ -32,5 +32,6 @@ function getAccessTokenFromRequest(req: Request) {
 }
 
 export const userResponseHandler: RequestHandler = (req, res, next) => {
-    
+    const data = res.locals.data;
+    res.json(data);
 };

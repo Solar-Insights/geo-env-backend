@@ -14,9 +14,10 @@ geoRouter.get(
 
         await getGeocoding(formattedAddress)
             .then((data) => {
-                res.status(200).json({
+                res.status(200).locals.data = {
                     coordinates: data
-                });
+                };
+                next();
             })
             .catch((error) => {
                 next(new ApiError(req.url));
@@ -36,9 +37,10 @@ geoRouter.get(
 
         await getReverseGeocoding(coord)
             .then((data) => {
-                res.status(200).json({
+                res.status(200).locals.data = {
                     address: data
-                });
+                };
+                next();
             })
             .catch((error) => {
                 next(new ApiError(req.url));
