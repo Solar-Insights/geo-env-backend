@@ -50,3 +50,12 @@ export class InvalidParameterError extends ExpressError {
         super(url, "INVALID_PARAMETER_ERROR", message, 400);
     }
 }
+
+export class InvalidTokenFormatError extends ExpressError {
+    constructor(
+        url: string,
+        message: string
+    ) {
+        super(url, "INVALID_TOKEN_FORMAT_ERROR", message, 401);
+    }
+}
