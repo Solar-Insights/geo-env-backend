@@ -6,35 +6,46 @@ import { validateRequestCoordinates, authRequiredPermissions, userRequestLogger 
 
 const geoRouter = express.Router();
 
-geoRouter.get("/geo/geocoding", authRequiredPermissions(["read:geo-data"]), userRequestLogger, async (req, res, next) => {
-    const formattedAddress = req.query.address as string;
+geoRouter.get(
+    "/geo/geocoding",
+    authRequiredPermissions(["read:geo-data"]),
+    userRequestLogger,
+    async (req, res, next) => {
+        const formattedAddress = req.query.address as string;
 
-    await getGeocoding(formattedAddress)
-        .then((data) => {
-            res.status(200).json({
-                coordinates: data
+        await getGeocoding(formattedAddress)
+            .then((data) => {
+                res.status(200).json({
+                    coordinates: data
+                });
+            })
+            .catch((error) => {
+                next(new ApiError(req.url));
             });
-        })
-        .catch((error) => {
-            next(new ApiError(req.url));
-        });
-});
+    }
+);
 
-geoRouter.get("/geo/reverse-geocoding", authRequiredPermissions(["read:geo-data"]), validateRequestCoordinates, userRequestLogger, async (req, res, next) => {
-    const coord: Coordinates = {
-        lat: Number(req.query.lat),
-        lng: Number(req.query.lng)
-    };
+geoRouter.get(
+    "/geo/reverse-geocoding",
+    authRequiredPermissions(["read:geo-data"]),
+    validateRequestCoordinates,
+    userRequestLogger,
+    async (req, res, next) => {
+        const coord: Coordinates = {
+            lat: Number(req.query.lat),
+            lng: Number(req.query.lng)
+        };
 
-    await getReverseGeocoding(coord)
-        .then((data) => {
-            res.status(200).json({
-                address: data
+        await getReverseGeocoding(coord)
+            .then((data) => {
+                res.status(200).json({
+                    address: data
+                });
+            })
+            .catch((error) => {
+                next(new ApiError(req.url));
             });
-        })
-        .catch((error) => {
-            next(new ApiError(req.url));
-        });
-});
+    }
+);
 
 export default geoRouter;

@@ -51,8 +51,8 @@ export class ServerFactory {
         return auth({
             audience: BACKEND_URL,
             issuerBaseURL: AUTH0_BASE_URL,
-            tokenSigningAlg: 'RS256'
-        });;
+            tokenSigningAlg: "RS256"
+        });
     }
 
     public withDefaultMiddlewares() {
@@ -105,7 +105,7 @@ export class ServerFactory {
         } else {
             console.log("no app has been setup yet");
         }
-        
+
         return this;
     }
 }
