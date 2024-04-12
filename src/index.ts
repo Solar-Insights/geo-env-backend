@@ -6,5 +6,3 @@ export const serverFactory: ServerFactory = ServerFactory.createFactory().create
     .withAllRouters()
     .withErrorMiddlewares()
     .createServer();
-
-
