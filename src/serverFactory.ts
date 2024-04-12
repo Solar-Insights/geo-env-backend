@@ -3,12 +3,12 @@ import { Server } from "http";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
-
 import { PORT, BACKEND_URL, AUTH0_BASE_URL, AUTH_MODE } from "@/config";
 import { errLogger, errResponder, failSafeHandler } from "@/middlewares/errorMapper";
 import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
 import solarRouter from "@/routes/solar";
+import { userRequestLogger, userResponseHandler } from "./middlewares/responseHandlers";
 
 export class ServerFactory {
     app!: Express;
@@ -87,6 +87,12 @@ export class ServerFactory {
     public withSolarRouter() {
         console.log("setting up solar router..");
         this.app.use(solarRouter);
+        return this;
+    }
+
+    public withResponseHandlers() {
+        console.log("setting up response middlewares..");
+        this.app.use(userRequestLogger, userResponseHandler);
         return this;
     }
 

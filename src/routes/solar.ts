@@ -2,7 +2,7 @@ import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
 import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/api/solar";
 import { ApiError } from "@/middlewares/customErrors";
-import { validateRequestCoordinates, authRequiredPermissions, userRequestLogger } from "@/middlewares/requestHandlers";
+import { validateRequestCoordinates, authRequiredPermissions } from "@/middlewares/requestHandlers";
 
 const solarRouter = express.Router();
 
@@ -10,7 +10,6 @@ solarRouter.get(
     "/solar/closest-building-insights",
     authRequiredPermissions(["read:solar-data"]),
     validateRequestCoordinates,
-    userRequestLogger,
     async (req, res, next) => {
         const coord: Coordinates = {
             lat: Number(req.query.lat),
@@ -33,7 +32,6 @@ solarRouter.get(
     "/solar/solar-layers",
     authRequiredPermissions(["read:solar-data"]),
     validateRequestCoordinates,
-    userRequestLogger,
     async (req, res, next) => {
         const radius: number = Number(req.query.radius);
         const coord: Coordinates = {
@@ -56,7 +54,6 @@ solarRouter.get(
 solarRouter.get(
     "/solar/geotiff",
     authRequiredPermissions(["read:solar-data"]),
-    userRequestLogger,
     async (req, res, next) => {
         const url = decodeURIComponent(req.query.url as string);
 

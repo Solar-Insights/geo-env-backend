@@ -2,14 +2,13 @@ import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
 import { getGeocoding, getReverseGeocoding } from "@/api/geo";
 import { ApiError } from "@/middlewares/customErrors";
-import { validateRequestCoordinates, authRequiredPermissions, userRequestLogger } from "@/middlewares/requestHandlers";
+import { validateRequestCoordinates, authRequiredPermissions } from "@/middlewares/requestHandlers";
 
 const geoRouter = express.Router();
 
 geoRouter.get(
     "/geo/geocoding",
     authRequiredPermissions(["read:geo-data"]),
-    userRequestLogger,
     async (req, res, next) => {
         const formattedAddress = req.query.address as string;
 
@@ -29,7 +28,6 @@ geoRouter.get(
     "/geo/reverse-geocoding",
     authRequiredPermissions(["read:geo-data"]),
     validateRequestCoordinates,
-    userRequestLogger,
     async (req, res, next) => {
         const coord: Coordinates = {
             lat: Number(req.query.lat),
