@@ -41,9 +41,9 @@ export const userRequestLogger: RequestHandler = (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = jwtDecode(accessToken);
 
     const userEmail = decodedAccessToken.email;
-    const ressourceUrl = req.baseUrl;
+    const ressourcePath = `${req.method} ${req.route.path}`;
     console.log(`user: ${userEmail}`);
-    console.log(`accessing ressource: ${ressourceUrl}\n`);
+    console.log(`accessing ressource: ${ressourcePath}\n`);
 
     next();
 };
