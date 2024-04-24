@@ -22,7 +22,7 @@ export class ExpressError extends Error {
     public toObject() {
         return {
             error: this.error,
-            endpoint: this.url,
+            url: this.url,
             message: this.message,
             code: this.code
         };
