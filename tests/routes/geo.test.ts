@@ -1,78 +1,70 @@
-import { describe, test, assert, vi } from "vitest";
+import { describe, test, assert } from "vitest";
 import request from "supertest";
-import { ServerFactory } from "@/serverFactory";
-import { dummyLatLng } from "geo-env-typing/geo";
-import { UtilGenerator, StringGenerator } from "geo-env-typing/generators";
-import { ApiError } from "@/middlewares/customErrors";
+import { LatLng } from "geo-env-typing/geo";
+import { serverFactory } from "@/index";
+import { validCoordinates } from "geo-env-typing/geo"; 
+import { getAuthTokenForTest } from "../auth/auth";
 
-const { app } = ServerFactory.create().onTestEnvironnement().withDefaultValues().build();
-const geo = await import("@/api/geo");
-vi.mock("@/services/geo");
+const app = serverFactory.app;
+const token = await getAuthTokenForTest();
+
+function getGeocodingEndpoint(address: string) {
+    return `/geo/geocoding?${new URLSearchParams({ address: address }).toString()}`;
+}
 
 describe("GET /geo/geocoding", async () => {
-    const dummyCoord = dummyLatLng();
-    const dummyAddress = StringGenerator.generateWord();
-    const url = `/geo/geocoding?${new URLSearchParams({ address: dummyAddress }).toString()}`;
-    const apiError = new ApiError(url);
-
-    test("whenRequestIsSucessfull, then returns 200 with coordinates", async () => {
-        geo.getGeocoding = vi.fn().mockResolvedValue(dummyCoord);
+    test("given white house address, when request is successfull, then returns 200 with valid coordinates", async () => {
+        const endpoint = getGeocodingEndpoint("The White House");
 
         return request(app)
-            .get(url)
+            .get(endpoint)
+            .set('Authorization', `Bearer ${token}`)
             .expect(200)
             .then((response) => {
-                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.coordinates, dummyCoord));
+                assert.isTrue(validCoordinates(response.body.coordinates));
             });
     });
 
-    test("whenRequestFails, then returns 500 with api error", () => {
-        geo.getGeocoding = vi
-            .fn()
-            .mockImplementation(() => {
-                throw apiError;
-            })
-            .mockRejectedValue({});
+    test("given invalid address, when request fails, then returns 500 with api error", () => {
+        const endpoint = getGeocodingEndpoint("THIS IS AN INVALID ADDRESS");
 
         return request(app)
-            .get(url)
+            .get(endpoint)
+            .set('Authorization', `Bearer ${token}`)
             .expect(500)
-            .then((response) => {
-                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, apiError.toObject()));
-            });
     });
 });
 
-describe("GET /geo/reverse-geocoding", async () => {
-    const dummyCoord = dummyLatLng();
-    const dummyAddress = StringGenerator.generateSentence();
-    const url = `/geo/reverse-geocoding?${new URLSearchParams(dummyCoord as any).toString()}`;
-    const apiError = new ApiError(url);
+function getReverseGeocodingEndpoint(coord: LatLng) {
+    return `/geo/reverse-geocoding?${new URLSearchParams(coord as any).toString()}`;
+}
 
-    test("whenRequestIsSucessfull, then returns 200 with address", async () => {
-        geo.getReverseGeocoding = vi.fn().mockResolvedValue(dummyAddress);
+describe("GET /geo/reverse-geocoding", async () => {
+    test("given white house coordinates, when request is successfull, then returns 200 with valid, non-empty string", async () => {
+        const endpoint = getReverseGeocodingEndpoint({
+            lat: 38.8977,
+            lng: 77.0365
+        });
 
         return request(app)
-            .get(url)
+            .get(endpoint)
+            .set('Authorization', `Bearer ${token}`)
             .expect(200)
             .then((response) => {
-                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.address, dummyAddress));
+                assert.isTrue(typeof response.body.address === "string");
+                assert.isTrue(response.body.address !== "")
             });
     });
 
-    test("whenRequestFails, then returns 500 with api error", () => {
-        geo.getReverseGeocoding = vi
-            .fn()
-            .mockImplementation(() => {
-                throw apiError;
-            })
-            .mockRejectedValue({});
+    test("given invalid coordinates, when request fails, then returns 400", () => {
+        const endpoint = getReverseGeocodingEndpoint({
+            lat: 1000,
+            lng: 1000
+        });
 
         return request(app)
-            .get(url)
-            .expect(500)
-            .then((response) => {
-                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, apiError.toObject()));
-            });
+            .get(endpoint)
+            .set('Authorization', `Bearer ${token}`)
+            .expect(400)
     });
 });
