@@ -53,23 +53,19 @@ solarRouter.get(
     }
 );
 
-solarRouter.get(
-    "/solar/geotiff",
-    authRequiredPermissions(["read:solar-data"]),
-    async (req, res, next) => {
-        const url = decodeURIComponent(req.query.url as string);
+solarRouter.get("/solar/geotiff", authRequiredPermissions(["read:solar-data"]), async (req, res, next) => {
+    const url = decodeURIComponent(req.query.url as string);
 
-        await getGeotiff(url)
-            .then((data) => {
-                res.status(200).locals.data = {
-                    geotiff: data
-                };
-                next();
-            })
-            .catch((error) => {
-                next(new ApiError(req.url));
-            });
-    }
-);
+    await getGeotiff(url)
+        .then((data) => {
+            res.status(200).locals.data = {
+                geotiff: data
+            };
+            next();
+        })
+        .catch((error) => {
+            next(new ApiError(req.url));
+        });
+});
 
 export default solarRouter;

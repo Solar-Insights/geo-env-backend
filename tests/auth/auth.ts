@@ -9,11 +9,11 @@ export async function getAuthTokenForTest() {
             "Content-Type": "application/json"
         },
         data: {
-            "client_id": AUTH0_TESTING_CLIENT_ID,
-            "client_secret": AUTH0_TESTING_CLIENT_SECRET,
-            "audience": BACKEND_URL,
-            "grant_type": "client_credentials"
-        },
+            client_id: AUTH0_TESTING_CLIENT_ID,
+            client_secret: AUTH0_TESTING_CLIENT_SECRET,
+            audience: BACKEND_URL,
+            grant_type: "client_credentials"
+        }
     })
         .then(async (response) => {
             console.log("successfuly acquired Auth Token for testing");
