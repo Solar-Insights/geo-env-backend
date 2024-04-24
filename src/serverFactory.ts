@@ -96,9 +96,15 @@ export class ServerFactory {
         return this;
     }
 
+    public withErrorLogger() {
+        console.log("setting up error logger..");
+        this.app.use(errLogger);
+        return this;
+    }
+
     public withErrorMiddlewares() {
         console.log("setting up error middlewares..");
-        this.app.use(errLogger, errResponder, failSafeHandler);
+        this.app.use(errResponder, failSafeHandler);
         return this;
     }
 
