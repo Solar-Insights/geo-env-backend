@@ -3,6 +3,7 @@ import { Coordinates } from "geo-env-typing/geo";
 import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/api/solar";
 import { ApiError } from "@/middlewares/customErrors";
 import { validateRequestCoordinates, authRequiredPermissions } from "@/middlewares/requestHandlers";
+import compression from "compression";
 
 const solarRouter = express.Router();
 
@@ -53,7 +54,7 @@ solarRouter.get(
     }
 );
 
-solarRouter.get("/solar/geotiff", authRequiredPermissions(["read:solar-data"]), async (req, res, next) => {
+solarRouter.get("/solar/geotiff", authRequiredPermissions(["read:solar-data"]), compression(), async (req, res, next) => {
     const url = decodeURIComponent(req.query.url as string);
 
     await getGeotiff(url)
