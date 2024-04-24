@@ -32,7 +32,7 @@ jobs:
         run: |
           New-Item .env
           echo GOOGLE_KEY=${{ secrets.GOOGLE_KEY }} >> .env
-          echo PORT=${{ secrets.PORT }} >> .env
+          echo AUTH_MODE=${{ secrets.AUTH_MODE }} >> .env
           echo BACKEND_URL=${{ secrets.BACKEND_URL }} >> .env
           echo AUTH0_BASE_URL=${{ secrets.AUTH0_BASE_URL }} >> .env
           echo AUTH0_TESTING_CLIENT_ID=${{ secrets.AUTH0_TESTING_CLIENT_ID }} >> .env
