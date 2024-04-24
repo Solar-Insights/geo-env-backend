@@ -21,6 +21,6 @@ export async function getAuthTokenForTest() {
             return token;
         })
         .catch((error) => {
-            console.log("Can't get Auth Token for testing");
+            console.log("Can't get Auth Token for testing", error.response.data);
         });
 }
