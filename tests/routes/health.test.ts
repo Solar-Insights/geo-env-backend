@@ -12,7 +12,7 @@ describe(`GET /health`, async () => {
     test("when request is sucessfull, then returns 200 with server is up message", async () => {
         return request(app)
             .get(url)
-            .set('Authorization', `Bearer ${token}`)
+            .set("Authorization", `Bearer ${token}`)
             .expect(200)
             .then((response) => {
                 assert.isTrue(response.body.status === "server is up");

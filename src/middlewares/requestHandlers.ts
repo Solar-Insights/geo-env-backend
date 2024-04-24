@@ -28,5 +28,5 @@ export function makeInvalidCoordError(url: string) {
     return new InvalidParameterError(
         url,
         "Coordinates should respect a certain range, and be numbers. Longitudes range between -180 and 180, and latitudes range between -90 and 90."
-    )
+    );
 }

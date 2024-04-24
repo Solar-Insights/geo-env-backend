@@ -58,7 +58,7 @@ export class InvalidTokenFormatError extends ExpressError {
 
 export function makeCoordinatesRangeError() {
     return new RangeError("Coordinates are not within of the permissible range of values");
-} 
+}
 
 export function rangeErrorToObject(rangeError: RangeError) {
     return {

@@ -2,7 +2,7 @@ import { describe, test, assert, vi } from "vitest";
 import request from "supertest";
 import { LatLng } from "geo-env-typing/geo";
 import { serverFactory } from "./factory";
-import { validCoordinates } from "geo-env-typing/geo"; 
+import { validCoordinates } from "geo-env-typing/geo";
 import { getAuthTokenForTest } from "../auth/auth";
 import { ApiError } from "@/middlewares/customErrors";
 import { UtilGenerator } from "geo-env-typing/generators";
@@ -21,7 +21,6 @@ const WHITE_HOUSE_COORDINATES: LatLng = {
     lng: 77.0365
 };
 
-
 function getGeocodingEndpoint(address: string) {
     return `/geo/geocoding?${new URLSearchParams({ address: address }).toString()}`;
 }
@@ -29,13 +28,11 @@ function getGeocodingEndpoint(address: string) {
 describe("GET /geo/geocoding", async () => {
     test("given white house address, when request is successfull, then returns 200 with valid coordinates", async () => {
         const endpoint = getGeocodingEndpoint(WHITE_HOUSE_ADDRESS);
-        geo.getGeocoding = vi
-            .fn()
-            .mockResolvedValue(WHITE_HOUSE_COORDINATES);
+        geo.getGeocoding = vi.fn().mockResolvedValue(WHITE_HOUSE_COORDINATES);
 
         return request(app)
             .get(endpoint)
-            .set('Authorization', `Bearer ${token}`)
+            .set("Authorization", `Bearer ${token}`)
             .expect(200)
             .then((response) => {
                 assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.coordinates, WHITE_HOUSE_COORDINATES));
@@ -55,7 +52,7 @@ describe("GET /geo/geocoding", async () => {
 
         return request(app)
             .get(endpoint)
-            .set('Authorization', `Bearer ${token}`)
+            .set("Authorization", `Bearer ${token}`)
             .expect(500)
             .then((response) => {
                 assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, new ApiError(endpoint).toObject()));
@@ -74,14 +71,13 @@ describe("GET /geo/geocoding", async () => {
 
         return request(app)
             .get(endpoint)
-            .set('Authorization', `Bearer ${token}`)
+            .set("Authorization", `Bearer ${token}`)
             .expect(500)
             .then((response) => {
                 assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, apiError.toObject()));
             });
     });
 });
-
 
 function getReverseGeocodingEndpoint(coord: LatLng) {
     return `/geo/reverse-geocoding?${new URLSearchParams(coord as any).toString()}`;
@@ -90,13 +86,11 @@ function getReverseGeocodingEndpoint(coord: LatLng) {
 describe("GET /geo/reverse-geocoding", async () => {
     test("given white house coordinates, when request is successfull, then returns 200 with valid, valid string", async () => {
         const endpoint = getReverseGeocodingEndpoint(WHITE_HOUSE_COORDINATES);
-        geo.getReverseGeocoding = vi
-            .fn()
-            .mockResolvedValue(WHITE_HOUSE_ADDRESS);
+        geo.getReverseGeocoding = vi.fn().mockResolvedValue(WHITE_HOUSE_ADDRESS);
 
         return await request(app)
             .get(endpoint)
-            .set('Authorization', `Bearer ${token}`)
+            .set("Authorization", `Bearer ${token}`)
             .expect(200)
             .then((response) => {
                 assert.isTrue(response.body.address === WHITE_HOUSE_ADDRESS);
@@ -108,10 +102,12 @@ describe("GET /geo/reverse-geocoding", async () => {
 
         return await request(app)
             .get(endpoint)
-            .set('Authorization', `Bearer ${token}`)
+            .set("Authorization", `Bearer ${token}`)
             .expect(400)
             .then((response) => {
-                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, makeInvalidCoordError(endpoint).toObject()));
+                assert.isTrue(
+                    UtilGenerator.identicalJsonStrings(response.body, makeInvalidCoordError(endpoint).toObject())
+                );
             });
     });
 
@@ -123,10 +119,12 @@ describe("GET /geo/reverse-geocoding", async () => {
 
         return await request(app)
             .get(endpoint)
-            .set('Authorization', `Bearer ${token}`)
+            .set("Authorization", `Bearer ${token}`)
             .expect(400)
             .then((response) => {
-                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, makeInvalidCoordError(endpoint).toObject()));
+                assert.isTrue(
+                    UtilGenerator.identicalJsonStrings(response.body, makeInvalidCoordError(endpoint).toObject())
+                );
             });
     });
 });
