@@ -9,11 +9,13 @@ import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
 import solarRouter from "@/routes/solar";
 import { userRequestLogger, userResponseHandler } from "./middlewares/responseHandlers";
+import { AddressInfo } from "net";
 
 export class ServerFactory {
     app!: Express;
     server!: Server;
     testEnv: Boolean = false;
+    port: Number = PORT;
 
     private constructor() {}
 
@@ -108,11 +110,18 @@ export class ServerFactory {
         return this;
     }
 
+    public withAnyAvailablePort() {
+        console.log("setting server port to 0");
+        this.port = 0;
+        return this;
+    }
+
     public createServer() {
         console.log("\ncreating server..");
         if (this.app !== undefined) {
-            this.server = this.app.listen(PORT, () => {
-                console.log(`express server open on port ${PORT}`);
+            this.server = this.app.listen(this.port, () => {
+                const usedPort = (this.server.address() as AddressInfo).port;
+                console.log(`express server open on port ${usedPort}`);
             });
         } else {
             console.log("no app has been setup yet");

@@ -4,7 +4,7 @@ import nock from "nock";
 import { GOOGLE_KEY } from "@/config";
 import { dummyBuildingInsights, dummyGeoTiff, dummySolarLayers } from "geo-env-typing/solar";
 import { dummyLatLng, LatLng } from "geo-env-typing/geo";
-import { UtilGenerator, NumberGenerator, StringGenerator } from "geo-env-typing/generators";
+import { UtilGenerator, NumberGenerator, StringGenerator } from "geo-env-typing/generator";
 import { ApiError } from "@/middlewares/customErrors";
 import { serverFactory } from "./factory";
 import { getAuthTokenForTest } from "../auth/auth";

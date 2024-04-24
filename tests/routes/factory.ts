@@ -7,4 +7,5 @@ export const serverFactory: ServerFactory = ServerFactory.createFactory()
     .withAllRouters()
     .withResponseHandlers()
     .withErrorMiddlewares()
+    .withAnyAvailablePort()
     .createServer();

@@ -5,9 +5,9 @@ import { serverFactory } from "./factory";
 import { validCoordinates } from "geo-env-typing/geo";
 import { getAuthTokenForTest } from "../auth/auth";
 import { ApiError } from "@/middlewares/customErrors";
-import { UtilGenerator } from "geo-env-typing/generators";
+import { UtilGenerator } from "geo-env-typing/generator";
 import { makeInvalidCoordError } from "@/middlewares/requestHandlers";
-import { makeCoordinatesRangeError, rangeErrorToObject } from "@/middlewares/customErrors";
+import { makeCoordinatesRangeError } from "@/middlewares/customErrors";
 
 const app = serverFactory.app;
 const token = await getAuthTokenForTest();
