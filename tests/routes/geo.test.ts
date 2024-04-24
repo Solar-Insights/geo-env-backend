@@ -7,6 +7,7 @@ import { getAuthTokenForTest } from "../auth/auth";
 import { ApiError } from "@/middlewares/customErrors";
 import { UtilGenerator } from "geo-env-typing/generators";
 import { makeInvalidCoordError } from "@/middlewares/requestHandlers";
+import { makeCoordinatesRangeError, rangeErrorToObject } from "@/middlewares/customErrors";
 
 const app = serverFactory.app;
 const token = await getAuthTokenForTest();
@@ -39,6 +40,25 @@ describe("GET /geo/geocoding", async () => {
             .then((response) => {
                 assert.isTrue(UtilGenerator.identicalJsonStrings(response.body.coordinates, WHITE_HOUSE_COORDINATES));
                 assert.isTrue(validCoordinates(response.body.coordinates));
+            });
+    });
+
+    test("given white house address, when request returns invalid coordinates, then returns 500", async () => {
+        const endpoint = getGeocodingEndpoint(WHITE_HOUSE_ADDRESS);
+        const rangeError = makeCoordinatesRangeError();
+        geo.getGeocoding = vi
+            .fn()
+            .mockImplementation(() => {
+                throw rangeError;
+            })
+            .mockRejectedValue({});
+
+        return request(app)
+            .get(endpoint)
+            .set('Authorization', `Bearer ${token}`)
+            .expect(500)
+            .then((response) => {
+                assert.isTrue(UtilGenerator.identicalJsonStrings(response.body, new ApiError(endpoint).toObject()));
             });
     });
 

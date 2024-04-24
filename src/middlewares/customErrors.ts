@@ -55,3 +55,15 @@ export class InvalidTokenFormatError extends ExpressError {
         super(url, "INVALID_TOKEN_FORMAT_ERROR", message, 401);
     }
 }
+
+export function makeCoordinatesRangeError() {
+    return new RangeError("Coordinates are not within of the permissible range of values");
+} 
+
+export function rangeErrorToObject(rangeError: RangeError) {
+    return {
+        message: rangeError.message,
+        name: rangeError.name,
+        stack: rangeError.stack
+    };
+}

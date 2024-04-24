@@ -1,6 +1,7 @@
 import { GOOGLE_KEY } from "@/config";
 import { LatLng, validCoordinates } from "geo-env-typing/geo";
 import { Client, GeocodeResponse, ReverseGeocodeResponse } from "@googlemaps/google-maps-services-js";
+import { makeCoordinatesRangeError } from "@/middlewares/customErrors";
 
 const client = new Client({});
 
@@ -20,7 +21,7 @@ export async function getGeocoding(formattedAddress: string) {
             if (validCoordinates(coord) && coord.lat != 0 && coord.lng != 0) {
                 return coord;
             } else {
-                throw new RangeError("Coordinates are not within of the permissible range of values");
+                throw makeCoordinatesRangeError();
             }
         })
         .catch((error) => {
