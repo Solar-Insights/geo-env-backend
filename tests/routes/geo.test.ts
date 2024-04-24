@@ -27,7 +27,7 @@ function getGeocodingEndpoint(address: string) {
 }
 
 describe("GET /geo/geocoding", async () => {
-    test("given white house address, when request is successfull, then returns 200 with valid coordinates", async () => {
+    test("given white house address, when request is successful, then returns 200 with valid coordinates", async () => {
         const endpoint = getGeocodingEndpoint(WHITE_HOUSE_ADDRESS);
         geo.getGeocoding = vi
             .fn()
@@ -88,7 +88,7 @@ function getReverseGeocodingEndpoint(coord: LatLng) {
 }
 
 describe("GET /geo/reverse-geocoding", async () => {
-    test("given white house coordinates, when request is successfull, then returns 200 with valid, valid string", async () => {
+    test("given white house coordinates, when request is successful, then returns 200 with valid, valid string", async () => {
         const endpoint = getReverseGeocodingEndpoint(WHITE_HOUSE_COORDINATES);
         geo.getReverseGeocoding = vi
             .fn()

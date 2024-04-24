@@ -33,7 +33,7 @@ function getBuildingInsightsNockInstance(coord: LatLng) {
 }
 
 describe(`GET /solar/closest-building-insights`, async () => {
-    test("given valid coordinates, when request is successfull, then returns 200 with building insights", async () => {
+    test("given valid coordinates, when request is successful, then returns 200 with building insights", async () => {
         const dummyData = dummyBuildingInsights();
         const dummyCoord = dummyLatLng();
         const endpoint = getClosestBuildingInsightsEndpoint(dummyCoord);
@@ -106,7 +106,7 @@ function getSolarLayersNockInstance(coord: LatLng, radius: number) {
 describe(`GET /solar/solar-layers`, async () => {
     const radius = NumberGenerator.generateDouble(100);
 
-    test("given valid coordinates, when request is successfull, then returns 200 with solar layers", () => {
+    test("given valid coordinates, when request is successful, then returns 200 with solar layers", () => {
         const dummyData = dummySolarLayers();
         const dummyCoord = dummyLatLng();
         const endpoint = getSolarLayersEndpoint({ lat: dummyCoord.lat, lng: dummyCoord.lng, radius: radius});
@@ -154,7 +154,7 @@ function getGeotiffNockInstance(url: string) {
 }
 
 describe(`GET /solar/geotiff`, async () => {
-    test("when request is successfull, then returns 200 with geotiff", async () => {
+    test("when request is successful, then returns 200 with geotiff", async () => {
         const dummyData = dummyGeoTiff();
         const dummyUrl = StringGenerator.generateUrl();
         const endpoint = getSolarGeotiffEndpoint(dummyUrl);

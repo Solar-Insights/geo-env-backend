@@ -16,7 +16,7 @@ export async function getAuthTokenForTest() {
         },
     })
         .then(async (response) => {
-            console.log("Successfully acquired Auth Token for testing");
+            console.log("successfuly acquired Auth Token for testing");
             const token = response.data.access_token;
             return token;
         })
