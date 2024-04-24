@@ -1,11 +1,7 @@
 import { BACKEND_URL, AUTH0_TESTING_CLIENT_ID, AUTH0_TESTING_CLIENT_SECRET } from "@/config";
 import axios from "axios";
 
-let token: string | undefined;
-
 export async function getAuthTokenForTest() {
-    if (token) return token;
-
     return await axios({
         method: "post",
         url: "https://dev-ubs32bgn56n1z15q.us.auth0.com/oauth/token",
@@ -21,7 +17,7 @@ export async function getAuthTokenForTest() {
     })
         .then(async (response) => {
             console.log("Successfully acquired Auth Token for testing");
-            token = response.data.access_token;
+            const token = response.data.access_token;
             return token;
         })
         .catch((error) => {
