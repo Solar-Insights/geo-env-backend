@@ -1,7 +1,7 @@
 import { supabase } from "@/db/init";
 import { InsertTeam, UpdateTeam } from "@/db/teams/types";
 
-export async function getTeamById(id: number) {
+export async function getTeamById(id: string) {
     const { data, error } = await supabase
         .from('teams')
         .select()
@@ -18,7 +18,7 @@ export async function createTeam(team: InsertTeam) {
     return { data, error };
 }
 
-export async function updateTeamById(team: UpdateTeam, id: number) {
+export async function updateTeamById(team: UpdateTeam, id: string) {
     const { data, error } = await supabase
         .from('teams')
         .update(team)
@@ -27,7 +27,7 @@ export async function updateTeamById(team: UpdateTeam, id: number) {
     return { data, error };
 }
 
-export async function deleteTeamById(id: number) {
+export async function deleteTeamById(id: string) {
     const { data, error } = await supabase
         .from('teams')
         .delete()

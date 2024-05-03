@@ -1,7 +1,7 @@
 import { supabase } from "@/db/init";
 import { InsertRequest, UpdateRequest } from "@/db/requests/types";
 
-export async function getRequestById(id: number) {
+export async function getRequestById(id: string) {
     const { data, error } = await supabase
         .from('requests')
         .select()
@@ -18,7 +18,7 @@ export async function createRequest(request: InsertRequest) {
     return { data, error };
 }
 
-export async function updateRequestById(request: UpdateRequest, id: number) {
+export async function updateRequestById(request: UpdateRequest, id: string) {
     const { data, error } = await supabase
         .from('requests')
         .update(request)
@@ -27,7 +27,7 @@ export async function updateRequestById(request: UpdateRequest, id: number) {
     return { data, error };
 }
 
-export async function deleteRequestById(id: number) {
+export async function deleteRequestById(id: string) {
     const { data, error } = await supabase
         .from('requests')
         .delete()
