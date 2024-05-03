@@ -8,7 +8,7 @@ import { errLogger, errResponder, failSafeHandler } from "@/middlewares/errorMap
 import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
 import solarRouter from "@/routes/solar";
-import { userRequestLogger, userResponseHandler } from "./middlewares/responseHandlers";
+import { userRequestLogger, userRequestBilling, userResponseHandler } from "./middlewares/responseHandlers";
 import { AddressInfo } from "net";
 
 export class ServerFactory {
@@ -89,6 +89,12 @@ export class ServerFactory {
     public withSolarRouter() {
         console.log("setting up solar router..");
         this.app.use(solarRouter);
+        return this;
+    }
+
+    public withBilling() {
+        console.log("setting up billing..");3
+        this.app.use(userRequestBilling);
         return this;
     }
 
