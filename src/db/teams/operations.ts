@@ -1,7 +1,7 @@
 import { supabase } from "@/db/init";
 import { InsertTeam, UpdateTeam } from "@/db/teams/types";
 
-export async function selectTeamById(id: number) {
+export async function getTeamById(id: number) {
     const { data, error } = await supabase
         .from('teams')
         .select()

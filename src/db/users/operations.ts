@@ -1,7 +1,7 @@
 import { supabase } from "@/db/init";
 import { InsertUser, UpdateUser } from "@/db/users/types";
 
-export async function selectUserById(id: number) {
+export async function getUserById(id: number) {
     const { data, error } = await supabase
         .from('users')
         .select()
