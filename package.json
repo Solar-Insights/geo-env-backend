@@ -7,6 +7,7 @@
     "scripts": {
         "start": "npx tsx src/index.ts",
         "test": "vitest run",
+        "supa-dev-env": "npx tsx src/db/supaDevEnv.ts",
         "format": "prettier --trailing-comma none --tab-width 4 --print-width 120 -uw --cache --ignore-path .prettierignore ."
     },
     "dependencies": {
