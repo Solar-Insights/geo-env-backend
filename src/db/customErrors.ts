@@ -25,9 +25,9 @@ export class DatabaseError extends Error {
 
 export class DatabasePostRequestValidationError extends DatabaseError {
     constructor(
-        error: "DATABASE_POST_REQUEST_VALIDATION_ERROR",
-        message: string = "An error was encountered when validating the response from the database."
+        message: string,
+        error: string = "DATABASE_POST_REQUEST_VALIDATION_ERROR"
     ) {
-        super(error, message=message);
+        super(error=error, message=message);
     }
 }
