@@ -14,12 +14,7 @@ export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
     const userId = decodedAccessToken.azp;
     const email = decodedAccessToken.email;
     
-    const { data, error } = await getUserByAuth0IdAndEmail(userId, email);
-
-    if (data === null || (data !== null && data.length === 0)) {
-        next(makeInvalidTokenErrorWithNotFoundUser(req.url));
-        return;
-    }
+    await getUserByAuth0IdAndEmail(userId, email); // Throws an error if not existant
 
     next();
 }
