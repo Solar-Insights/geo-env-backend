@@ -99,7 +99,13 @@ export class ServerFactory {
         return this;
     }
 
-    public withBilling() {
+    public withRequestLogger() {
+        console.log("setting up request logger..");3
+        this.app.use(userRequestLogger);
+        return this;
+    }
+
+    public withRequestBilling() {
         console.log("setting up billing..");3
         this.app.use(userRequestBilling);
         return this;
@@ -107,7 +113,7 @@ export class ServerFactory {
 
     public withResponseHandlers() {
         console.log("setting up response middlewares..");
-        this.app.use(userRequestLogger, userResponseHandler);
+        this.app.use(userResponseHandler);
         return this;
     }
 
