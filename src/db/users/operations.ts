@@ -1,11 +1,12 @@
 import { supabase } from "@/db/init";
 import { InsertUser, UpdateUser } from "@/db/users/types";
 
-export async function getUserById(id: number) {
+export async function getUserByAuth0IdAndEmail(auth0Id: string, email: string) {
     const { data, error } = await supabase
         .from('users')
         .select()
-        .eq("id", id);
+        .eq("auth0_id", auth0Id)
+        .eq("email", email);
 
         return { data, error };
 }
@@ -18,7 +19,7 @@ export async function createUser(user: InsertUser) {
     return { data, error };
 }
 
-export async function updateUserByAuth0Id(user: UpdateUser, auth0Id: number) {
+export async function updateUserByAuth0Id(user: UpdateUser, auth0Id: string) {
     const { data, error } = await supabase
         .from('users')
         .update(user)
@@ -27,7 +28,7 @@ export async function updateUserByAuth0Id(user: UpdateUser, auth0Id: number) {
         return { data, error };
 }
 
-export async function deleteUserByAuth0Id(auth0Id: number) {
+export async function deleteUserByAuth0Id(auth0Id: string) {
     const { data, error } = await supabase
         .from('users')
         .delete()
