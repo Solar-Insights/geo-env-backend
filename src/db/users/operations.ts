@@ -6,24 +6,32 @@ export async function selectUserById(id: number) {
         .from('users')
         .select()
         .eq("id", id);
+
+        return { data, error };
 }
 
 export async function createUser(user: InsertUser) {
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('users')
         .insert(user);
+
+    return { data, error };
 }
 
 export async function updateUserById(user: UpdateUser, id: number) {
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('users')
         .update(user)
         .eq("id", id);
+
+        return { data, error };
 }
 
 export async function deleteUserById(id: number) {
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('users')
         .delete()
         .eq("id", id);
+
+        return { data, error };
 }
