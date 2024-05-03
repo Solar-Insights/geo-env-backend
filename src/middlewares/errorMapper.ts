@@ -1,5 +1,6 @@
 import { ErrorRequestHandler } from "express";
 import { ExpressError, UnresolvedError } from "@/middlewares/customErrors";
+import { DatabaseError } from "@/db/customErrors";
 import { UnauthorizedError } from "express-oauth2-jwt-bearer";
 
 export const errLogger: ErrorRequestHandler = (err, req, res, next) => {
@@ -10,6 +11,7 @@ export const errLogger: ErrorRequestHandler = (err, req, res, next) => {
 export const errResponder: ErrorRequestHandler = (err, req, res, next) => {
     if (err instanceof ExpressError) res.status(err.code).json(err);
     else if (err instanceof UnauthorizedError) res.status(err.statusCode).json(err);
+    else if (err instanceof DatabaseError) res.status(err.code).json(err);
     else next(err);
 };
 

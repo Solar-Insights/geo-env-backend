@@ -8,7 +8,7 @@ export async function getRequestById(id: string) {
         .select()
         .eq("id", id);
 
-    new OperationValidator(data, error).validateGetSingleItemRequest(); 
+    new OperationValidator(data, error).validateGetSingleOrLessItemRequest(); 
 
     return data![0];
 }
