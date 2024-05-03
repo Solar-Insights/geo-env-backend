@@ -50,12 +50,6 @@ export class InvalidParameterError extends ExpressError {
     }
 }
 
-export class InvalidTokenFormatError extends ExpressError {
-    constructor(url: string, message: string) {
-        super(url, "INVALID_TOKEN_FORMAT_ERROR", message, 401);
-    }
-}
-
 export function makeCoordinatesRangeError() {
     return new RangeError("Coordinates are not within of the permissible range of values");
 }

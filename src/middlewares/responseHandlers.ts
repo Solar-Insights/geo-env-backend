@@ -1,4 +1,3 @@
-import { InvalidTokenFormatError } from "@/middlewares/customErrors";
 import { Request, RequestHandler } from "express";
 import { jwtDecode } from "jwt-decode";
 import { CustomAuth0JwtPayload } from "@/services/types";
@@ -6,7 +5,7 @@ import { CustomAuth0JwtPayload } from "@/services/types";
 export const userRequestLogger: RequestHandler = (req, res, next) => {
     const accessToken = getAccessTokenFromRequest(req);
     if (accessToken === null) {
-        next(new InvalidTokenFormatError(req.url, "Access token is of an invalid format."));
+        next();
         return;
     }
 
