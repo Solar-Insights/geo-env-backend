@@ -18,20 +18,20 @@ export async function createUser(user: InsertUser) {
     return { data, error };
 }
 
-export async function updateUserById(user: UpdateUser, id: number) {
+export async function updateUserByAuth0Id(user: UpdateUser, auth0Id: number) {
     const { data, error } = await supabase
         .from('users')
         .update(user)
-        .eq("id", id);
+        .eq("auth0_id", auth0Id);
 
         return { data, error };
 }
 
-export async function deleteUserById(id: number) {
+export async function deleteUserByAuth0Id(auth0Id: number) {
     const { data, error } = await supabase
         .from('users')
         .delete()
-        .eq("id", id);
+        .eq("auth0_id", auth0Id);
 
         return { data, error };
 }
