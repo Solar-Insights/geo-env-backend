@@ -8,7 +8,7 @@ export async function getUserByAuth0IdAndEmail(auth0Id: string, email: string) {
         .eq("auth0_id", auth0Id)
         .eq("email", email);
 
-        return { data, error };
+    return { data, error };
 }
 
 export async function createUser(user: InsertUser) {
@@ -25,7 +25,7 @@ export async function updateUserByAuth0Id(user: UpdateUser, auth0Id: string) {
         .update(user)
         .eq("auth0_id", auth0Id);
 
-        return { data, error };
+    return { data, error };
 }
 
 export async function deleteUserByAuth0Id(auth0Id: string) {
@@ -34,5 +34,5 @@ export async function deleteUserByAuth0Id(auth0Id: string) {
         .delete()
         .eq("auth0_id", auth0Id);
 
-        return { data, error };
+    return { data, error };
 }
