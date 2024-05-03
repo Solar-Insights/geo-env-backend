@@ -11,7 +11,7 @@ export async function getUserByAuth0IdAndEmail(auth0Id: string, email: string) {
 
     new OperationValidator(data, error).validateGetSingleItemRequest();
 
-    return { data, error };
+    return data![0];
 }
 
 export async function createUser(user: InsertUser) {
@@ -20,8 +20,6 @@ export async function createUser(user: InsertUser) {
         .insert(user);
 
     new OperationValidator(data, error).validateCreateRequest();
-
-    return { data, error };
 }
 
 export async function updateUserByAuth0Id(user: UpdateUser, auth0Id: string) {
@@ -31,8 +29,6 @@ export async function updateUserByAuth0Id(user: UpdateUser, auth0Id: string) {
         .eq("auth0_id", auth0Id);
 
     new OperationValidator(data, error).validateUpdateRequest();
-
-    return { data, error };
 }
 
 export async function deleteUserByAuth0Id(auth0Id: string) {
@@ -42,6 +38,4 @@ export async function deleteUserByAuth0Id(auth0Id: string) {
         .eq("auth0_id", auth0Id);
 
     new OperationValidator(data, error).validateDeleteRequest();
-
-    return { data, error };
 }

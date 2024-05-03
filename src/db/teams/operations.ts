@@ -10,7 +10,7 @@ export async function getTeamById(id: string) {
 
     new OperationValidator(data, error).validateGetSingleItemRequest();
 
-    return { data, error };
+    return data![0];
 }
 
 export async function createTeam(team: InsertTeam) {
@@ -19,8 +19,6 @@ export async function createTeam(team: InsertTeam) {
         .insert(team);
 
     new OperationValidator(data, error).validateCreateRequest();
-
-    return { data, error };
 }
 
 export async function updateTeamById(team: UpdateTeam, id: string) {
@@ -30,8 +28,6 @@ export async function updateTeamById(team: UpdateTeam, id: string) {
         .eq("id", id);
 
     new OperationValidator(data, error).validateUpdateRequest();
-
-    return { data, error };
 }
 
 export async function deleteTeamById(id: string) {
@@ -41,6 +37,4 @@ export async function deleteTeamById(id: string) {
         .eq("id", id);
 
     new OperationValidator(data, error).validateDeleteRequest();
-
-    return { data, error };
 }

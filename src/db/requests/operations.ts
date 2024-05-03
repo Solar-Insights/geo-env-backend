@@ -10,7 +10,7 @@ export async function getRequestById(id: string) {
 
     new OperationValidator(data, error).validateGetSingleItemRequest(); 
 
-    return { data, error };
+    return data![0];
 }
 
 export async function createRequest(request: InsertRequest) {
@@ -19,8 +19,6 @@ export async function createRequest(request: InsertRequest) {
         .insert(request);
 
     new OperationValidator(data, error).validateCreateRequest();
-
-    return { data, error };
 }
 
 export async function updateRequestById(request: UpdateRequest, id: string) {
@@ -30,8 +28,6 @@ export async function updateRequestById(request: UpdateRequest, id: string) {
         .eq("id", id);
 
     new OperationValidator(data, error).validateUpdateRequest();
-
-    return { data, error };
 }
 
 export async function deleteRequestById(id: string) {
@@ -41,6 +37,4 @@ export async function deleteRequestById(id: string) {
         .eq("id", id);
 
     new OperationValidator(data, error).validateDeleteRequest();
-
-    return { data, error };
 }
