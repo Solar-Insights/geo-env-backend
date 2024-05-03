@@ -8,8 +8,9 @@ import { errLogger, errResponder, failSafeHandler } from "@/middlewares/errorMap
 import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
 import solarRouter from "@/routes/solar";
-import { userRequestLogger, userRequestBilling, userResponseHandler } from "./middlewares/responseHandlers";
+import { userRequestLogger, userRequestBilling, userResponseHandler } from "@/middlewares/responseHandlers";
 import { AddressInfo } from "net";
+import { existingSupabaseUser } from "@/middlewares/requestHandlers";
 
 export class ServerFactory {
     app!: Express;
@@ -26,6 +27,12 @@ export class ServerFactory {
     public createApp() {
         console.log("creating app..");
         this.app = express();
+        return this;
+    }
+
+    public withSupabaseUserExistenceValidation() {
+        console.log("setting up supabase user existence validation..")
+        this.app.use(existingSupabaseUser);
         return this;
     }
 
