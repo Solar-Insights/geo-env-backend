@@ -6,7 +6,7 @@ const userRouter = express.Router();
 
 userRouter.get(
     "/user/my-organization",
-    authRequiredPermissions(["read:organization-user-access"]),
+    // authRequiredPermissions(["read:organization-user-access"]),
     async (req, res, next) => {
         res.status(200).locals.data = {
             myOrganization: {
@@ -26,19 +26,21 @@ userRouter.get(
                     },
                     {
                         created_date: "2024-04-30",
-                        email: "user3@example.com",
+                        email: "mathisbeaudoin15@hotmail.com",
                         name: "Bob Johnson",
                         avatar: "https://s.gravatar.com/avatar/ee05b160c94adaa5c69e28f130fd4b06?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fma.png"
                     }
                 ]
             }
         };
+
+        next();
     }
 );
 
 userRouter.get(
     "/user/my-organization/members",
-    authRequiredPermissions(["read:organization-admin-access"]),
+    // authRequiredPermissions(["read:organization-admin-access"]),
     async (req, res, next) => {
         res.status(200).locals.data = {
             myOrganizationMembers: [
@@ -104,12 +106,14 @@ userRouter.get(
                 }
             ]
         };
+
+        next();
     }
 );
 
 userRouter.post(
     "/user/my-organization/members", 
-    authRequiredPermissions(["write:organization-admin-access"]), 
+    // authRequiredPermissions(["write:organization-admin-access"]), 
     async (req, res, next) => {
         const body = req.body;
 
@@ -123,15 +127,19 @@ userRouter.post(
         res.status(201).locals.data = {
             myOrganizationMember: newOrganizationMember
         }
+
+        next();
 });
 
 userRouter.delete(
     "/user/my-organization/members", 
-    authRequiredPermissions(["write-organization-admin-access"]), 
+    // authRequiredPermissions(["write-organization-admin-access"]), 
     async (req, res, next) => {
         const body = req.body;
 
         res.status(204);
+
+        next();
 });
 
 export default userRouter;
