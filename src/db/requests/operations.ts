@@ -30,11 +30,11 @@ export async function updateRequestById(request: UpdateRequest, id: string) {
     new OperationValidator(data, error).validateUpdateRequest();
 }
 
-export async function deleteRequestById(id: string) {
-    const { data, error } = await supabase
-        .from('requests')
-        .delete()
-        .eq("id", id);
+// export async function deleteRequestById(id: string) {
+//     const { data, error } = await supabase
+//         .from('requests')
+//         .delete()
+//         .eq("id", id);
 
-    new OperationValidator(data, error).validateDeleteRequest();
-}
+//     new OperationValidator(data, error).validateDeleteRequest();
+// }
