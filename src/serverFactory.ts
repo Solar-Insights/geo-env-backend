@@ -8,6 +8,7 @@ import { errLogger, errResponder, failSafeHandler } from "@/middlewares/errorMap
 import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
 import solarRouter from "@/routes/solar";
+import userRouter from "@/routes/user";
 import { userRequestLogger, userRequestBilling, userResponseHandler } from "@/middlewares/responseHandlers";
 import { AddressInfo } from "net";
 import { existingSupabaseUser } from "@/middlewares/requestHandlers";
@@ -78,6 +79,7 @@ export class ServerFactory {
         this.withHealthRouter();
         this.withGeoRouter();
         this.withSolarRouter();
+        this.withUserRouter();
         return this;
     }
 
@@ -96,6 +98,12 @@ export class ServerFactory {
     public withSolarRouter() {
         console.log("setting up solar router..");
         this.app.use(solarRouter);
+        return this;
+    }
+
+    public withUserRouter() {
+        console.log("setting up user router..")
+        this.app.use(userRouter);
         return this;
     }
 
