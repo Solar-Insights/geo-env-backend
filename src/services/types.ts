@@ -5,3 +5,15 @@ export interface CustomAuth0JwtPayload extends JwtPayload {
     email: string;
     azp: string
 }
+
+export type MyOrganization = {
+    name: string,
+    admins: MyOrganizationMember[]
+};
+
+export type MyOrganizationMember = {
+    created_date: string;
+    email: string;
+    name: string;
+    avatar: string;
+};
