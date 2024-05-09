@@ -44,8 +44,8 @@ export async function getAllTheTeamAdmins(teamId: string) {
     .from('users')
     .select()
     .eq("team_id", teamId)
-    .eq("is_deleted", false)
-    .eq("is_admin", true);
+    .eq("is_admin", true)
+    .eq("is_deleted", false);
 
     new OperationValidator(data, error).validateGetSingleOrMoreItemRequest();
 

@@ -20,7 +20,7 @@ export class OperationValidator {
     }
 
     private expectsOneOrMoreItem() {
-        if (this.data!.length !== 0) 
+        if (this.data!.length === 0) 
             throw new DatabasePostRequestValidationError("Expected at least one item to be returned from the request to the database.");
         return this; 
     }
