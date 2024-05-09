@@ -49,8 +49,8 @@ export async function addMemberToMyOrganization(decodedAccessToken: CustomAuth0J
     await createUser(newMember);
 
     const newlyCreatedMember = await getUserByEmail(organizationMemberPayload.email);
-
-    return newlyCreatedMember;
+    const newlyCreatedMemberDTO = databaseMemberToClientMember(newlyCreatedMember);
+    return newlyCreatedMemberDTO;
 }
 
 export async function deleteMyOrganizationMember(decodedAccessToken: CustomAuth0JwtPayload, memberToDelete: MyOrganizationMember) {

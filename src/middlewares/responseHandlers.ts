@@ -8,8 +8,7 @@ import { generateRandomUuid } from "@/db/utils";
 import { createRequest } from "@/db/requests/operations";
 
 export const userRequestLogger: RequestHandler = (req, res, next) => {
-    const accessToken = getAccessTokenFromRequest(req)!;
-    const decodedAccessToken: CustomAuth0JwtPayload = jwtDecode(accessToken);
+    const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     
     const email = decodedAccessToken.email;
     const userId = decodedAccessToken.azp;
@@ -45,7 +44,13 @@ export const userRequestBilling: RequestHandler = async (req, res, next) => {
     next();
 };
 
-export function getAccessTokenFromRequest(req: Request) {
+export function getDecodedAccessTokenFromRequest(req: Request) {
+    const accessToken = getAccessTokenFromRequest(req)!;
+    const decodedAccessToken: CustomAuth0JwtPayload = jwtDecode(accessToken);
+    return decodedAccessToken;
+}
+
+function getAccessTokenFromRequest(req: Request) {
     const authorization = req.headers.authorization;
     const bearerString = "Bearer ";
     if (authorization === undefined || !authorization.startsWith(bearerString)) {

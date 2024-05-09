@@ -5,11 +5,10 @@ import { RequestHandler } from "express";
 import { claimIncludes } from "express-oauth2-jwt-bearer";
 import { Coordinates, validCoordinates } from "geo-env-typing/geo";
 import { jwtDecode } from "jwt-decode";
-import { getAccessTokenFromRequest } from "@/middlewares/responseHandlers";
+import { getDecodedAccessTokenFromRequest } from "@/middlewares/responseHandlers";
 
 export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
-    const accessToken = getAccessTokenFromRequest(req)!;
-    const decodedAccessToken: CustomAuth0JwtPayload = jwtDecode(accessToken);
+    const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
     const email = decodedAccessToken.email;
     
