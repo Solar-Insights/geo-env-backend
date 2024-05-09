@@ -2,14 +2,12 @@
     - Run using:
     npx tsx src/db/test.ts
 */
-import { createTeam, deleteTeamById, getTeamById } from "@/db/teams/operations";
+import { createTeam, getTeamById } from "@/db/teams/operations";
 import { createUser, getUserByAuth0IdAndEmail } from "@/db/users/operations";
 
 const userId = "2m5fiinQSDYS5Zvw1K5SWJjGkKUSgANi";
 const userEmail = "mathisbeaudoin15@hotmail.com";
 const teamId = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Imc5dTZaYUdJbkk0YUM5bFpwMkM0UiJ9"
-
-await deleteTeamById(teamId)
 
 await createTeam({ 
     id: teamId,

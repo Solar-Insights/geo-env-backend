@@ -19,6 +19,12 @@ export class OperationValidator {
         return this;
     }
 
+    private expectsOneOrMoreItem() {
+        if (this.data!.length !== 0) 
+            throw new DatabasePostRequestValidationError("Expected at least one item to be returned from the request to the database.");
+        return this; 
+    }
+
     private expecteOneOrLessItem() {
         if (this.data!.length !== 0 && this.data!.length !== 1) 
             throw new DatabasePostRequestValidationError("Expected one item or less to be returned from the request to the database.");
@@ -35,6 +41,11 @@ export class OperationValidator {
         if (this.data !== null) 
             throw new DatabasePostRequestValidationError("Expected no data to be returned from the request to the database.");
         return this;
+    }
+
+    public validateGetSingleOrMoreItemRequest() {
+        this.expectsNonNullData();
+        this.expectsOneOrMoreItem();
     }
 
     public validateGetSingleOrLessItemRequest() {
