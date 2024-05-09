@@ -9,7 +9,7 @@ const solarRouter = express.Router();
 
 solarRouter.get(
     "/solar/closest-building-insights",
-    authRequiredPermissions(["read:solar-data"]),
+    authRequiredPermissions(["read:get-solar-data"]),
     validateRequestCoordinates,
     async (req, res, next) => {
         const coord: Coordinates = {
@@ -32,7 +32,7 @@ solarRouter.get(
 
 solarRouter.get(
     "/solar/solar-layers",
-    authRequiredPermissions(["read:solar-data"]),
+    authRequiredPermissions(["read:get-solar-data"]),
     validateRequestCoordinates,
     async (req, res, next) => {
         const radius: number = Number(req.query.radius);

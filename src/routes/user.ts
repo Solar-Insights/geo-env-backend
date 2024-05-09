@@ -9,7 +9,7 @@ const userRouter = express.Router();
 
 userRouter.get(
     "/user/my-organization",
-    // authRequiredPermissions(["read:organization-user-access"]),
+    authRequiredPermissions(["read:basic-user-management"]),
     async (req, res, next) => {
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
@@ -24,7 +24,7 @@ userRouter.get(
 
 userRouter.get(
     "/user/my-organization/members",
-    // authRequiredPermissions(["read:organization-admin-access"]),
+    authRequiredPermissions(["read:admin-user-management"]),
     async (req, res, next) => {
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
@@ -39,7 +39,7 @@ userRouter.get(
 
 userRouter.post(
     "/user/my-organization/members", 
-    // authRequiredPermissions(["write:organization-admin-access"]), 
+    authRequiredPermissions(["write:admin-user-management"]), 
     async (req, res, next) => {
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
         const body: CreateMyOrganizationMemberPayload = req.body;
@@ -54,7 +54,7 @@ userRouter.post(
 
 userRouter.delete(
     "/user/my-organization/members", 
-    // authRequiredPermissions(["write-organization-admin-access"]), 
+    authRequiredPermissions(["write:admin-user-management"]), 
     async (req, res, next) => {
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
         const body: MyOrganizationMember = req.body;
