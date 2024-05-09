@@ -3,7 +3,7 @@
     npx tsx src/db/test.ts
 */
 import { createTeam, getTeamById } from "@/db/teams/operations";
-import { createUser, getUserByAuth0IdAndEmail } from "@/db/users/operations";
+import { createUser, getUserByEmail } from "@/db/users/operations";
 
 const userId = "2m5fiinQSDYS5Zvw1K5SWJjGkKUSgANi";
 const userEmail = "mathisbeaudoin15@hotmail.com";
@@ -24,7 +24,7 @@ await createUser({
     team_id: teamId  
 })
 
-const user = await getUserByAuth0IdAndEmail(userId, userEmail);
+const user = await getUserByEmail(userEmail);
 console.log(user);
 
 const team = await getTeamById(teamId);

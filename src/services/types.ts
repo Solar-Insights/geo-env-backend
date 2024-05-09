@@ -17,3 +17,8 @@ export type MyOrganizationMember = {
     name: string;
     avatar: string;
 };
+
+export type CreateMyOrganizationMemberPayload = {
+    email: string,
+    name: string
+};

@@ -1,4 +1,4 @@
-import { getUserByAuth0IdAndEmail } from "@/db/users/operations";
+import { getUserByEmail } from "@/db/users/operations";
 import { InvalidParameterError, InvalidTokenError } from "@/middlewares/customErrors";
 import { CustomAuth0JwtPayload } from "@/services/types";
 import { RequestHandler } from "express";
@@ -11,10 +11,9 @@ export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
     const accessToken = getAccessTokenFromRequest(req)!;
     const decodedAccessToken: CustomAuth0JwtPayload = jwtDecode(accessToken);
 
-    const userId = decodedAccessToken.azp;
     const email = decodedAccessToken.email;
     
-    await getUserByAuth0IdAndEmail(userId, email); // Throws an error if not existant
+    await getUserByEmail(email); // Throws an error if not existant
 
     next();
 }

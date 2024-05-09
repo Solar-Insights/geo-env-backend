@@ -1,7 +1,7 @@
 import { Request, RequestHandler } from "express";
 import { jwtDecode } from "jwt-decode";
 import { CustomAuth0JwtPayload } from "@/services/types";
-import { getUserByAuth0IdAndEmail } from "@/db/users/operations";
+import { getUserByEmail } from "@/db/users/operations";
 import { getTeamById } from "@/db/teams/operations";
 import { InsertRequest } from "@/db/requests/types";
 import { generateRandomUuid } from "@/db/utils";
@@ -27,9 +27,8 @@ export const userRequestBilling: RequestHandler = async (req, res, next) => {
     const accessToken = getAccessTokenFromRequest(req)!;
     const decodedAccessToken: CustomAuth0JwtPayload = jwtDecode(accessToken);
 
-    const userId = decodedAccessToken.azp;
     const email = decodedAccessToken.email;
-    const user = await getUserByAuth0IdAndEmail(userId, email);
+    const user = await getUserByEmail(email);
 
     const team = await getTeamById(user.team_id);
 

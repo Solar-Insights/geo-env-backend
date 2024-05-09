@@ -1,6 +1,6 @@
 import express from "express";
 import { authRequiredPermissions } from "@/middlewares/requestHandlers";
-import { MyOrganizationMember } from "@/services/types";
+import { CreateMyOrganizationMemberPayload, MyOrganizationMember } from "@/services/types";
 
 const userRouter = express.Router();
 
@@ -115,7 +115,7 @@ userRouter.post(
     "/user/my-organization/members", 
     // authRequiredPermissions(["write:organization-admin-access"]), 
     async (req, res, next) => {
-        const body = req.body;
+        const body: CreateMyOrganizationMemberPayload = req.body;
 
         const newOrganizationMember: MyOrganizationMember = {
             created_date: new Date().toISOString().substring(0, 10),
@@ -135,7 +135,7 @@ userRouter.delete(
     "/user/my-organization/members", 
     // authRequiredPermissions(["write-organization-admin-access"]), 
     async (req, res, next) => {
-        const body = req.body;
+        const body: MyOrganizationMember = req.body;
 
         res.status(204);
 
