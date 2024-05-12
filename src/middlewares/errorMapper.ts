@@ -4,7 +4,7 @@ import { DatabaseError } from "@/db/customErrors";
 import { UnauthorizedError } from "express-oauth2-jwt-bearer";
 
 export const errLogger: ErrorRequestHandler = (err, req, res, next) => {
-    console.error(err);
+    console.error(req.url, err);
     next(err);
 };
 
