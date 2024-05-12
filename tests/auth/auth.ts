@@ -1,4 +1,4 @@
-import { BACKEND_URL, AUTH0_BASE_URL, AUTH0_TESTING_CLIENT_ID, AUTH0_TESTING_CLIENT_SECRET } from "@/config";
+import { BACKEND_URL, AUTH0_BASE_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET } from "@/config";
 import axios from "axios";
 
 export async function getAuthTokenForTest() {
@@ -9,8 +9,8 @@ export async function getAuthTokenForTest() {
             "Content-Type": "application/json"
         },
         data: {
-            client_id: AUTH0_TESTING_CLIENT_ID,
-            client_secret: AUTH0_TESTING_CLIENT_SECRET,
+            client_id: AUTH0_CLIENT_ID,
+            client_secret: AUTH0_CLIENT_SECRET,
             audience: BACKEND_URL,
             grant_type: "client_credentials"
         }
