@@ -7,3 +7,8 @@ export const ironPalette = ["00000A", "91009C", "E64616", "FEB400", "FFFFF6"];
 export const sunlightPalette = ["212121", "FFCA28"];
 
 export const panelsPalette = ["E8EAF6", "1A237E"];
+
+export const roleIds = {
+    "OrgMember": "rol_nM2dQUEKVzMhjn1U",
+    "OrgAdmin": "rol_I4RWf4h8E9cwpgli"
+};

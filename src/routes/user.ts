@@ -8,7 +8,6 @@ import {
     getMyOrganizationDetails
 } from "@/services/users";
 import { getDecodedAccessTokenFromRequest } from "@/middlewares/responseHandlers";
-import { jwtDecode } from "jwt-decode";
 
 const userRouter = express.Router();
 

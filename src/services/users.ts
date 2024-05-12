@@ -9,8 +9,9 @@ import {
 import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "./types";
 import { getTeamById } from "@/db/teams/operations";
 import { databaseMemberToClientMember } from "@/dto/users";
-import { InsertUser, SupabaseUser, UpdateUser } from "@/db/users/types";
-import { getManagementAPIToken, manuallyCreateAuth0User } from "@/api/user";
+import { InsertUser, SupabaseUser } from "@/db/users/types";
+import { assignRolesToUser, getManagementAPIToken, manuallyCreateAuth0User, sendEmailForEmailVerification, sendEmailForPasswordReset } from "@/api/user";
+import { roleIds } from "@/services/constants";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
@@ -50,13 +51,16 @@ export async function addMemberToMyOrganization(
     organizationMemberPayload: CreateMyOrganizationMemberPayload
 ) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
-
     const managementAPIToken = await getManagementAPIToken();
+
     const newUser = await manuallyCreateAuth0User(
         managementAPIToken,
         organizationMemberPayload.email,
         organizationMemberPayload.name
     );
+    await sendEmailForEmailVerification(managementAPIToken, newUser.user_id);
+    await sendEmailForPasswordReset(newUser.email);
+    await assignRolesToUser(managementAPIToken, newUser.user_id, [roleIds["OrgMember"]]);
 
     const newMember: InsertUser = {
         auth0_id: newUser.user_id,
