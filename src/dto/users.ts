@@ -6,8 +6,8 @@ export function databaseMemberToClientMember(user: SupabaseUser) {
         email: user.email,
         avatar: user.avatar,
         created_date: user.created_at,
-        name: user.name,
-    }
-    
+        name: user.name
+    };
+
     return member;
 }

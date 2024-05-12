@@ -11,11 +11,11 @@ export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
     const email = decodedAccessToken.email;
-    
+
     await getUserByEmail(email); // Throws an error if not existant
 
     next();
-}
+};
 
 export const authRequiredPermissions = (permission: string | string[]) => {
     if (typeof permission === "string") {
@@ -40,7 +40,7 @@ export const validateRequestCoordinates: RequestHandler = (req, res, next) => {
 
 export function makeInvalidTokenErrorWithNotFoundUser(url: string) {
     return new InvalidTokenError(
-        url, 
+        url,
         "The current user's team could not be identified. Please ask your organisation's administrator for more information."
     );
 }

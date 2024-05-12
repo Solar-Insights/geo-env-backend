@@ -18,16 +18,13 @@ export class DatabaseError extends Error {
         return {
             error: this.error,
             message: this.message,
-            code: this.code,
+            code: this.code
         };
     }
 }
 
 export class DatabasePostRequestValidationError extends DatabaseError {
-    constructor(
-        message: string,
-        error: string = "DATABASE_POST_REQUEST_VALIDATION_ERROR"
-    ) {
-        super(error=error, message=message);
+    constructor(message: string, error: string = "DATABASE_POST_REQUEST_VALIDATION_ERROR") {
+        super((error = error), (message = message));
     }
 }

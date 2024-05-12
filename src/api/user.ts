@@ -11,10 +11,10 @@ export async function getManagementAPIToken() {
         responseType: "json",
         url: `${AUTH0_BASE_URL}/oauth/token`,
         data: {
-            "client_id": AUTH0_CLIENT_ID,
-            "client_secret": AUTH0_CLIENT_SECRET,
-            "audience": `${AUTH0_BASE_URL}/api/v2/`,
-            "grant_type": "client_credentials"
+            client_id: AUTH0_CLIENT_ID,
+            client_secret: AUTH0_CLIENT_SECRET,
+            audience: `${AUTH0_BASE_URL}/api/v2/`,
+            grant_type: "client_credentials"
         }
     })
         .then((response) => {
@@ -27,20 +27,20 @@ export async function getManagementAPIToken() {
 
 export async function manuallyCreateAuth0User(managementAPIToken: string, email: string, name: string) {
     const newUserData = {
-      "email": email,
-      "email_verified": false,
-      "nickname": name,
-      "connection": "Username-Password-Authentication",
-      "password": "Mathisledrole12",
-      "verify_email": false
+        email: email,
+        email_verified: false,
+        nickname: name,
+        connection: "Username-Password-Authentication",
+        password: "Mathisledrole12",
+        verify_email: false
     };
 
     return await axios({
         method: "post",
-        headers: { 
-            'Content-Type': 'application/json', 
-            'Accept': 'application/json',
-            "Authorization": `Bearer ${managementAPIToken}`
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${managementAPIToken}`
         },
         responseType: "json",
         url: `${AUTH0_BASE_URL}/api/v2/users`,

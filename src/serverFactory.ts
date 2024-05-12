@@ -32,7 +32,7 @@ export class ServerFactory {
     }
 
     public withSupabaseUserExistenceValidation() {
-        console.log("setting up supabase user existence validation..")
+        console.log("setting up supabase user existence validation..");
         this.app.use(existingSupabaseUser);
         return this;
     }
@@ -102,19 +102,21 @@ export class ServerFactory {
     }
 
     public withUserRouter() {
-        console.log("setting up user router..")
+        console.log("setting up user router..");
         this.app.use(userRouter);
         return this;
     }
 
     public withRequestLogger() {
-        console.log("setting up request logger..");3
+        console.log("setting up request logger..");
+        3;
         this.app.use(userRequestLogger);
         return this;
     }
 
     public withRequestBilling() {
-        console.log("setting up billing..");3
+        console.log("setting up billing..");
+        3;
         this.app.use(userRequestBilling);
         return this;
     }

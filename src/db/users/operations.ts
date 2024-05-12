@@ -1,13 +1,9 @@
 import { supabase } from "@/db/init";
 import { InsertUser, UpdateUser } from "@/db/users/types";
-import { OperationValidator } from "@/db/operationValidator"; 
+import { OperationValidator } from "@/db/operationValidator";
 
 export async function getUserByEmail(email: string) {
-    const { data, error } = await supabase
-        .from('users')
-        .select()
-        .eq("email", email)
-        .eq("is_deleted", false);
+    const { data, error } = await supabase.from("users").select().eq("email", email).eq("is_deleted", false);
 
     new OperationValidator(data, error).validateGetSingleItemRequest();
 
@@ -15,11 +11,7 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function getAllTheTeamUsers(teamId: string) {
-    const { data, error } = await supabase
-        .from('users')
-        .select()
-        .eq("team_id", teamId)
-        .eq("is_deleted", false);
+    const { data, error } = await supabase.from("users").select().eq("team_id", teamId).eq("is_deleted", false);
 
     new OperationValidator(data, error).validateGetSingleOrMoreItemRequest();
 
@@ -28,11 +20,11 @@ export async function getAllTheTeamUsers(teamId: string) {
 
 export async function getSpecificMemberOfTheTeam(teamId: string, email: string) {
     const { data, error } = await supabase
-    .from('users')
-    .select()
-    .eq("team_id", teamId)
-    .eq("email", email)
-    .eq("is_deleted", false);
+        .from("users")
+        .select()
+        .eq("team_id", teamId)
+        .eq("email", email)
+        .eq("is_deleted", false);
 
     new OperationValidator(data, error).validateGetSingleItemRequest();
 
@@ -41,11 +33,11 @@ export async function getSpecificMemberOfTheTeam(teamId: string, email: string) 
 
 export async function getAllTheTeamAdmins(teamId: string) {
     const { data, error } = await supabase
-    .from('users')
-    .select()
-    .eq("team_id", teamId)
-    .eq("is_admin", true)
-    .eq("is_deleted", false);
+        .from("users")
+        .select()
+        .eq("team_id", teamId)
+        .eq("is_admin", true)
+        .eq("is_deleted", false);
 
     new OperationValidator(data, error).validateGetSingleOrMoreItemRequest();
 
@@ -53,27 +45,19 @@ export async function getAllTheTeamAdmins(teamId: string) {
 }
 
 export async function createUser(user: InsertUser) {
-    const { data, error } = await supabase
-        .from('users')
-        .insert(user);
+    const { data, error } = await supabase.from("users").insert(user);
 
     new OperationValidator(data, error).validateCreateRequest();
 }
 
 export async function updateUserByAuth0Id(user: UpdateUser, email: string) {
-    const { data, error } = await supabase
-        .from('users')
-        .update(user)
-        .eq("email", email);
+    const { data, error } = await supabase.from("users").update(user).eq("email", email);
 
     new OperationValidator(data, error).validateUpdateRequest();
 }
 
 export async function removeUserByEmailFromActive(user: UpdateUser, email: string) {
-    const { data, error } = await supabase
-        .from('users')
-        .update(user)
-        .eq("email", email);
+    const { data, error } = await supabase.from("users").update(user).eq("email", email);
 
     new OperationValidator(data, error).validateUpdateRequest();
 }

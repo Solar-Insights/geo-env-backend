@@ -1,4 +1,11 @@
-import { getAllTheTeamAdmins, getAllTheTeamUsers, getUserByEmail, createUser, removeUserByEmailFromActive, getSpecificMemberOfTheTeam } from "@/db/users/operations";
+import {
+    getAllTheTeamAdmins,
+    getAllTheTeamUsers,
+    getUserByEmail,
+    createUser,
+    removeUserByEmailFromActive,
+    getSpecificMemberOfTheTeam
+} from "@/db/users/operations";
 import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "./types";
 import { getTeamById } from "@/db/teams/operations";
 import { databaseMemberToClientMember } from "@/dto/users";
@@ -12,10 +19,10 @@ export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0Jw
     const myTeamAdmins = await getAllTheTeamAdmins(requester.team_id);
 
     const membersDTO: MyOrganizationMember[] = [];
-    myTeamAdmins?.forEach((admin) => { 
+    myTeamAdmins?.forEach((admin) => {
         const singleMemberDTO = databaseMemberToClientMember(admin);
         membersDTO.push(singleMemberDTO);
-    })
+    });
 
     return {
         admins: membersDTO,
@@ -29,28 +36,35 @@ export async function getAllMyOrganizationMembers(decodedAccessToken: CustomAuth
     const myTeamMembers = await getAllTheTeamUsers(requester.team_id);
 
     const membersDTO: MyOrganizationMember[] = [];
-    myTeamMembers?.forEach((member) => { 
+    myTeamMembers?.forEach((member) => {
         if (organizationMembersAreIdentical(requester, member)) return;
         const singleMemberDTO = databaseMemberToClientMember(member);
         membersDTO.push(singleMemberDTO);
-    })
+    });
 
     return membersDTO;
 }
 
-export async function addMemberToMyOrganization(decodedAccessToken: CustomAuth0JwtPayload, organizationMemberPayload: CreateMyOrganizationMemberPayload) {
+export async function addMemberToMyOrganization(
+    decodedAccessToken: CustomAuth0JwtPayload,
+    organizationMemberPayload: CreateMyOrganizationMemberPayload
+) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
 
     const managementAPIToken = await getManagementAPIToken();
-    const newUser = await manuallyCreateAuth0User(managementAPIToken, organizationMemberPayload.email, organizationMemberPayload.name);
+    const newUser = await manuallyCreateAuth0User(
+        managementAPIToken,
+        organizationMemberPayload.email,
+        organizationMemberPayload.name
+    );
 
     const newMember: InsertUser = {
-        "auth0_id": newUser.user_id,
-        "avatar": newUser.picture,
-        "email": newUser.email,
-        "name": newUser.nickname,
-        "team_id": requester.team_id,
-    }
+        auth0_id: newUser.user_id,
+        avatar: newUser.picture,
+        email: newUser.email,
+        name: newUser.nickname,
+        team_id: requester.team_id
+    };
     await createUser(newMember);
 
     const newlyCreatedMember = await getUserByEmail(organizationMemberPayload.email);
@@ -58,13 +72,16 @@ export async function addMemberToMyOrganization(decodedAccessToken: CustomAuth0J
     return newlyCreatedMemberDTO;
 }
 
-export async function deleteMyOrganizationMember(decodedAccessToken: CustomAuth0JwtPayload, memberToDelete: MyOrganizationMember) {
+export async function deleteMyOrganizationMember(
+    decodedAccessToken: CustomAuth0JwtPayload,
+    memberToDelete: MyOrganizationMember
+) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
-    
+
     const memberToRemove = await getSpecificMemberOfTheTeam(requester.team_id, memberToDelete.email);
     memberToRemove.is_deleted = true;
 
-    await removeUserByEmailFromActive(memberToRemove, memberToRemove.email)
+    await removeUserByEmailFromActive(memberToRemove, memberToRemove.email);
 }
 
 function organizationMembersAreIdentical(member1: SupabaseUser, member2: SupabaseUser) {
@@ -72,8 +89,6 @@ function organizationMembersAreIdentical(member1: SupabaseUser, member2: Supabas
 }
 
 async function getRequesterFromDecodedAccessToken(decodedAccessToken: CustomAuth0JwtPayload) {
-    const requester = await getUserByEmail(decodedAccessToken.email)
-    ;
-
+    const requester = await getUserByEmail(decodedAccessToken.email);
     return requester;
 }

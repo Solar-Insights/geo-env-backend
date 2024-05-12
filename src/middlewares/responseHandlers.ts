@@ -9,16 +9,16 @@ import { createRequest } from "@/db/requests/operations";
 
 export const userRequestLogger: RequestHandler = (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
-    
+
     const email = decodedAccessToken.email;
     const userId = decodedAccessToken.azp;
     const accessPath = getAccessPathFromRequest(req);
 
-    console.log("\n--- REQUEST ---")
+    console.log("\n--- REQUEST ---");
     console.log(`ressource: ${accessPath}`);
     console.log(`user: ${email}`);
-    console.log(`user id: ${userId}`)
-    
+    console.log(`user id: ${userId}`);
+
     next();
 };
 
