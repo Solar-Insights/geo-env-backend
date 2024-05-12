@@ -54,7 +54,7 @@ solarRouter.get(
     }
 );
 
-solarRouter.get("/solar/geotiff", authRequiredPermissions(["read:solar-data"]), compression(), async (req, res, next) => {
+solarRouter.get("/solar/geotiff", authRequiredPermissions(["read:get-solar-data"]), compression(), async (req, res, next) => {
     const url = decodeURIComponent(req.query.url as string);
 
     await getGeotiff(url)

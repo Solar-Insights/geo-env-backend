@@ -13,7 +13,10 @@ userRouter.get(
     async (req, res, next) => {
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-        const myOrganization = await getMyOrganizationDetails(decodedAccessToken);
+        const myOrganization = await getMyOrganizationDetails(decodedAccessToken)
+        .catch((error) => {
+            next(error);
+        });
 
         res.status(200).locals.data = {
             myOrganization: myOrganization
@@ -28,7 +31,10 @@ userRouter.get(
     async (req, res, next) => {
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-        const myOrganizationMembers = await getAllMyOrganizationMembers(decodedAccessToken);
+        const myOrganizationMembers = await getAllMyOrganizationMembers(decodedAccessToken)
+        .catch((error) => {
+            next(error);
+        });
 
         res.status(200).locals.data = {
             myOrganizationMembers: myOrganizationMembers
@@ -44,7 +50,10 @@ userRouter.post(
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
         const body: CreateMyOrganizationMemberPayload = req.body;
 
-        const myOrganizationMember = await addMemberToMyOrganization(decodedAccessToken, body);
+        const myOrganizationMember = await addMemberToMyOrganization(decodedAccessToken, body)
+            .catch((error) => {
+                next(error);
+            });
 
         res.status(201).locals.data = {
             myOrganizationMember: myOrganizationMember
@@ -59,7 +68,10 @@ userRouter.delete(
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
         const body: MyOrganizationMember = req.body;
 
-        await deleteMyOrganizationMember(decodedAccessToken, body);
+        await deleteMyOrganizationMember(decodedAccessToken, body)
+        .catch((error) => {
+            next(error);
+        });
         
         res.status(204);
         next();
