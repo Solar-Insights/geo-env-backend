@@ -10,7 +10,7 @@ import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizatio
 import { getTeamById } from "@/db/teams/operations";
 import { databaseMemberToClientMember } from "@/dto/users";
 import { InsertUser, SupabaseUser } from "@/db/users/types";
-import { assignRolesToUser, getManagementAPIToken, manuallyCreateAuth0User, sendEmailForEmailVerification, sendEmailForPasswordReset } from "@/api/user";
+import { assignRolesToUser, getManagementAPIToken, manuallyCreateAuth0User, sendEmailForPasswordReset } from "@/api/user";
 import { roleIds } from "@/services/constants";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
@@ -58,7 +58,6 @@ export async function addMemberToMyOrganization(
         organizationMemberPayload.email,
         organizationMemberPayload.name
     );
-    await sendEmailForEmailVerification(managementAPIToken, newUser.user_id);
     await sendEmailForPasswordReset(newUser.email);
     await assignRolesToUser(managementAPIToken, newUser.user_id, [roleIds["OrgMember"]]);
 

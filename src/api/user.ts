@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AUTH0_BASE_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET } from "@/config";
 import { Auth0User } from "@/services/types";
+import { generateRandomUuid } from "@/db/utils";
 
 export async function getManagementAPIToken() {
     return await axios({
@@ -31,8 +32,9 @@ export async function manuallyCreateAuth0User(managementAPIToken: string, email:
         email_verified: false,
         nickname: name,
         connection: "Username-Password-Authentication",
-        password: "Mathisledrole12",
-        verify_email: false
+        password: generateRandomUuid(),
+        verify_email: true,
+
     };
 
     return await axios({
@@ -49,28 +51,6 @@ export async function manuallyCreateAuth0User(managementAPIToken: string, email:
         .then((response) => {
             return response.data as Auth0User;
         })
-        .catch((error) => {
-            console.log(error);
-            throw error;
-        });
-}
-
-export async function sendEmailForEmailVerification(managementAPIToken: string, userId: string) {
-    const userData = {
-        user_id: userId
-    };
-
-    await axios({
-        method: "post",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${managementAPIToken}`
-        },
-        responseType: "json",
-        url: `${AUTH0_BASE_URL}/api/v2/jobs/verification-email`,
-        data: userData
-    })
         .catch((error) => {
             console.log(error);
             throw error;
