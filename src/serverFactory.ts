@@ -3,7 +3,7 @@ import { Server } from "http";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
-import { PORT, BACKEND_URL, AUTH0_BASE_URL, AUTH_MODE } from "@/config";
+import { PORT, BACKEND_URL, AUTH0_BASE_URL } from "@/config";
 import { errLogger, errResponder, failSafeHandler } from "@/middlewares/errorMapper";
 import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
@@ -39,15 +39,11 @@ export class ServerFactory {
 
     public withAuth() {
         console.log("setting up auth0..");
-        if (AUTH_MODE) {
-            if (this.canUseAuth0()) {
-                const auth0Middleware = this.makeAuth0Middleware();
-                this.app.use(auth0Middleware);
-            } else {
-                console.log("could not find the required environment variables to setup up auth0");
-            }
+        if (this.canUseAuth0()) {
+            const auth0Middleware = this.makeAuth0Middleware();
+            this.app.use(auth0Middleware);
         } else {
-            console.log("no auth mode detected: aborting the setup of auth0..");
+            console.log("could not find the required environment variables to setup up auth0");
         }
 
         return this;
