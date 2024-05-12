@@ -101,3 +101,20 @@ export async function assignRolesToUser(managementAPIToken: string, userId: stri
             throw error;
         });
 }
+
+export async function deleteAuth0User(managementAPIToken: string, userId: string) {
+    await axios({
+        method: "delete",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${managementAPIToken}`
+        },
+        responseType: "json",
+        url: `${AUTH0_BASE_URL}/api/v2/users/${userId}`,
+    })
+        .catch((error) => {
+            console.log(error);
+            throw error;
+        });
+}
