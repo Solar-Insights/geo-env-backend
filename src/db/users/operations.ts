@@ -57,16 +57,10 @@ export async function updateUserByAuth0Id(user: UpdateUser, email: string) {
 }
 
 export async function removeUserByEmailFromActive(user: UpdateUser, email: string) {
-    const { data, error } = await supabase.from("users").update(user).eq("email", email);
+    const { data, error } = await supabase
+        .from("users")
+        .update(user)
+        .eq("email", email);
 
     new OperationValidator(data, error).validateUpdateRequest();
 }
-
-// export async function deleteUserByAuth0Id(auth0Id: string) {
-//     const { data, error } = await supabase
-//         .from('users')
-//         .delete()
-//         .eq("auth0_id", auth0Id);
-
-//     new OperationValidator(data, error).validateDeleteRequest();
-// }
