@@ -10,7 +10,7 @@ import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizatio
 import { getTeamById } from "@/db/teams/operations";
 import { databaseMemberToClientMember } from "@/dto/users";
 import { InsertUser, SupabaseUser } from "@/db/users/types";
-import { assignRolesToUser, getManagementAPIToken, manuallyCreateAuth0User, sendEmailForPasswordReset } from "@/api/user";
+import { assignRolesToUser, deleteAuth0User, getManagementAPIToken, manuallyCreateAuth0User, sendEmailForPasswordReset } from "@/api/user";
 import { roleIds } from "@/services/constants";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
@@ -80,10 +80,12 @@ export async function deleteMyOrganizationMember(
     memberToDelete: MyOrganizationMember
 ) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
-
+    const managementAPIToken = await getManagementAPIToken();
     const memberToRemove = await getSpecificMemberOfTheTeam(requester.team_id, memberToDelete.email);
-    memberToRemove.is_deleted = true;
 
+    await deleteAuth0User(managementAPIToken, memberToRemove.auth0_id);
+
+    memberToRemove.is_deleted = true;
     await removeUserByEmailFromActive(memberToRemove, memberToRemove.email);
 }
 

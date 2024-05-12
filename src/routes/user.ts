@@ -68,7 +68,7 @@ userRouter.delete(
     authRequiredPermissions(["write:admin-user-management"]),
     async (req, res, next) => {
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
-        const body: MyOrganizationMember = req.body;
+        const body: MyOrganizationMember = req.body.myOrganizationMember;
 
         await deleteMyOrganizationMember(decodedAccessToken, body).catch((error) => {
             next(error);
