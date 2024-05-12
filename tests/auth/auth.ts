@@ -1,10 +1,10 @@
-import { BACKEND_URL, AUTH0_TESTING_CLIENT_ID, AUTH0_TESTING_CLIENT_SECRET } from "@/config";
+import { BACKEND_URL, AUTH0_BASE_URL, AUTH0_TESTING_CLIENT_ID, AUTH0_TESTING_CLIENT_SECRET } from "@/config";
 import axios from "axios";
 
 export async function getAuthTokenForTest() {
     return await axios({
         method: "post",
-        url: "https://dev-ubs32bgn56n1z15q.us.auth0.com/oauth/token",
+        url: `${AUTH0_BASE_URL}/oauth/token`,
         headers: {
             "Content-Type": "application/json"
         },
