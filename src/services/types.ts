@@ -22,3 +22,15 @@ export type CreateMyOrganizationMemberPayload = {
     email: string,
     name: string
 };
+
+export type Auth0User = {
+    created_at: string,
+    email: string,
+    email_verified: boolean,
+    identities: Object[],
+    name: string,
+    nickname: string,
+    picture: string,
+    updated_at: string,
+    user_id: string,
+  };

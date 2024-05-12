@@ -3,6 +3,7 @@ import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizatio
 import { getTeamById } from "@/db/teams/operations";
 import { databaseMemberToClientMember } from "@/dto/users";
 import { InsertUser, SupabaseUser, UpdateUser } from "@/db/users/types";
+import { getManagementAPIToken, manuallyCreateAuth0User } from "@/api/user";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
@@ -39,11 +40,15 @@ export async function getAllMyOrganizationMembers(decodedAccessToken: CustomAuth
 
 export async function addMemberToMyOrganization(decodedAccessToken: CustomAuth0JwtPayload, organizationMemberPayload: CreateMyOrganizationMemberPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
+
+    const managementAPIToken = await getManagementAPIToken();
+    const newUser = await manuallyCreateAuth0User(managementAPIToken, organizationMemberPayload.email, organizationMemberPayload.name);
+
     const newMember: InsertUser = {
-        "auth0_id": "", // NEED TO ADJUST
-        "avatar": "", // NEED TO ADJUST
-        "email": organizationMemberPayload.email,
-        "name": organizationMemberPayload.name,
+        "auth0_id": newUser.user_id,
+        "avatar": newUser.picture,
+        "email": newUser.email,
+        "name": newUser.nickname,
         "team_id": requester.team_id,
     }
     await createUser(newMember);
@@ -67,7 +72,8 @@ function organizationMembersAreIdentical(member1: SupabaseUser, member2: Supabas
 }
 
 async function getRequesterFromDecodedAccessToken(decodedAccessToken: CustomAuth0JwtPayload) {
-    const requester = await getUserByEmail(decodedAccessToken.email);
+    const requester = await getUserByEmail(decodedAccessToken.email)
+    ;
 
     return requester;
 }
