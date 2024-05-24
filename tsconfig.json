@@ -22,7 +22,11 @@
         "noUnusedParameters": false,
         "noFallthroughCasesInSwitch": true,
 
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "strictPropertyInitialization": false
     },
     "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "tests/**/*.ts"]
 }
