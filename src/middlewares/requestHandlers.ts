@@ -4,7 +4,6 @@ import { CustomAuth0JwtPayload } from "@/services/types";
 import { RequestHandler } from "express";
 import { claimIncludes } from "express-oauth2-jwt-bearer";
 import { Coordinates, validCoordinates } from "geo-env-typing/geo";
-import { jwtDecode } from "jwt-decode";
 import { getDecodedAccessTokenFromRequest } from "@/middlewares/responseHandlers";
 
 export const existingSupabaseUser: RequestHandler = async (req, res, next) => {

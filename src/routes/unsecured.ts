@@ -1,7 +1,4 @@
 import express from "express";
-import { getGeocoding } from "@/api/geo";
-import { ApiError } from "@/middlewares/customErrors";
-import { NewOrganizationForm } from "@/services/types";
 import { validateOrReject } from "class-validator";
 import { ObjectValidationError } from "@/middlewares/customErrors";
 import { NewOrganizationFormClass } from "@/dto/unsecured/newOrganizationForm";
@@ -13,14 +10,14 @@ unsecuredRouter.post("/unsecured/organization", async (req, res, next) => {
 
     await validateOrReject(newOrganizationFormObject)
         .catch((errors) => {
-            console.log(errors);
             next(new ObjectValidationError(
                 req.url,
                 "NewOrganizationFormClass"
             ));
         });
-
     
+    // Send email to someone with info
+    res.status(201).json();
 });
 
 export default unsecuredRouter;
