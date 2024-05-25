@@ -67,3 +67,9 @@ export function rangeErrorToObject(rangeError: RangeError) {
         stack: rangeError.stack
     };
 }
+
+export class ObjectValidationError extends ExpressError {
+    constructor(url: string, className: string) {
+        super(url, "INVALID_OBJECT_ERROR", `An error occured when validating an object of ${className}`, 400);
+    }
+}

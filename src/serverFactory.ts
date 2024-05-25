@@ -12,6 +12,7 @@ import userRouter from "@/routes/user";
 import { userRequestLogger, userRequestBilling, userResponseHandler } from "@/middlewares/responseHandlers";
 import { AddressInfo } from "net";
 import { existingSupabaseUser } from "@/middlewares/requestHandlers";
+import unsecuredRouter from "./routes/unsecured";
 
 export class ServerFactory {
     app!: Express;
@@ -68,6 +69,12 @@ export class ServerFactory {
         console.log("setting up body parser..");
         this.app.use(bodyParser.json());
 
+        return this;
+    }
+
+    public withUnsecuredRouter() {
+        console.log("setting up unsecured router..");
+        this.app.use(unsecuredRouter);
         return this;
     }
 

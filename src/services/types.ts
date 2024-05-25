@@ -34,3 +34,12 @@ export type Auth0User = {
     updated_at: string;
     user_id: string;
 };
+
+export type PricingTier = "starter" | "pro" | "enterprise";
+
+export type NewOrganizationForm = {
+    name: string;
+    contactEmail: string;
+    pricingTier: PricingTier;
+    additionalNotes: string;
+};
