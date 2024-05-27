@@ -24,9 +24,11 @@ unsecuredRouter.post("/unsecured/organization", async (req, res, next) => {
             ));
         });
     
-    await sendNewOrganizationRequestEmail(req.body)
-        .then(() => {
+    await sendNewOrganizationRequestEmail(newOrganizationFormObject)
+        .then((logs: string) => {
             unsecuredRequestLogger(req);
+            console.log(logs);
+            
             res.status(201).json();
         })
         .catch((error) => {

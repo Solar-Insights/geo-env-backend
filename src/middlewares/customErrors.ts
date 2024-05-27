@@ -1,4 +1,4 @@
-import { EmailErrorType } from "@/services/types";
+import { EmailOperationType } from "@/services/types";
 
 export type ErrorType = "api-error";
 
@@ -77,7 +77,7 @@ export class ObjectValidationError extends ExpressError {
 }
 
 export class EmailError extends ExpressError {
-    constructor(url: string, emailErrorType: EmailErrorType) {
-        super(url, "EMAIL_ERROR", `An error occured when handling emails. Type: ${emailErrorType}`, 500);
+    constructor(url: string, emailOperationType: EmailOperationType) {
+        super(url, "EMAIL_ERROR", `An error occured when handling emails. Type: ${emailOperationType}`, 500);
     }
 }

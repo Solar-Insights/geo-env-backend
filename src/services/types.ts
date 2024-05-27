@@ -44,4 +44,4 @@ export type NewOrganizationForm = {
     additionalNotes: string;
 };
 
-export type EmailErrorType = "SENDING" | "READING";
+export type EmailOperationType = "SENDING" | "READING";
