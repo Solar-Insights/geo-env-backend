@@ -19,7 +19,7 @@ function emailLogger(sender: string, receiver: string, emailOperationType: Email
 
 export async function sendNewOrganizationRequestEmail(newOrganizationFormObject: NewOrganizationFormClass) {
     const SENDER_SERVICE = "gmail";
-    const SUBJECT = `New org. request from ${newOrganizationFormObject.name} - ${newOrganizationFormObject.pricingTier}`;
+    const SUBJECT = `[${newOrganizationFormObject.pricingTier}] New org. request from ${newOrganizationFormObject.name}`;
     const CONTENT = JSON.stringify(newOrganizationFormObject, null, 4);
 
     const NEW_ORGANIZATION_REQUEST_EMAIL_OPTIONS = {
