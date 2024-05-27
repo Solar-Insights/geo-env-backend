@@ -97,3 +97,11 @@ async function getRequesterFromDecodedAccessToken(decodedAccessToken: CustomAuth
     const requester = await getUserByEmail(decodedAccessToken.email);
     return requester;
 }
+
+export async function getMyOrganizationPricingTier(decodedAccessToken: CustomAuth0JwtPayload) {
+    const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
+
+    const organization = await getTeamById(requester.team_id);
+
+    return organization.pricing_tier;
+}
