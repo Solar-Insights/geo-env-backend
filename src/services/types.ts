@@ -43,3 +43,5 @@ export type NewOrganizationForm = {
     pricingTier: PricingTier;
     additionalNotes: string;
 };
+
+export type EmailErrorType = "SENDING" | "READING";

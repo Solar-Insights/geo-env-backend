@@ -1,8 +1,9 @@
 import express, { Request } from "express";
 import { validateOrReject } from "class-validator";
-import { ObjectValidationError } from "@/middlewares/customErrors";
+import { EmailError, ObjectValidationError } from "@/middlewares/customErrors";
 import { NewOrganizationFormClass } from "@/dto/unsecured/newOrganizationForm";
 import { getAccessPathFromRequest } from "@/middlewares/responseHandlers";
+import { sendNewOrganizationRequestEmail } from "@/services/emails";
 
 const unsecuredRouter = express.Router();
 
@@ -23,10 +24,17 @@ unsecuredRouter.post("/unsecured/organization", async (req, res, next) => {
             ));
         });
     
-    // Send email to someone with info
-    unsecuredRequestLogger(req);
-
-    res.status(201).json();
+    await sendNewOrganizationRequestEmail(req.body)
+        .then(() => {
+            unsecuredRequestLogger(req);
+            res.status(201).json();
+        })
+        .catch((error) => {
+            next(new EmailError(
+                req.url,
+                "SENDING"
+            ));
+        });
 });
 
 export default unsecuredRouter;

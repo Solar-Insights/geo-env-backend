@@ -1,5 +1,6 @@
 import { GMAIL_EMAIL, GMAIL_PASSWORD } from "@/config";
 import { createTransport } from "nodemailer";
+import { NewOrganizationForm } from "./types";
 
 function createEmailTransporter(service: string, user: string, password: string) {
     return createTransport({
@@ -11,7 +12,7 @@ function createEmailTransporter(service: string, user: string, password: string)
     });
 }
 
-export async function sendNewOrganizationRequestEmail() {
+export async function sendNewOrganizationRequestEmail(newOrganizationForm: NewOrganizationForm) {
     const SENDER_SERVICE = "gmail";
     const SUBJECT = "Bonjour";
     const CONTENT = "Bonjour";
@@ -23,11 +24,8 @@ export async function sendNewOrganizationRequestEmail() {
         text: CONTENT
     }
 
-    createEmailTransporter(SENDER_SERVICE, GMAIL_EMAIL, GMAIL_PASSWORD)
+    return createEmailTransporter(SENDER_SERVICE, GMAIL_EMAIL, GMAIL_PASSWORD)
         .sendMail(NEW_ORGANIZATION_REQUEST_EMAIL_OPTIONS)
-        .then((data) => {
-            console.log(data);
-        })
         .catch((error) => {
             console.log(error);
             throw error;
