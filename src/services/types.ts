@@ -45,3 +45,19 @@ export type NewOrganizationForm = {
 };
 
 export type EmailOperationType = "SENDING" | "READING";
+
+export type PricingTierQuotas = {
+    [key in PricingTier]: {
+        [key in QuotaObject]: {
+            max: number
+        }
+    };
+};
+
+export type RouteToQuotaObjectMap = {
+    [key in RoutesAffectingQuotas]: QuotaObject
+};
+
+export type RoutesAffectingQuotas = "/solar/closest-building-insights" | "/user/my-organization/members";
+
+export type QuotaObject = "organizationMembers" | "buildingInsightsRequests";

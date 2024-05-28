@@ -1,3 +1,5 @@
+import { PricingTierQuotas, RouteToQuotaObjectMap } from "@/services/types";
+
 export const binaryPalette = ["212121", "B3E5FC"];
 
 export const rainbowPalette = ["3949AB", "81D4FA", "66BB6A", "FFE082", "E53935"];
@@ -11,4 +13,36 @@ export const panelsPalette = ["E8EAF6", "1A237E"];
 export const roleIds = {
     "OrgMember": "rol_nM2dQUEKVzMhjn1U",
     "OrgAdmin": "rol_I4RWf4h8E9cwpgli"
+};
+
+export const routeToQuotaObjectMap: RouteToQuotaObjectMap = {
+    "/user/my-organization/members": "organizationMembers",
+    "/solar/closest-building-insights": "buildingInsightsRequests"
+};
+
+export const pricingTiersQuotas: PricingTierQuotas = {
+    starter: {
+        organizationMembers: {
+            max: 1
+        },
+        buildingInsightsRequests: {
+            max: 100    
+        },
+    },
+    pro: {
+        organizationMembers: {
+            max: 8
+        },
+        buildingInsightsRequests: {
+            max: Infinity
+        },
+    },
+    enterprise: {
+        organizationMembers: {
+            max: 16
+        },
+        buildingInsightsRequests: {
+            max: Infinity
+        },
+    },
 };
