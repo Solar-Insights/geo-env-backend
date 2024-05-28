@@ -1,12 +1,12 @@
 import { getUserByEmail } from "@/db/users/operations";
 import { InvalidParameterError, InvalidTokenError } from "@/middlewares/customErrors";
-import { CustomAuth0JwtPayload, RoutesAffectingQuotas } from "@/services/types";
+import { CustomAuth0JwtPayload, PricingTier, RoutesAffectingQuotas } from "@/services/types";
 import { RequestHandler } from "express";
 import { claimIncludes } from "express-oauth2-jwt-bearer";
 import { Coordinates, validCoordinates } from "geo-env-typing/geo";
 import { getDecodedAccessTokenFromRequest } from "@/middlewares/responseHandlers";
 import { getMyOrganizationPricingTier } from "@/services/users";
-import { pricingTiersQuotas, routeToQuotaObjectMap } from "@/services/constants";
+import { pricingTiersQuotas, routeToMonthlyQuotaFieldMap } from "@/services/constants";
 
 export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
@@ -54,16 +54,14 @@ export function makeInvalidCoordError(url: string) {
 }
 
 export const requestRespectsPricingTierQuota: RequestHandler = async (req, res, next) => {
-    if (!(req.url in routeToQuotaObjectMap)) next();
-
-    const quotaRoute = req.url as RoutesAffectingQuotas;
-    const correspondingQuotaObject = routeToQuotaObjectMap[quotaRoute];
-
+    if (!(req.url in routeToMonthlyQuotaFieldMap)) next();
+    
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     const pricingTier = await getMyOrganizationPricingTier(decodedAccessToken);
-    const quotasForTier = pricingTiersQuotas[pricingTier];
 
-    const quotaObjectForTier = quotasForTier[correspondingQuotaObject];
+    const quotaRoute = req.url as RoutesAffectingQuotas;
+    const correspondingMonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
+    const monthlyQuotaFieldLimitForTier = pricingTiersQuotas[pricingTier][correspondingMonthlyQuotaField];
     
     next();
 };

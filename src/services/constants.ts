@@ -1,4 +1,4 @@
-import { PricingTierQuotas, RouteToQuotaObjectMap } from "@/services/types";
+import { PricingTierQuotas, RouteToMonthlyQuotaFieldMap } from "@/services/types";
 
 export const binaryPalette = ["212121", "B3E5FC"];
 
@@ -15,34 +15,24 @@ export const roleIds = {
     "OrgAdmin": "rol_I4RWf4h8E9cwpgli"
 };
 
-export const routeToQuotaObjectMap: RouteToQuotaObjectMap = {
-    "/user/my-organization/members": "organizationMembers",
-    "/solar/closest-building-insights": "buildingInsightsRequests"
+export const routeToMonthlyQuotaFieldMap: RouteToMonthlyQuotaFieldMap = {
+    "/user/my-organization/members": "max_free_members_count",
+    "/solar/closest-building-insights": "max_building_insights_requests"
 };
+
+export const SOLAR_INSIGHTS_INFINITY = 2147483647;
 
 export const pricingTiersQuotas: PricingTierQuotas = {
     starter: {
-        organizationMembers: {
-            max: 1
-        },
-        buildingInsightsRequests: {
-            max: 100    
-        },
+        max_free_members_count: 1,
+        max_building_insights_requests: 100
     },
     pro: {
-        organizationMembers: {
-            max: 8
-        },
-        buildingInsightsRequests: {
-            max: Infinity
-        },
+        max_free_members_count: 8,
+        max_building_insights_requests: SOLAR_INSIGHTS_INFINITY
     },
     enterprise: {
-        organizationMembers: {
-            max: 16
-        },
-        buildingInsightsRequests: {
-            max: Infinity
-        },
+        max_free_members_count: 16,
+        max_building_insights_requests: SOLAR_INSIGHTS_INFINITY
     },
 };

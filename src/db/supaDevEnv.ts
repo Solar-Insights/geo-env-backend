@@ -29,3 +29,9 @@ console.log(user);
 
 const team = await getTeamById(teamId);
 console.log(team);
+
+/**
+    Billing date should be set on creation of a team. 
+    - Is the same numerical day as the as the creation date of the team
+    - If number is not below 28 (29-30-31) then changes it to the 1st of every month to avoid problems
+*/

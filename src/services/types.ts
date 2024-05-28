@@ -48,16 +48,14 @@ export type EmailOperationType = "SENDING" | "READING";
 
 export type PricingTierQuotas = {
     [key in PricingTier]: {
-        [key in QuotaObject]: {
-            max: number
-        }
+        [key in MonthlyQuotaField]: number
     };
 };
 
-export type RouteToQuotaObjectMap = {
-    [key in RoutesAffectingQuotas]: QuotaObject
+export type RouteToMonthlyQuotaFieldMap = {
+    [key in RoutesAffectingQuotas]: MonthlyQuotaField
 };
 
 export type RoutesAffectingQuotas = "/solar/closest-building-insights" | "/user/my-organization/members";
 
-export type QuotaObject = "organizationMembers" | "buildingInsightsRequests";
+export type MonthlyQuotaField = "max_free_members_count" | "max_building_insights_requests";
