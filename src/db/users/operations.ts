@@ -5,8 +5,6 @@ import { OperationValidator } from "@/db/operationValidator";
 export async function getUserByEmail(email: string) {
     const { data, error } = await supabase.from("users").select().eq("email", email).eq("is_deleted", false);
 
-    data?.pop();
-
     new OperationValidator(data, error).validateGetSingleItemRequest();
 
     return data![0];
