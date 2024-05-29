@@ -1,5 +1,5 @@
 import { getUserByEmail } from "@/db/users/operations";
-import { InvalidParameterError, InvalidTokenError } from "@/middlewares/customErrors";
+import { InvalidParameterError, InvalidTokenError, QuotaLimitReachedAlert, QuotaLimitReachedError } from "@/middlewares/customErrors";
 import { CustomAuth0JwtPayload, MonthlyQuotaField, MonthlyQuotaFieldDetailed, RoutesAffectingQuotas } from "@/services/types";
 import { RequestHandler } from "express";
 import { claimIncludes } from "express-oauth2-jwt-bearer";
@@ -76,7 +76,6 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
 };
 
 export function makeQuotaLimitReachedResponse(monthlyQuotaField: MonthlyQuotaField, hardLimit: boolean, url: string) {
-    if (hardLimit) return;
-    
-    return;
+    if (hardLimit) return new QuotaLimitReachedError(url, monthlyQuotaField);
+    return new QuotaLimitReachedAlert(url, monthlyQuotaField);
 }

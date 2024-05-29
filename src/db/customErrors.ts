@@ -15,11 +15,7 @@ export class DatabaseError extends Error {
     }
 
     public toObject() {
-        return {
-            error: this.error,
-            message: this.message,
-            code: this.code
-        };
+        return JSON.stringify(this);
     }
 }
 

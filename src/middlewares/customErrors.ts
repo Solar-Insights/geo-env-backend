@@ -22,12 +22,7 @@ export class ExpressError extends Error {
     }
 
     public toObject() {
-        return {
-            error: this.error,
-            url: this.url,
-            message: this.message,
-            code: this.code
-        };
+        return JSON.stringify(this);
     }
 }
 
@@ -79,5 +74,27 @@ export class ObjectValidationError extends ExpressError {
 export class EmailError extends ExpressError {
     constructor(url: string, emailOperationType: EmailOperationType) {
         super(url, "EMAIL_ERROR", `An error occured when handling emails. Type: ${emailOperationType}`, 500);
+    }
+}
+
+export class QuotaLimitReachedAlert extends ExpressError {
+    quotaField: string;
+    hard: boolean;
+
+    constructor(url: string, quotaField: string) {
+        super(url, "QUOTA_LIMIT_REACHED", `The organization has reached its soft quota limit for ${quotaField}`, 422);
+        this.quotaField = quotaField;
+        this.hard = false;
+    }
+}
+
+export class QuotaLimitReachedError extends ExpressError {
+    quotaField: string;
+    hard: boolean;
+
+    constructor(url: string, quotaField: string) {
+        super(url, "QUOTA_LIMIT_REACHED", `The organization has reached its hard quota limit for ${quotaField}`, 422);
+        this.quotaField = quotaField;
+        this.hard = true;
     }
 }
