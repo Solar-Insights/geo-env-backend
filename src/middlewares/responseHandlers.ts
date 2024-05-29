@@ -7,28 +7,39 @@ import { InsertRequest } from "@/db/requests/types";
 import { generateRandomUuid } from "@/db/utils";
 import { createRequest } from "@/db/requests/operations";
 
-export const userRequestLogger: RequestHandler = (req, res, next) => {
+export const userRequestLogger: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-    const email = decodedAccessToken.email;
-    const userId = decodedAccessToken.azp;
-    const accessPath = getAccessPathFromRequest(req);
-
     console.log("\n--- REQUEST ---");
-    console.log(`ressource: ${accessPath}`);
-    console.log(`user: ${email}`);
-    console.log(`user id: ${userId}`);
+    console.log(`ressource: ${getAccessPathFromRequest(req)}`);
+    console.log(`user: ${decodedAccessToken.email}`);
+    console.log(`user id: ${decodedAccessToken.azp}`);
+
+    const user = await getUserByEmail(decodedAccessToken.email);
+    const team = await getTeamById(user.team_id);
+    const request: InsertRequest = {
+        endpoint: getAccessPathFromRequest(req),
+        id: generateRandomUuid(),
+        team_id: team.id,
+        user_id: user.auth0_id
+    };
+    
+    await createRequest(request);
+
+    console.log("**successfully billed to user");
 
     next();
 };
 
 export const userRequestBilling: RequestHandler = async (req, res, next) => {
-    const accessToken = getAccessTokenFromRequest(req)!;
-    const decodedAccessToken: CustomAuth0JwtPayload = jwtDecode(accessToken);
+    const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-    const email = decodedAccessToken.email;
-    const user = await getUserByEmail(email);
+    console.log("\n--- REQUEST ---");
+    console.log(`ressource: ${getAccessPathFromRequest(req)}`);
+    console.log(`user: ${decodedAccessToken.email}`);
+    console.log(`user id: ${decodedAccessToken.azp}`);
 
+    const user = await getUserByEmail(decodedAccessToken.email);
     const team = await getTeamById(user.team_id);
 
     const request: InsertRequest = {
