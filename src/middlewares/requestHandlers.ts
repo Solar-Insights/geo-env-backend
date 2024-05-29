@@ -1,12 +1,13 @@
 import { getUserByEmail } from "@/db/users/operations";
 import { InvalidParameterError, InvalidTokenError } from "@/middlewares/customErrors";
-import { CustomAuth0JwtPayload, PricingTier, RoutesAffectingQuotas } from "@/services/types";
+import { CustomAuth0JwtPayload, MonthlyQuotaField, MonthlyQuotaFieldDetailed, RoutesAffectingQuotas } from "@/services/types";
 import { RequestHandler } from "express";
 import { claimIncludes } from "express-oauth2-jwt-bearer";
 import { Coordinates, validCoordinates } from "geo-env-typing/geo";
 import { getDecodedAccessTokenFromRequest } from "@/middlewares/responseHandlers";
-import { getMyOrganizationPricingTier } from "@/services/users";
-import { pricingTiersQuotas, routeToMonthlyQuotaFieldMap } from "@/services/constants";
+import { getOrganizationByAccessToken } from "@/services/users";
+import { routeToMonthlyQuotaFieldMap, monthlyQuotaFieldToMonthlyBillingFieldMap, pricingTiersQuotas } from "@/services/constants";
+import { getLatestBillingByTeamId } from "@/db/billing/operations";
 
 export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
@@ -53,15 +54,29 @@ export function makeInvalidCoordError(url: string) {
     );
 }
 
-export const requestRespectsPricingTierQuota: RequestHandler = async (req, res, next) => {
+export const respectsPricingTierQuota: RequestHandler = async (req, res, next) => {
     if (!(req.url in routeToMonthlyQuotaFieldMap)) next();
     
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
-    const pricingTier = await getMyOrganizationPricingTier(decodedAccessToken);
+    const organization = await getOrganizationByAccessToken(decodedAccessToken);
+    const organizationLatestBilling = await getLatestBillingByTeamId(organization.id);
 
     const quotaRoute = req.url as RoutesAffectingQuotas;
-    const correspondingMonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
-    const monthlyQuotaFieldLimitForTier = pricingTiersQuotas[pricingTier][correspondingMonthlyQuotaField];
+    const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
+    const monthlyQuotaFieldDetailed: MonthlyQuotaFieldDetailed = pricingTiersQuotas[organization.pricing_tier][monthlyQuotaField];
+    const organizationCurrentValue: number = organizationLatestBilling[monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField]];
     
+    if (organizationCurrentValue >= monthlyQuotaFieldDetailed.value) {
+        next(
+            makeQuotaLimitReachedResponse(monthlyQuotaField, monthlyQuotaFieldDetailed.hard, quotaRoute)
+        );
+    }
+
     next();
 };
+
+export function makeQuotaLimitReachedResponse(monthlyQuotaField: MonthlyQuotaField, hardLimit: boolean, url: string) {
+    if (hardLimit) return;
+    
+    return;
+}

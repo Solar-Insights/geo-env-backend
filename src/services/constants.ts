@@ -1,4 +1,4 @@
-import { PricingTierQuotas, RouteToMonthlyQuotaFieldMap } from "@/services/types";
+import { RouteToMonthlyQuotaFieldMap, MonthlyQuotaFieldToMonthlyBillingFieldMap, MonthlyBillingField, PricingTierQuotas } from "@/services/types";
 
 export const binaryPalette = ["212121", "B3E5FC"];
 
@@ -20,19 +20,42 @@ export const routeToMonthlyQuotaFieldMap: RouteToMonthlyQuotaFieldMap = {
     "/solar/closest-building-insights": "max_building_insights_requests"
 };
 
+export const monthlyQuotaFieldToMonthlyBillingFieldMap: MonthlyQuotaFieldToMonthlyBillingFieldMap = {
+    "max_free_members_count": "max_members_count",
+    "max_building_insights_requests": "building_insights_requests"
+};
+
 export const SOLAR_INSIGHTS_INFINITY = 2147483647;
 
 export const pricingTiersQuotas: PricingTierQuotas = {
     starter: {
-        max_free_members_count: 1,
-        max_building_insights_requests: 100
+        max_free_members_count: {
+            value: 1,
+            hard: true
+        },
+        max_building_insights_requests: {
+            value: 100,
+            hard: true,
+        }
     },
     pro: {
-        max_free_members_count: 8,
-        max_building_insights_requests: SOLAR_INSIGHTS_INFINITY
+        max_free_members_count: {
+            value: 8,
+            hard: false
+        },
+        max_building_insights_requests: {
+            value: SOLAR_INSIGHTS_INFINITY,
+            hard: true,
+        }
     },
     enterprise: {
-        max_free_members_count: 16,
-        max_building_insights_requests: SOLAR_INSIGHTS_INFINITY
+        max_free_members_count: {
+            value: 16,
+            hard: false
+        },
+        max_building_insights_requests: {
+            value: SOLAR_INSIGHTS_INFINITY,
+            hard: true,
+        }
     },
 };
