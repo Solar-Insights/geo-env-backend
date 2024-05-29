@@ -18,6 +18,12 @@ export const userRequestLogger: RequestHandler = async (req, res, next) => {
     console.log(`user: ${decodedAccessToken.email}`);
     console.log(`user id: ${decodedAccessToken.azp}`);
 
+    next();
+};
+
+export const userRequestDatabaseLogger: RequestHandler = async (req, res, next) => {
+    const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
+
     const user = await getUserByEmail(decodedAccessToken.email);
     const team = await getTeamById(user.team_id);
     const request: InsertRequest = {
@@ -29,16 +35,21 @@ export const userRequestLogger: RequestHandler = async (req, res, next) => {
 
     await createRequest(request);
 
+    console.log("**successfully logged to database");
+
     next();
-};
+}
 
 export const userRequestBilling: RequestHandler = async (req, res, next) => {
-    if (!(req.url in routeToMonthlyQuotaFieldMap)) next();
-    
+    if (!(getAccessPathFromRequest(req) in routeToMonthlyQuotaFieldMap)) {
+        next();
+        return;
+    }
+
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     const organization = await getOrganizationByAccessToken(decodedAccessToken);
 
-    const quotaRoute = req.url as RoutesAffectingQuotas;
+    const quotaRoute = getAccessPathFromRequest(req) as RoutesAffectingQuotas;
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
     const monthlyBillingField: MonthlyBillingField = monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField];
     await incrementLatestBillingField(organization.id, monthlyBillingField)
@@ -71,5 +82,5 @@ export const userResponseHandler: RequestHandler = (req, res, next) => {
 };
 
 export function getAccessPathFromRequest(req: Request) {
-    return `${req.method} ${req.route.path}`;
+    return `${req.method} ${req.path}`;
 }

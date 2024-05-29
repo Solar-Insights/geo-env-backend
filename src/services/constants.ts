@@ -16,8 +16,8 @@ export const roleIds = {
 };
 
 export const routeToMonthlyQuotaFieldMap: RouteToMonthlyQuotaFieldMap = {
-    "/user/my-organization/members": "max_free_members_count",
-    "/solar/closest-building-insights": "max_building_insights_requests"
+    "POST /user/my-organization/members": "max_free_members_count",
+    "GET /solar/closest-building-insights": "max_building_insights_requests"
 };
 
 export const monthlyQuotaFieldToMonthlyBillingFieldMap: MonthlyQuotaFieldToMonthlyBillingFieldMap = {

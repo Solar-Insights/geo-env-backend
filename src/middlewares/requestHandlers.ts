@@ -4,7 +4,7 @@ import { CustomAuth0JwtPayload, MonthlyQuotaField, MonthlyQuotaFieldDetailed, Ro
 import { RequestHandler } from "express";
 import { claimIncludes } from "express-oauth2-jwt-bearer";
 import { Coordinates, validCoordinates } from "geo-env-typing/geo";
-import { getDecodedAccessTokenFromRequest } from "@/middlewares/responseHandlers";
+import { getAccessPathFromRequest, getDecodedAccessTokenFromRequest } from "@/middlewares/responseHandlers";
 import { getOrganizationByAccessToken } from "@/services/users";
 import { routeToMonthlyQuotaFieldMap, monthlyQuotaFieldToMonthlyBillingFieldMap, pricingTiersQuotas } from "@/services/constants";
 import { getLatestBillingByTeamId } from "@/db/billing/operations";
@@ -55,13 +55,16 @@ export function makeInvalidCoordError(url: string) {
 }
 
 export const respectsPricingTierQuota: RequestHandler = async (req, res, next) => {
-    if (!(req.url in routeToMonthlyQuotaFieldMap)) next();
+    if (!(getAccessPathFromRequest(req) in routeToMonthlyQuotaFieldMap)) {
+        next();
+        return;
+    }
     
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     const organization = await getOrganizationByAccessToken(decodedAccessToken);
     const organizationLatestBilling = await getLatestBillingByTeamId(organization.id);
 
-    const quotaRoute = req.url as RoutesAffectingQuotas;
+    const quotaRoute = getAccessPathFromRequest(req) as RoutesAffectingQuotas;
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
     const monthlyQuotaFieldDetailed: MonthlyQuotaFieldDetailed = pricingTiersQuotas[organization.pricing_tier][monthlyQuotaField];
     const organizationCurrentValue: number = organizationLatestBilling[monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField]];

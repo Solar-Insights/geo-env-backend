@@ -61,7 +61,7 @@ export type RouteToMonthlyQuotaFieldMap = {
     [key in RoutesAffectingQuotas]: MonthlyQuotaField
 };
 
-export type RoutesAffectingQuotas = "/solar/closest-building-insights" | "/user/my-organization/members";
+export type RoutesAffectingQuotas = "GET /solar/closest-building-insights" | "POST /user/my-organization/members";
 
 export type MonthlyQuotaField = "max_free_members_count" | "max_building_insights_requests";
 

@@ -9,7 +9,7 @@ import healthRouter from "@/routes/health";
 import geoRouter from "@/routes/geo";
 import solarRouter from "@/routes/solar";
 import userRouter from "@/routes/user";
-import { userRequestLogger, userRequestBilling, userResponseHandler } from "@/middlewares/responseHandlers";
+import { userRequestLogger, userRequestBilling, userResponseHandler, userRequestDatabaseLogger } from "@/middlewares/responseHandlers";
 import { AddressInfo } from "net";
 import { existingSupabaseUser } from "@/middlewares/requestHandlers";
 import unsecuredRouter from "./routes/unsecured";
@@ -110,16 +110,20 @@ export class ServerFactory {
         return this;
     }
 
+    public withRequestDatabaseLogger() {
+        console.log("setting up request database logger..");
+        this.app.use(userRequestDatabaseLogger)
+        return this;
+    }
+
     public withRequestLogger() {
         console.log("setting up request logger..");
-        3;
         this.app.use(userRequestLogger);
         return this;
     }
 
     public withRequestBilling() {
         console.log("setting up billing..");
-        3;
         this.app.use(userRequestBilling);
         return this;
     }
