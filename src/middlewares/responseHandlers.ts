@@ -7,7 +7,7 @@ import { InsertRequest } from "@/db/requests/types";
 import { generateRandomUuid } from "@/db/utils";
 import { createRequest } from "@/db/requests/operations";
 import { getOrganizationByAccessToken } from "@/services/users";
-import { getLatestBillingByTeamId, incrementLatestBillingField } from "@/db/billing/operations";
+import { incrementLatestBillingField } from "@/db/billing/operations";
 import { monthlyQuotaFieldToMonthlyBillingFieldMap, routeToMonthlyQuotaFieldMap } from "@/services/constants";
 
 export const userRequestLogger: RequestHandler = async (req, res, next) => {
@@ -33,6 +33,8 @@ export const userRequestLogger: RequestHandler = async (req, res, next) => {
 };
 
 export const userRequestBilling: RequestHandler = async (req, res, next) => {
+    if (!(req.url in routeToMonthlyQuotaFieldMap)) next();
+    
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     const organization = await getOrganizationByAccessToken(decodedAccessToken);
 
