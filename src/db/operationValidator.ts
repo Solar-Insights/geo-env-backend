@@ -4,10 +4,12 @@ import { DatabasePostRequestValidationError } from "./customErrors";
 export class OperationValidator {
     data: any[] | null;
     error: PostgrestError | null;
+    count: number | null | undefined;
 
-    public constructor(data: any[] | null, error: PostgrestError | null) {
+    public constructor(data: any[] | null, error: PostgrestError | null, count?: number | null | undefined) {
         this.data = data;
         this.error = error;
+        this.count = count;
 
         if (this.error !== null)
             throw new DatabasePostRequestValidationError(
@@ -53,6 +55,18 @@ export class OperationValidator {
                 "Expected no data to be returned from the request to the database."
             );
         return this;
+    }
+
+    private expectsNonNullCount() {
+        if (this.count === null)
+            throw new DatabasePostRequestValidationError(
+                "Expected count to be returned from the request to the database."
+            );
+        return this;
+    }
+
+    public validateCountRequest() {
+        this.expectsNonNullCount();
     }
 
     public validateGetSingleOrMoreItemRequest() {

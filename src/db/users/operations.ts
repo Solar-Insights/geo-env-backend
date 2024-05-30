@@ -18,6 +18,17 @@ export async function getAllTheTeamUsers(teamId: string) {
     return data;
 }
 
+export async function getTeamUserCount(teamId: string) {
+    const { count, error } = await supabase.from("users")
+        .select("*", { count: "exact", head: true })
+        .eq("team_id", teamId)
+        .eq("is_deleted", false)
+
+    new OperationValidator(null, error, count).validateCountRequest();
+
+    return count!;
+}
+
 export async function getSpecificMemberOfTheTeam(teamId: string, email: string) {
     const { data, error } = await supabase
         .from("users")

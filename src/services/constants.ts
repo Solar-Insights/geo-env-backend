@@ -25,6 +25,8 @@ export const monthlyQuotaFieldToMonthlyBillingFieldMap: MonthlyQuotaFieldToMonth
     "max_building_insights_requests": "building_insights_requests"
 };
 
+export const maximumMonthlyBillingFields: MonthlyBillingField[] = ["max_members_count"];
+
 export const SOLAR_INSIGHTS_INFINITY = 2147483647;
 
 export const pricingTiersQuotas: PricingTierQuotas = {

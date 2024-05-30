@@ -1,7 +1,9 @@
 import { supabase } from "@/db/init";
 import { OperationValidator } from "@/db/operationValidator";
-import { MonthlyBillingField, MonthlyQuotaField } from "@/services/types";
-import { SupabaseBilling, UpdateBilling } from "./types";
+import { MonthlyBillingField } from "@/services/types";
+import { SupabaseBilling, UpdateBilling } from "@/db/billing/types";
+import { maximumMonthlyBillingFields } from "@/services/constants";
+import { getTeamUserCount } from "@/db/users/operations";
 
 export async function getLatestBillingByTeamId(teamId: string) {
     const { data, error } = await supabase.from("billing")
@@ -9,7 +11,7 @@ export async function getLatestBillingByTeamId(teamId: string) {
         .eq("team_id", teamId)
         .order("billing_date", { ascending: false });
 
-    new OperationValidator(data, error).validateGetSingleItemRequest();
+    new OperationValidator(data, error).validateGetSingleOrMoreItemRequest();
 
     return data![0];
 }
@@ -22,7 +24,21 @@ export async function updateBillingById(billing: UpdateBilling, id: string) {
 
 export async function incrementLatestBillingField(teamId: string, billingField: MonthlyBillingField) {
     const latestBilling: SupabaseBilling = await getLatestBillingByTeamId(teamId);
-    latestBilling[billingField] += 1;
+
+    if (!maximumMonthlyBillingFields.includes(billingField)) {
+        latestBilling[billingField] += 1;
+    } else {
+        switch (billingField) { // Check if we're over the limit before setting new max
+            case "max_members_count":
+                const teamUserCount = await getTeamUserCount(teamId);
+                console.log(teamUserCount);
+                if (teamUserCount > latestBilling.max_members_count) {
+                    console.log("now more members than max members count")
+                    latestBilling.max_members_count = teamUserCount;
+                }
+                break;
+        }
+    }
 
     await updateBillingById(latestBilling, latestBilling.id);
 }
