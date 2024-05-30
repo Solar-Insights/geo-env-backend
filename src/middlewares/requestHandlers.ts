@@ -1,4 +1,4 @@
-import { getUserByEmail } from "@/db/users/operations";
+import { getTeamUserCount, getUserByEmail } from "@/db/users/operations";
 import { InvalidParameterError, InvalidTokenError, QuotaLimitReachedAlert, QuotaLimitReachedError } from "@/middlewares/customErrors";
 import { CustomAuth0JwtPayload, MonthlyQuotaField, MonthlyQuotaFieldDetailed, RoutesAffectingQuotas } from "@/services/types";
 import { RequestHandler } from "express";
@@ -64,11 +64,16 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
     const organization = await getOrganizationByAccessToken(decodedAccessToken);
     const organizationLatestBilling = await getLatestBillingByTeamId(organization.id);
 
+    // TEMPORARY: Probably needs to create an object for max type of values, or maybe a current / max number in the db?
+    organizationLatestBilling.max_members_count = await getTeamUserCount(organization.id);
+
     const quotaRoute = getAccessPathFromRequest(req) as RoutesAffectingQuotas;
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
     const monthlyQuotaFieldDetailed: MonthlyQuotaFieldDetailed = pricingTiersQuotas[organization.pricing_tier][monthlyQuotaField];
     const organizationCurrentValue: number = organizationLatestBilling[monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField]];
     
+    console.log(organizationCurrentValue, monthlyQuotaFieldDetailed)
+
     if (organizationCurrentValue >= monthlyQuotaFieldDetailed.value) {
         next(
             makeQuotaLimitReachedResponse(monthlyQuotaField, monthlyQuotaFieldDetailed.hard, quotaRoute)

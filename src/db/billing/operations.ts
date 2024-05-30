@@ -31,7 +31,6 @@ export async function incrementLatestBillingField(teamId: string, billingField: 
         switch (billingField) { // Check if we're over the limit before setting new max
             case "max_members_count":
                 const teamUserCount = await getTeamUserCount(teamId);
-                console.log(teamUserCount);
                 if (teamUserCount > latestBilling.max_members_count) {
                     console.log("now more members than max members count")
                     latestBilling.max_members_count = teamUserCount;

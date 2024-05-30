@@ -11,7 +11,7 @@ import solarRouter from "@/routes/solar";
 import userRouter from "@/routes/user";
 import { userRequestLogger, userRequestBilling, userResponseHandler, userRequestDatabaseLogger } from "@/middlewares/responseHandlers";
 import { AddressInfo } from "net";
-import { existingSupabaseUser } from "@/middlewares/requestHandlers";
+import { existingSupabaseUser, respectsPricingTierQuota } from "@/middlewares/requestHandlers";
 import unsecuredRouter from "./routes/unsecured";
 
 export class ServerFactory {
@@ -95,6 +95,12 @@ export class ServerFactory {
     public withGeoRouter() {
         console.log("setting up geo router..");
         this.app.use(geoRouter);
+        return this;
+    }
+
+    public withPricingTierQuotaVerification() {
+        console.log("setting up pricing tier quota verification..");
+        this.app.use(respectsPricingTierQuota);
         return this;
     }
 
