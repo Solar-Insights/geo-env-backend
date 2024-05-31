@@ -1,4 +1,4 @@
-import { Database } from "@/db/types";
+import { Database } from "@/db/utils/types";
 
 export type SupabaseTeam = Database["public"]["Tables"]["teams"]["Row"];
 

@@ -1,5 +1,5 @@
 import { PostgrestError } from "@supabase/supabase-js";
-import { DatabasePostRequestValidationError } from "./customErrors";
+import { DatabasePostRequestValidationError } from "@/db/utils/errors";
 
 export class OperationValidator {
     data: any[] | null;

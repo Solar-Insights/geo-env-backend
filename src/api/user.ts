@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AUTH0_BASE_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET } from "@/config";
 import { Auth0User } from "@/services/types";
-import { generateRandomUuid } from "@/db/utils";
+import { generateRandomUuid } from "@/db/utils/helpers";
 
 export async function getManagementAPIToken() {
     return await axios({

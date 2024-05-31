@@ -1,6 +1,6 @@
 import { supabase } from "@/db/init";
 import { InsertTeam, UpdateTeam } from "@/db/teams/types";
-import { OperationValidator } from "@/db/operationValidator";
+import { OperationValidator } from "@/db/utils/validator";
 
 export async function getTeamById(id: string) {
     const { data, error } = await supabase.from("teams").select().eq("id", id);

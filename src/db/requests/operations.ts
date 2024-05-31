@@ -1,6 +1,6 @@
 import { supabase } from "@/db/init";
 import { InsertRequest, UpdateRequest } from "@/db/requests/types";
-import { OperationValidator } from "@/db/operationValidator";
+import { OperationValidator } from "@/db/utils/validator";
 
 export async function getRequestById(id: string) {
     const { data, error } = await supabase.from("requests").select().eq("id", id);

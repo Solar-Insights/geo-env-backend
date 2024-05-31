@@ -1,6 +1,6 @@
 import { supabase } from "@/db/init";
 import { InsertUser, UpdateUser } from "@/db/users/types";
-import { OperationValidator } from "@/db/operationValidator";
+import { OperationValidator } from "@/db/utils/validator";
 
 export async function getUserByEmail(email: string) {
     const { data, error } = await supabase.from("users").select().eq("email", email).eq("is_deleted", false);

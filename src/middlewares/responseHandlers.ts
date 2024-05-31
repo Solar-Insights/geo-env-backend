@@ -4,7 +4,7 @@ import { CustomAuth0JwtPayload, MonthlyBillingField, MonthlyQuotaField, RoutesAf
 import { getUserByEmail } from "@/db/users/operations";
 import { getTeamById } from "@/db/teams/operations";
 import { InsertRequest } from "@/db/requests/types";
-import { generateRandomUuid } from "@/db/utils";
+import { generateRandomUuid } from "@/db/utils/helpers";
 import { createRequest } from "@/db/requests/operations";
 import { getOrganizationByAccessToken } from "@/services/users";
 import { incrementLatestBillingField } from "@/db/billing/operations";

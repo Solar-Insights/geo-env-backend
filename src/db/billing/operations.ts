@@ -1,5 +1,5 @@
 import { supabase } from "@/db/init";
-import { OperationValidator } from "@/db/operationValidator";
+import { OperationValidator } from "@/db/utils/validator";
 import { MonthlyBillingField } from "@/services/types";
 import { SupabaseBilling, UpdateBilling } from "@/db/billing/types";
 import { maximumMonthlyBillingFields } from "@/services/constants";

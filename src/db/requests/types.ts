@@ -1,4 +1,4 @@
-import { Database } from "@/db/types";
+import { Database } from "@/db/utils/types";
 
 export type SupabaseRequest = Database["public"]["Tables"]["requests"]["Row"];
 
