@@ -10,19 +10,19 @@ export async function getUserByEmail(email: string) {
     return data![0];
 }
 
-export async function getAllTheTeamUsers(teamId: string) {
-    const { data, error } = await supabase.from("users").select().eq("team_id", teamId).eq("is_deleted", false);
+export async function getAllOrganizationUsers(organizationId: string) {
+    const { data, error } = await supabase.from("users").select().eq("organization_id", organizationId).eq("is_deleted", false);
 
     new OperationValidator(data, error).validateGetSingleOrMoreItemRequest();
 
-    return data;
+    return data!;
 }
 
-export async function getTeamUserCount(teamId: string) {
+export async function getOrganizationUserCount(organizationId: string) {
     const { count, error } = await supabase
         .from("users")
         .select("*", { count: "exact", head: true })
-        .eq("team_id", teamId)
+        .eq("organization_id", organizationId)
         .eq("is_deleted", false);
 
     new OperationValidator(null, error, count).validateCountRequest();
@@ -30,11 +30,11 @@ export async function getTeamUserCount(teamId: string) {
     return count!;
 }
 
-export async function getSpecificMemberOfTheTeam(teamId: string, email: string) {
+export async function getSpecificMemberOfTheOrganization(organizationId: string, email: string) {
     const { data, error } = await supabase
         .from("users")
         .select()
-        .eq("team_id", teamId)
+        .eq("organization_id", organizationId)
         .eq("email", email)
         .eq("is_deleted", false);
 
@@ -43,17 +43,17 @@ export async function getSpecificMemberOfTheTeam(teamId: string, email: string) 
     return data![0];
 }
 
-export async function getAllTheTeamAdmins(teamId: string) {
+export async function getAllTheOrganizationAdmins(organizationId: string) {
     const { data, error } = await supabase
         .from("users")
         .select()
-        .eq("team_id", teamId)
+        .eq("organization_id", organizationId)
         .eq("is_admin", true)
         .eq("is_deleted", false);
 
     new OperationValidator(data, error).validateGetSingleOrMoreItemRequest();
 
-    return data;
+    return data!;
 }
 
 export async function createUser(user: InsertUser) {

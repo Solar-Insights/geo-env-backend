@@ -1,13 +1,13 @@
 import {
-    getAllTheTeamAdmins,
-    getAllTheTeamUsers,
+    getAllTheOrganizationAdmins,
+    getAllOrganizationUsers,
     getUserByEmail,
     createUser,
     removeUserByEmailFromActive,
-    getSpecificMemberOfTheTeam
+    getSpecificMemberOfTheOrganization
 } from "@/db/users/operations";
 import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "../utils/types";
-import { getTeamById } from "@/db/teams/operations";
+import { getOrganizationById } from "@/db/organizations/operations";
 import { databaseMemberToClientMember } from "@/dto/users";
 import { InsertUser, SupabaseUser } from "@/db/users/types";
 import {
@@ -22,28 +22,28 @@ import { roleIds } from "@/server/utils/constants";
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
 
-    const myTeam = await getTeamById(requester.team_id);
-    const myTeamAdmins = await getAllTheTeamAdmins(requester.team_id);
+    const myOrganization = await getOrganizationById(requester.organization_id);
+    const myOrganizationAdmins = await getAllTheOrganizationAdmins(requester.organization_id);
 
     const membersDTO: MyOrganizationMember[] = [];
-    myTeamAdmins?.forEach((admin) => {
+    myOrganizationAdmins?.forEach((admin) => {
         const singleMemberDTO = databaseMemberToClientMember(admin);
         membersDTO.push(singleMemberDTO);
     });
 
     return {
         admins: membersDTO,
-        name: myTeam.team_name
+        name: myOrganization.organization_name
     };
 }
 
 export async function getAllMyOrganizationMembers(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
 
-    const myTeamMembers = await getAllTheTeamUsers(requester.team_id);
+    const myOrganizationMembers = await getAllOrganizationUsers(requester.organization_id);
 
     const membersDTO: MyOrganizationMember[] = [];
-    myTeamMembers?.forEach((member) => {
+    myOrganizationMembers?.forEach((member) => {
         if (organizationMembersAreIdentical(requester, member)) return;
         const singleMemberDTO = databaseMemberToClientMember(member);
         membersDTO.push(singleMemberDTO);
@@ -72,7 +72,7 @@ export async function addMemberToMyOrganization(
         avatar: newUser.picture,
         email: newUser.email,
         name: newUser.nickname,
-        team_id: requester.team_id
+        organization_id: requester.organization_id
     };
     await createUser(newMember);
 
@@ -87,7 +87,7 @@ export async function deleteMyOrganizationMember(
 ) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
     const managementAPIToken = await getManagementAPIToken();
-    const memberToRemove = await getSpecificMemberOfTheTeam(requester.team_id, memberToDelete.email);
+    const memberToRemove = await getSpecificMemberOfTheOrganization(requester.organization_id, memberToDelete.email);
 
     await deleteAuth0User(managementAPIToken, memberToRemove.auth0_id);
 
@@ -107,7 +107,7 @@ async function getRequesterFromDecodedAccessToken(decodedAccessToken: CustomAuth
 export async function getOrganizationByAccessToken(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
 
-    const organization = await getTeamById(requester.team_id);
+    const organization = await getOrganizationById(requester.organization_id);
 
     return organization;
 }

@@ -6,7 +6,6 @@ import { makeGeotiff } from "@/server/services/solar";
 
 export async function getClosestBuildingInsights(coord: LatLng) {
     // https://developers.google.com/maps/documentation/solar/reference/rest/v1/buildingInsights/findClosest
-
     return await axios({
         method: "get",
         responseType: "json",

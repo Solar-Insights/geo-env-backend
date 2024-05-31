@@ -15,7 +15,7 @@ The following section describes a step-by-step guide to launch your server local
     - `PORT` can be skipped to let the OS select the appropriate port for the server
     - `GOOGLE_KEY` should have authorisation to use the Geocoding, Places and Solar API for all routes to be available. For local use, application restriction is not absolutely required, **as long as you keep your API key secure**. For production use, see the next section regarding deployment
     - `BACKEND_URL` is a variable used by AUTH0 to identify where your backend is served (IIRC, it can be pretty much anything, and does not even need to be valid)
-    - `AUTH0_BASE_URL` is the URL used by your Auth0 team to authenticate user
+    - `AUTH0_BASE_URL` is the URL used by your Auth0 organization to authenticate user
     - `AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` are credentials used by Auth0 to generate tokens authenticating APIs
 3. Run `npm run start`
 4. HTTP requests can now be sent to the routes provided in `src/routes/*` to retrieve data

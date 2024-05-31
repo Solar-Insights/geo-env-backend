@@ -7,7 +7,7 @@ import {
     RoutesAffectingQuotas
 } from "@/server/utils/types";
 import { getUserByEmail } from "@/db/users/operations";
-import { getTeamById } from "@/db/teams/operations";
+import { getOrganizationById } from "@/db/organizations/operations";
 import { InsertRequest } from "@/db/requests/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
 import { createRequest } from "@/db/requests/operations";
@@ -30,11 +30,11 @@ export const userRequestDatabaseLogger: RequestHandler = async (req, res, next) 
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
     const user = await getUserByEmail(decodedAccessToken.email);
-    const team = await getTeamById(user.team_id);
+    const organization = await getOrganizationById(user.organization_id);
     const request: InsertRequest = {
         endpoint: getAccessPathFromRequest(req),
         id: generateRandomUuid(),
-        team_id: team.id,
+        organization_id: organization.id,
         user_id: user.auth0_id
     };
 

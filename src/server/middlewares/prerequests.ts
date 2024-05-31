@@ -1,4 +1,4 @@
-import { getTeamUserCount, getUserByEmail } from "@/db/users/operations";
+import { getOrganizationUserCount, getUserByEmail } from "@/db/users/operations";
 import {
     InvalidParameterError,
     InvalidTokenError,
@@ -21,7 +21,7 @@ import {
     monthlyQuotaFieldToMonthlyBillingFieldMap,
     pricingTiersQuotas
 } from "@/server/utils/constants";
-import { getLatestBillingByTeamId } from "@/db/billing/operations";
+import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
 
 export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
@@ -57,7 +57,7 @@ export const validateRequestCoordinates: RequestHandler = (req, res, next) => {
 export function makeInvalidTokenErrorWithNotFoundUser(url: string) {
     return new InvalidTokenError(
         url,
-        "The current user's team could not be identified. Please ask your organisation's administrator for more information."
+        "The current user's organization could not be identified. Please ask your organisation's administrator for more information."
     );
 }
 
@@ -76,10 +76,10 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
 
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     const organization = await getOrganizationByAccessToken(decodedAccessToken);
-    const organizationLatestBilling = await getLatestBillingByTeamId(organization.id);
+    const organizationLatestBilling = await getLatestBillingByOrganizationId(organization.id);
 
     // TEMPORARY: Probably needs to create an object for max type of values, or maybe a current / max number in the db?
-    organizationLatestBilling.max_members_count = await getTeamUserCount(organization.id);
+    organizationLatestBilling.max_members_count = await getOrganizationUserCount(organization.id);
 
     const quotaRoute = getAccessPathFromRequest(req) as RoutesAffectingQuotas;
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
