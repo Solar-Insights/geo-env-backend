@@ -30,7 +30,7 @@ export class UserApi extends ApiGeneric {
                 return response.data.access_token as string;
             })
             .catch(() => {
-                throw new ApiError();;
+                throw new ApiError();
             });
     }
 
@@ -43,7 +43,7 @@ export class UserApi extends ApiGeneric {
             password: generateRandomUuid(),
             verify_email: true
         };
-    
+
         return await axios({
             method: "post",
             headers: {
@@ -69,7 +69,7 @@ export class UserApi extends ApiGeneric {
             email: email,
             connection: "Username-Password-Authentication"
         };
-    
+
         await axios({
             method: "post",
             headers: {
@@ -79,17 +79,16 @@ export class UserApi extends ApiGeneric {
             responseType: "json",
             url: `${AUTH0_BASE_URL}/dbconnections/change_password`,
             data: passwordResetData
-        })
-            .catch(() => {
-                throw new ApiError();
-            });
+        }).catch(() => {
+            throw new ApiError();
+        });
     }
 
     public async assignRolesToUser(managementAPIToken: string, userId: string, roles: string[]) {
         const rolesData = {
             roles: roles
         };
-    
+
         await axios({
             method: "post",
             headers: {
@@ -100,10 +99,9 @@ export class UserApi extends ApiGeneric {
             responseType: "json",
             url: `${AUTH0_BASE_URL}/api/v2/users/${userId}/roles`,
             data: rolesData
-        })
-            .catch(() => {
-                throw new ApiError();
-            });
+        }).catch(() => {
+            throw new ApiError();
+        });
     }
 
     public async deleteAuth0User(managementAPIToken: string, userId: string) {
@@ -116,9 +114,8 @@ export class UserApi extends ApiGeneric {
             },
             responseType: "json",
             url: `${AUTH0_BASE_URL}/api/v2/users/${userId}`
-        })
-            .catch(() => {
-                throw new ApiError();
-            });
+        }).catch(() => {
+            throw new ApiError();
+        });
     }
 }

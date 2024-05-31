@@ -11,7 +11,11 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function getAllOrganizationUsers(organizationId: string) {
-    const { data, error } = await supabase.from("users").select().eq("organization_id", organizationId).eq("is_deleted", false);
+    const { data, error } = await supabase
+        .from("users")
+        .select()
+        .eq("organization_id", organizationId)
+        .eq("is_deleted", false);
 
     new OperationValidator(data, error).validateGetSingleOrMoreItemRequest();
 

@@ -19,7 +19,7 @@ unsecuredRouter.post("/unsecured/organization", async (req, res, next) => {
     const newOrganizationFormObject = new NewOrganizationFormClass(req.body);
     await validate(newOrganizationFormObject, "NewOrganizationFormClass");
 
-    await sendNewOrganizationRequestEmail(newOrganizationFormObject)
+    await sendNewOrganizationRequestEmail(newOrganizationFormObject);
 
     res.status(201).json();
 });

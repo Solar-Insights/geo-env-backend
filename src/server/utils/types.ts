@@ -72,6 +72,6 @@ export type MonthlyQuotaFieldToMonthlyBillingFieldMap = {
 };
 
 export type MyOrganizationDetails = {
-    admins: MyOrganizationMember[],
-    name: string,
+    admins: MyOrganizationMember[];
+    name: string;
 };

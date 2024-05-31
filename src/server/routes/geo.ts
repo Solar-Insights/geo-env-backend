@@ -9,7 +9,7 @@ geoRouter.get("/geo/geocoding", authRequiredPermissions(["read:get-geo-data"]), 
     const geoApi = new GeoApi(req);
     const formattedAddress = req.query.address as string;
 
-    const coordinates: LatLng = await geoApi.getGeocoding(formattedAddress)
+    const coordinates: LatLng = await geoApi.getGeocoding(formattedAddress);
 
     res.status(200).locals.data = {
         coordinates: coordinates
@@ -29,7 +29,7 @@ geoRouter.get(
             lng: Number(req.query.lng)
         };
 
-        const address = await geoApi.getReverseGeocoding(coord)
+        const address = await geoApi.getReverseGeocoding(coord);
 
         res.status(200).locals.data = {
             address: address

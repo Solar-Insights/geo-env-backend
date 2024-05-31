@@ -18,7 +18,7 @@ solarRouter.get(
             lng: Number(req.query.lng)
         };
 
-        const buildingInsights: BuildingInsights = await solarApi.getClosestBuildingInsights(coord)
+        const buildingInsights: BuildingInsights = await solarApi.getClosestBuildingInsights(coord);
 
         res.status(200).locals.data = {
             buildingInsights: buildingInsights
@@ -40,7 +40,7 @@ solarRouter.get(
             lng: Number(req.query.lng)
         };
 
-        const solarLayers: SolarLayers = await solarApi.getSolarLayers(coord, radius)
+        const solarLayers: SolarLayers = await solarApi.getSolarLayers(coord, radius);
 
         res.status(200).locals.data = {
             solarLayers: solarLayers
@@ -58,7 +58,7 @@ solarRouter.get(
         const solarApi = new SolarApi(req);
         const url = decodeURIComponent(req.query.url as string);
 
-        const geotiff: GeoTiff = await solarApi.getGeotiff(url)
+        const geotiff: GeoTiff = await solarApi.getGeotiff(url);
 
         res.status(200).locals.data = {
             geotiff: geotiff

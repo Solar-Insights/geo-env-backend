@@ -38,6 +38,6 @@ export async function sendNewOrganizationRequestEmail(newOrganizationFormObject:
             emailLogger(GMAIL_EMAIL, GMAIL_EMAIL, "SENDING");
         })
         .catch((error) => {
-            throw new EmailError( "SENDING");
+            throw new EmailError("SENDING");
         });
 }

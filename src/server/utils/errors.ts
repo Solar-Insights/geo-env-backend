@@ -1,4 +1,4 @@
-import { EmailOperationType, MonthlyQuotaField} from "@/server/utils/types";
+import { EmailOperationType, MonthlyQuotaField } from "@/server/utils/types";
 
 export type ErrorType = "api-error";
 
@@ -7,11 +7,7 @@ export class ExpressError extends Error {
     message: string;
     code: number;
 
-    public constructor(
-        error: string,
-        message: string = "The Express server encountered an error.",
-        code: number
-    ) {
+    public constructor(error: string, message: string = "The Express server encountered an error.", code: number) {
         super();
         this.error = error;
         this.message = message;
@@ -35,7 +31,8 @@ export class InvalidParameterError extends ExpressError {
     }
 
     public forInvalidCoord() {
-        this.message = "Coordinates should respect a certain range, and be numbers. Longitudes range between -180 and 180, and latitudes range between -90 and 90."
+        this.message =
+            "Coordinates should respect a certain range, and be numbers. Longitudes range between -180 and 180, and latitudes range between -90 and 90.";
         return this;
     }
 }

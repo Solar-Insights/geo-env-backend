@@ -49,7 +49,7 @@ export async function getAllMyOrganizationMembers(userApi: UserApi, decodedAcces
 }
 
 export async function addMemberToMyOrganization(
-    userApi: UserApi, 
+    userApi: UserApi,
     decodedAccessToken: CustomAuth0JwtPayload,
     organizationMemberPayload: CreateMyOrganizationMemberPayload
 ) {
@@ -79,7 +79,7 @@ export async function addMemberToMyOrganization(
 }
 
 export async function deleteMyOrganizationMember(
-    userApi: UserApi, 
+    userApi: UserApi,
     decodedAccessToken: CustomAuth0JwtPayload,
     memberToDelete: MyOrganizationMember
 ) {
