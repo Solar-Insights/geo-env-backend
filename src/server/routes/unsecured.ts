@@ -4,8 +4,7 @@ import { EmailError, ObjectValidationError } from "@/server/utils/errors";
 import { NewOrganizationFormClass } from "@/dto/unsecured/newOrganizationForm";
 import { getAccessPathFromRequest } from "@/server/middlewares/postrequests";
 import { sendNewOrganizationRequestEmail } from "@/server/services/emails";
-
-const unsecuredRouter = express.Router();
+import { validate } from "@/dto/validation/requestValidation";
 
 function unsecuredRequestLogger(req: Request) {
     const accessPath = getAccessPathFromRequest(req);
@@ -13,16 +12,16 @@ function unsecuredRequestLogger(req: Request) {
     console.log(`ressource: ${accessPath}`);
 }
 
-unsecuredRouter.post("/unsecured/organization", async (req, res, next) => {
-    const newOrganizationFormObject = new NewOrganizationFormClass(req.body);
+const unsecuredRouter = express.Router();
 
-    await validateOrReject(newOrganizationFormObject).catch((errors) => {
-        next(new ObjectValidationError(req.url, "NewOrganizationFormClass"));
-    });
+unsecuredRouter.post("/unsecured/organization", async (req, res, next) => {
+    unsecuredRequestLogger(req);
+
+    const newOrganizationFormObject = new NewOrganizationFormClass(req.body);
+    await validate(newOrganizationFormObject, "NewOrganizationFormClass", req);
 
     await sendNewOrganizationRequestEmail(newOrganizationFormObject)
         .then((logs: string) => {
-            unsecuredRequestLogger(req);
             console.log(logs);
 
             res.status(201).json();

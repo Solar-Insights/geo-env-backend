@@ -10,8 +10,8 @@ export const errLogger: ErrorRequestHandler = (err, req, res, next) => {
 
 export const errResponder: ErrorRequestHandler = (err, req, res, next) => {
     if (err instanceof ExpressError) res.status(err.code).json(err);
-    else if (err instanceof UnauthorizedError) res.status(err.statusCode).json(err);
     else if (err instanceof DatabaseError) res.status(err.code).json(err);
+    else if (err instanceof UnauthorizedError) res.status(err.statusCode).json(err);
     else next(err);
 };
 

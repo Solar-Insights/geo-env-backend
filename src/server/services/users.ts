@@ -8,18 +8,13 @@ import {
 } from "@/db/users/operations";
 import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "../utils/types";
 import { getOrganizationById } from "@/db/organizations/operations";
-import { databaseMemberToClientMember } from "@/dto/users";
-import { InsertUser, SupabaseUser } from "@/db/users/types";
-import {
-    assignRolesToUser,
-    deleteAuth0User,
-    getManagementAPIToken,
-    manuallyCreateAuth0User,
-    sendEmailForPasswordReset
-} from "@/api/apis/user";
+import { databaseMemberToClientMember } from "@/dto/users/users";
+import { InsertUser } from "@/db/users/types";
+import { UserApi } from "@/api/apis/user";
 import { roleIds } from "@/server/utils/constants";
+import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
 
-export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
+export async function getMyOrganizationDetails(userApi: UserApi, decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
 
     const myOrganization = await getOrganizationById(requester.organization_id);
@@ -37,7 +32,7 @@ export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0Jw
     };
 }
 
-export async function getAllMyOrganizationMembers(decodedAccessToken: CustomAuth0JwtPayload) {
+export async function getAllMyOrganizationMembers(userApi: UserApi, decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
 
     const myOrganizationMembers = await getAllOrganizationUsers(requester.organization_id);
@@ -53,19 +48,20 @@ export async function getAllMyOrganizationMembers(decodedAccessToken: CustomAuth
 }
 
 export async function addMemberToMyOrganization(
+    userApi: UserApi, 
     decodedAccessToken: CustomAuth0JwtPayload,
     organizationMemberPayload: CreateMyOrganizationMemberPayload
 ) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
-    const managementAPIToken = await getManagementAPIToken();
+    const managementAPIToken = await userApi.getManagementAPIToken();
 
-    const newUser = await manuallyCreateAuth0User(
+    const newUser = await userApi.manuallyCreateAuth0User(
         managementAPIToken,
         organizationMemberPayload.email,
         organizationMemberPayload.name
     );
-    await sendEmailForPasswordReset(newUser.email);
-    await assignRolesToUser(managementAPIToken, newUser.user_id, [roleIds["OrgMember"]]);
+    await userApi.sendEmailForPasswordReset(newUser.email);
+    await userApi.assignRolesToUser(managementAPIToken, newUser.user_id, [roleIds["OrgMember"]]);
 
     const newMember: InsertUser = {
         auth0_id: newUser.user_id,
@@ -82,32 +78,16 @@ export async function addMemberToMyOrganization(
 }
 
 export async function deleteMyOrganizationMember(
+    userApi: UserApi, 
     decodedAccessToken: CustomAuth0JwtPayload,
     memberToDelete: MyOrganizationMember
 ) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
-    const managementAPIToken = await getManagementAPIToken();
+    const managementAPIToken = await userApi.getManagementAPIToken();
     const memberToRemove = await getSpecificMemberOfTheOrganization(requester.organization_id, memberToDelete.email);
 
-    await deleteAuth0User(managementAPIToken, memberToRemove.auth0_id);
+    await userApi.deleteAuth0User(managementAPIToken, memberToRemove.auth0_id);
 
     memberToRemove.is_deleted = true;
     await removeUserByEmailFromActive(memberToRemove, memberToRemove.email);
-}
-
-function organizationMembersAreIdentical(member1: SupabaseUser, member2: SupabaseUser) {
-    return member1.email === member2.email && member1.auth0_id === member2.auth0_id;
-}
-
-async function getRequesterFromDecodedAccessToken(decodedAccessToken: CustomAuth0JwtPayload) {
-    const requester = await getUserByEmail(decodedAccessToken.email);
-    return requester;
-}
-
-export async function getOrganizationByAccessToken(decodedAccessToken: CustomAuth0JwtPayload) {
-    const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
-
-    const organization = await getOrganizationById(requester.organization_id);
-
-    return organization;
 }

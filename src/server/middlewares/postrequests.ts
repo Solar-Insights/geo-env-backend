@@ -11,7 +11,7 @@ import { getOrganizationById } from "@/db/organizations/operations";
 import { InsertRequest } from "@/db/requests/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
 import { createRequest } from "@/db/requests/operations";
-import { getOrganizationByAccessToken } from "@/server/services/users";
+import { getOrganizationByAccessToken } from "@/db/users/helpers";
 import { incrementLatestBillingField } from "@/db/billing/operations";
 import { monthlyQuotaFieldToMonthlyBillingFieldMap, routeToMonthlyQuotaFieldMap } from "@/server/utils/constants";
 

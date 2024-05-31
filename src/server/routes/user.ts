@@ -8,6 +8,7 @@ import {
     getMyOrganizationDetails
 } from "@/server/services/users";
 import { getDecodedAccessTokenFromRequest } from "@/server/middlewares/postrequests";
+import { UserApi } from "@/api/apis/user";
 
 const userRouter = express.Router();
 
@@ -15,16 +16,16 @@ userRouter.get(
     "/user/my-organization",
     authRequiredPermissions(["read:basic-user-management"]),
     async (req, res, next) => {
+        const userApi = new UserApi(req);
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-        const myOrganization = await getMyOrganizationDetails(decodedAccessToken).catch((error) => {
-            next(error);
-        });
-
-        res.status(200).locals.data = {
-            myOrganization: myOrganization
-        };
-        next();
+        await getMyOrganizationDetails(userApi, decodedAccessToken)
+            .then((myOrganization) => {
+                res.status(200).locals.data = {
+                    myOrganization: myOrganization
+                };
+                next();
+            })
     }
 );
 
@@ -32,16 +33,16 @@ userRouter.get(
     "/user/my-organization/members",
     authRequiredPermissions(["read:admin-user-management"]),
     async (req, res, next) => {
+        const userApi = new UserApi(req);
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-        const myOrganizationMembers = await getAllMyOrganizationMembers(decodedAccessToken).catch((error) => {
-            next(error);
-        });
-
-        res.status(200).locals.data = {
-            myOrganizationMembers: myOrganizationMembers
-        };
-        next();
+        await getAllMyOrganizationMembers(userApi, decodedAccessToken)
+            .then((myOrganizationMembers) => {
+                res.status(200).locals.data = {
+                    myOrganizationMembers: myOrganizationMembers
+                };
+                next();
+            })
     }
 );
 
@@ -49,17 +50,17 @@ userRouter.post(
     "/user/my-organization/members",
     authRequiredPermissions(["write:admin-user-management"]),
     async (req, res, next) => {
+        const userApi = new UserApi(req);
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
         const body: CreateMyOrganizationMemberPayload = req.body;
 
-        const myOrganizationMember = await addMemberToMyOrganization(decodedAccessToken, body).catch((error) => {
-            next(error);
-        });
-
-        res.status(201).locals.data = {
-            myOrganizationMember: myOrganizationMember
-        };
-        next();
+        await addMemberToMyOrganization(userApi, decodedAccessToken, body)
+            .then((myOrganizationMember) => {
+                res.status(201).locals.data = {
+                    myOrganizationMember: myOrganizationMember
+                };
+                next();
+            })
     }
 );
 
@@ -67,15 +68,15 @@ userRouter.delete(
     "/user/my-organization/members",
     authRequiredPermissions(["write:admin-user-management"]),
     async (req, res, next) => {
+        const userApi = new UserApi(req);
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
         const body: MyOrganizationMember = req.body.myOrganizationMember;
 
-        await deleteMyOrganizationMember(decodedAccessToken, body).catch((error) => {
-            next(error);
-        });
-
-        res.status(204);
-        next();
+        await deleteMyOrganizationMember(userApi, decodedAccessToken, body)
+            .then(() => {
+                res.status(204);
+                next();
+            })
     }
 );
 

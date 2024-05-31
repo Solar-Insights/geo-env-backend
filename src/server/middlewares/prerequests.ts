@@ -15,7 +15,7 @@ import { RequestHandler } from "express";
 import { claimIncludes } from "express-oauth2-jwt-bearer";
 import { Coordinates, validCoordinates } from "geo-env-typing/geo";
 import { getAccessPathFromRequest, getDecodedAccessTokenFromRequest } from "@/server/middlewares/postrequests";
-import { getOrganizationByAccessToken } from "@/server/services/users";
+import { getOrganizationByAccessToken } from "@/db/users/helpers";
 import {
     routeToMonthlyQuotaFieldMap,
     monthlyQuotaFieldToMonthlyBillingFieldMap,
