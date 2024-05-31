@@ -1,8 +1,8 @@
 import axios from "axios";
-import { GOOGLE_KEY } from "@/config";
+import { GOOGLE_KEY } from "@/server/utils/env";
 import { LatLng } from "geo-env-typing/geo";
 import { BuildingInsights, SolarLayers } from "geo-env-typing/solar";
-import { makeGeotiff } from "@/services/solar";
+import { makeGeotiff } from "@/server/services/solar";
 
 export async function getClosestBuildingInsights(coord: LatLng) {
     // https://developers.google.com/maps/documentation/solar/reference/rest/v1/buildingInsights/findClosest

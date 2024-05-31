@@ -48,17 +48,17 @@ export type EmailOperationType = "SENDING" | "READING";
 
 export type PricingTierQuotas = {
     [key in PricingTier]: {
-        [key in MonthlyQuotaField]: MonthlyQuotaFieldDetailed
+        [key in MonthlyQuotaField]: MonthlyQuotaFieldDetailed;
     };
 };
 
 export type MonthlyQuotaFieldDetailed = {
-    value: number,
-    hard: boolean
+    value: number;
+    hard: boolean;
 };
 
 export type RouteToMonthlyQuotaFieldMap = {
-    [key in RoutesAffectingQuotas]: MonthlyQuotaField
+    [key in RoutesAffectingQuotas]: MonthlyQuotaField;
 };
 
 export type RoutesAffectingQuotas = "GET /solar/closest-building-insights" | "POST /user/my-organization/members";
@@ -68,5 +68,5 @@ export type MonthlyQuotaField = "max_free_members_count" | "max_building_insight
 export type MonthlyBillingField = "max_members_count" | "building_insights_requests";
 
 export type MonthlyQuotaFieldToMonthlyBillingFieldMap = {
-    [key in MonthlyQuotaField]: MonthlyBillingField
+    [key in MonthlyQuotaField]: MonthlyBillingField;
 };

@@ -1,4 +1,4 @@
-import { EmailOperationType } from "@/services/types";
+import { EmailOperationType } from "@/server/utils/types";
 
 export type ErrorType = "api-error";
 

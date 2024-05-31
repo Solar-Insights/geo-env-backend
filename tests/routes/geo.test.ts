@@ -4,10 +4,10 @@ import { LatLng } from "geo-env-typing/geo";
 import { serverFactory } from "./factory";
 import { validCoordinates } from "geo-env-typing/geo";
 import { getAuthTokenForTest } from "../auth/auth";
-import { ApiError } from "@/middlewares/customErrors";
+import { ApiError } from "@/server/utils/errors";
 import { UtilGenerator } from "geo-env-typing/generator";
-import { makeInvalidCoordError } from "@/middlewares/requestHandlers";
-import { makeCoordinatesRangeError } from "@/middlewares/customErrors";
+import { makeInvalidCoordError } from "@/server/middlewares/prerequests";
+import { makeCoordinatesRangeError } from "@/server/utils/errors";
 
 const app = serverFactory.app;
 const token = await getAuthTokenForTest();

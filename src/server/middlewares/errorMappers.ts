@@ -1,6 +1,6 @@
 import { ErrorRequestHandler } from "express";
-import { ExpressError, UnresolvedError } from "@/middlewares/customErrors";
-import { DatabaseError } from "@/db/customErrors";
+import { ExpressError, UnresolvedError } from "@/server/utils/errors";
+import { DatabaseError } from "@/db/utils/errors";
 import { UnauthorizedError } from "express-oauth2-jwt-bearer";
 
 export const errLogger: ErrorRequestHandler = (err, req, res, next) => {

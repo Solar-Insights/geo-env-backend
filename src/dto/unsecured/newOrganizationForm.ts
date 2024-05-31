@@ -1,5 +1,5 @@
-import { NewOrganizationForm } from '@/services/types';
-import { Length, IsEmail, IsIn } from 'class-validator';
+import { NewOrganizationForm } from "@/server/utils/types";
+import { Length, IsEmail, IsIn } from "class-validator";
 
 export class NewOrganizationFormClass {
     @Length(0, 256)
@@ -15,7 +15,7 @@ export class NewOrganizationFormClass {
     @Length(0, 1024)
     additionalNotes: string;
 
-    public constructor (form: NewOrganizationForm) {
+    public constructor(form: NewOrganizationForm) {
         this.name = form.name;
         this.contactEmail = form.contactEmail;
         this.pricingTier = form.pricingTier;

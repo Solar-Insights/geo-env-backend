@@ -1,14 +1,19 @@
 import { Request, RequestHandler } from "express";
 import { jwtDecode } from "jwt-decode";
-import { CustomAuth0JwtPayload, MonthlyBillingField, MonthlyQuotaField, RoutesAffectingQuotas } from "@/services/types";
+import {
+    CustomAuth0JwtPayload,
+    MonthlyBillingField,
+    MonthlyQuotaField,
+    RoutesAffectingQuotas
+} from "@/server/utils/types";
 import { getUserByEmail } from "@/db/users/operations";
 import { getTeamById } from "@/db/teams/operations";
 import { InsertRequest } from "@/db/requests/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
 import { createRequest } from "@/db/requests/operations";
-import { getOrganizationByAccessToken } from "@/services/users";
+import { getOrganizationByAccessToken } from "@/server/services/users";
 import { incrementLatestBillingField } from "@/db/billing/operations";
-import { monthlyQuotaFieldToMonthlyBillingFieldMap, routeToMonthlyQuotaFieldMap } from "@/services/constants";
+import { monthlyQuotaFieldToMonthlyBillingFieldMap, routeToMonthlyQuotaFieldMap } from "@/server/utils/constants";
 
 export const userRequestLogger: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
@@ -38,7 +43,7 @@ export const userRequestDatabaseLogger: RequestHandler = async (req, res, next) 
     console.log("**successfully logged to database");
 
     next();
-}
+};
 
 export const userRequestBilling: RequestHandler = async (req, res, next) => {
     if (!(getAccessPathFromRequest(req) in routeToMonthlyQuotaFieldMap)) {
@@ -52,7 +57,7 @@ export const userRequestBilling: RequestHandler = async (req, res, next) => {
     const quotaRoute = getAccessPathFromRequest(req) as RoutesAffectingQuotas;
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
     const monthlyBillingField: MonthlyBillingField = monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField];
-    await incrementLatestBillingField(organization.id, monthlyBillingField)
+    await incrementLatestBillingField(organization.id, monthlyBillingField);
 
     console.log("**successfully added to monthly billing");
 
@@ -75,11 +80,6 @@ function getAccessTokenFromRequest(req: Request) {
     const accessToken = authorization.slice(bearerString.length);
     return accessToken;
 }
-
-export const userResponseHandler: RequestHandler = (req, res, next) => {
-    const data = res.locals.data;
-    res.json(data);
-};
 
 export function getAccessPathFromRequest(req: Request) {
     return `${req.method} ${req.path}`;

@@ -1,13 +1,13 @@
 import express from "express";
-import { authRequiredPermissions } from "@/middlewares/requestHandlers";
-import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "@/services/types";
+import { authRequiredPermissions } from "@/server/middlewares/prerequests";
+import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "@/server/utils/types";
 import {
     addMemberToMyOrganization,
     deleteMyOrganizationMember,
     getAllMyOrganizationMembers,
     getMyOrganizationDetails
-} from "@/services/users";
-import { getDecodedAccessTokenFromRequest } from "@/middlewares/responseHandlers";
+} from "@/server/services/users";
+import { getDecodedAccessTokenFromRequest } from "@/server/middlewares/postrequests";
 
 const userRouter = express.Router();
 

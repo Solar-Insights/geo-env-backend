@@ -1,12 +1,13 @@
 import { supabase } from "@/db/init";
 import { OperationValidator } from "@/db/utils/validator";
-import { MonthlyBillingField } from "@/services/types";
+import { MonthlyBillingField } from "@/server/utils/types";
 import { SupabaseBilling, UpdateBilling } from "@/db/billing/types";
-import { maximumMonthlyBillingFields } from "@/services/constants";
+import { maximumMonthlyBillingFields } from "@/server/utils/constants";
 import { getTeamUserCount } from "@/db/users/operations";
 
 export async function getLatestBillingByTeamId(teamId: string) {
-    const { data, error } = await supabase.from("billing")
+    const { data, error } = await supabase
+        .from("billing")
         .select()
         .eq("team_id", teamId)
         .order("billing_date", { ascending: false });
@@ -28,11 +29,13 @@ export async function incrementLatestBillingField(teamId: string, billingField: 
     if (!maximumMonthlyBillingFields.includes(billingField)) {
         latestBilling[billingField] += 1;
     } else {
-        switch (billingField) { // Check if we're over the limit before setting new max
+        switch (
+            billingField // Check if we're over the limit before setting new max
+        ) {
             case "max_members_count":
                 const teamUserCount = await getTeamUserCount(teamId);
                 if (teamUserCount > latestBilling.max_members_count) {
-                    console.log("now more members than max members count")
+                    console.log("now more members than max members count");
                     latestBilling.max_members_count = teamUserCount;
                 }
                 break;

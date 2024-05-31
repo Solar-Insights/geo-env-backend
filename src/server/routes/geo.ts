@@ -1,8 +1,8 @@
 import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
 import { getGeocoding, getReverseGeocoding } from "@/api/geo";
-import { ApiError } from "@/middlewares/customErrors";
-import { validateRequestCoordinates, authRequiredPermissions } from "@/middlewares/requestHandlers";
+import { ApiError } from "@/server/utils/errors";
+import { validateRequestCoordinates, authRequiredPermissions } from "@/server/middlewares/prerequests";
 
 const geoRouter = express.Router();
 

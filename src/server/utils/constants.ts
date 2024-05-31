@@ -1,4 +1,9 @@
-import { RouteToMonthlyQuotaFieldMap, MonthlyQuotaFieldToMonthlyBillingFieldMap, MonthlyBillingField, PricingTierQuotas } from "@/services/types";
+import {
+    RouteToMonthlyQuotaFieldMap,
+    MonthlyQuotaFieldToMonthlyBillingFieldMap,
+    MonthlyBillingField,
+    PricingTierQuotas
+} from "@/server/utils/types";
 
 export const binaryPalette = ["212121", "B3E5FC"];
 
@@ -11,8 +16,8 @@ export const sunlightPalette = ["212121", "FFCA28"];
 export const panelsPalette = ["E8EAF6", "1A237E"];
 
 export const roleIds = {
-    "OrgMember": "rol_nM2dQUEKVzMhjn1U",
-    "OrgAdmin": "rol_I4RWf4h8E9cwpgli"
+    OrgMember: "rol_nM2dQUEKVzMhjn1U",
+    OrgAdmin: "rol_I4RWf4h8E9cwpgli"
 };
 
 export const routeToMonthlyQuotaFieldMap: RouteToMonthlyQuotaFieldMap = {
@@ -21,8 +26,8 @@ export const routeToMonthlyQuotaFieldMap: RouteToMonthlyQuotaFieldMap = {
 };
 
 export const monthlyQuotaFieldToMonthlyBillingFieldMap: MonthlyQuotaFieldToMonthlyBillingFieldMap = {
-    "max_free_members_count": "max_members_count",
-    "max_building_insights_requests": "building_insights_requests"
+    max_free_members_count: "max_members_count",
+    max_building_insights_requests: "building_insights_requests"
 };
 
 export const maximumMonthlyBillingFields: MonthlyBillingField[] = ["max_members_count"];
@@ -37,7 +42,7 @@ export const pricingTiersQuotas: PricingTierQuotas = {
         },
         max_building_insights_requests: {
             value: 100,
-            hard: true,
+            hard: true
         }
     },
     pro: {
@@ -47,7 +52,7 @@ export const pricingTiersQuotas: PricingTierQuotas = {
         },
         max_building_insights_requests: {
             value: SOLAR_INSIGHTS_INFINITY,
-            hard: true,
+            hard: true
         }
     },
     enterprise: {
@@ -57,7 +62,7 @@ export const pricingTiersQuotas: PricingTierQuotas = {
         },
         max_building_insights_requests: {
             value: SOLAR_INSIGHTS_INFINITY,
-            hard: true,
+            hard: true
         }
-    },
+    }
 };

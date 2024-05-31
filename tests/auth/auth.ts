@@ -1,4 +1,4 @@
-import { BACKEND_URL, AUTH0_BASE_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET } from "@/config";
+import { BACKEND_URL, AUTH0_BASE_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET } from "@/server/utils/env";
 import axios from "axios";
 
 export async function getAuthTokenForTest() {

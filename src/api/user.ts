@@ -1,6 +1,6 @@
 import axios from "axios";
-import { AUTH0_BASE_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET } from "@/config";
-import { Auth0User } from "@/services/types";
+import { AUTH0_BASE_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET } from "@/server/utils/env";
+import { Auth0User } from "@/server/utils/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
 
 export async function getManagementAPIToken() {
@@ -33,8 +33,7 @@ export async function manuallyCreateAuth0User(managementAPIToken: string, email:
         nickname: name,
         connection: "Username-Password-Authentication",
         password: generateRandomUuid(),
-        verify_email: true,
-
+        verify_email: true
     };
 
     return await axios({
@@ -61,23 +60,22 @@ export async function sendEmailForPasswordReset(email: string) {
     const passwordResetData = {
         client_id: AUTH0_CLIENT_ID,
         email: email,
-        connection: 'Username-Password-Authentication'
+        connection: "Username-Password-Authentication"
     };
 
     await axios({
         method: "post",
         headers: {
             "Content-Type": "application/json",
-            Accept: "application/json",
+            Accept: "application/json"
         },
         responseType: "json",
         url: `${AUTH0_BASE_URL}/dbconnections/change_password`,
         data: passwordResetData
-    })
-        .catch((error) => {
-            console.log(error);
-            throw error;
-        });
+    }).catch((error) => {
+        console.log(error);
+        throw error;
+    });
 }
 
 export async function assignRolesToUser(managementAPIToken: string, userId: string, roles: string[]) {
@@ -95,11 +93,10 @@ export async function assignRolesToUser(managementAPIToken: string, userId: stri
         responseType: "json",
         url: `${AUTH0_BASE_URL}/api/v2/users/${userId}/roles`,
         data: rolesData
-    })
-        .catch((error) => {
-            console.log(error);
-            throw error;
-        });
+    }).catch((error) => {
+        console.log(error);
+        throw error;
+    });
 }
 
 export async function deleteAuth0User(managementAPIToken: string, userId: string) {
@@ -111,10 +108,9 @@ export async function deleteAuth0User(managementAPIToken: string, userId: string
             Authorization: `Bearer ${managementAPIToken}`
         },
         responseType: "json",
-        url: `${AUTH0_BASE_URL}/api/v2/users/${userId}`,
-    })
-        .catch((error) => {
-            console.log(error);
-            throw error;
-        });
+        url: `${AUTH0_BASE_URL}/api/v2/users/${userId}`
+    }).catch((error) => {
+        console.log(error);
+        throw error;
+    });
 }

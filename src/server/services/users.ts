@@ -6,12 +6,18 @@ import {
     removeUserByEmailFromActive,
     getSpecificMemberOfTheTeam
 } from "@/db/users/operations";
-import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "./types";
+import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "../utils/types";
 import { getTeamById } from "@/db/teams/operations";
 import { databaseMemberToClientMember } from "@/dto/users";
 import { InsertUser, SupabaseUser } from "@/db/users/types";
-import { assignRolesToUser, deleteAuth0User, getManagementAPIToken, manuallyCreateAuth0User, sendEmailForPasswordReset } from "@/api/user";
-import { roleIds } from "@/services/constants";
+import {
+    assignRolesToUser,
+    deleteAuth0User,
+    getManagementAPIToken,
+    manuallyCreateAuth0User,
+    sendEmailForPasswordReset
+} from "@/api/user";
+import { roleIds } from "@/server/utils/constants";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);

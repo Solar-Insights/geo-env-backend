@@ -1,21 +1,21 @@
 import { describe, test, assert, vi } from "vitest";
 import request from "supertest";
 import nock from "nock";
-import { GOOGLE_KEY } from "@/config";
+import { GOOGLE_KEY } from "@/server/utils/env";
 import { dummyBuildingInsights, dummyGeoTiff, dummySolarLayers } from "geo-env-typing/solar";
 import { dummyLatLng, LatLng } from "geo-env-typing/geo";
 import { UtilGenerator, NumberGenerator, StringGenerator } from "geo-env-typing/generator";
-import { ApiError } from "@/middlewares/customErrors";
+import { ApiError } from "@/server/utils/errors";
 import { serverFactory } from "./factory";
 import { getAuthTokenForTest } from "../auth/auth";
-import { makeInvalidCoordError } from "@/middlewares/requestHandlers";
+import { makeInvalidCoordError } from "@/server/middlewares/prerequests";
 
 const app = serverFactory.app;
 const token = await getAuthTokenForTest();
 
 const GoogleSolarApiUrl = "https://solar.googleapis.com/v1/";
-const solar = await import("@/services/solar");
-vi.mock("@/services/solar");
+const solar = await import("@/server/services/solar");
+vi.mock("@/server/services/solar");
 
 function getClosestBuildingInsightsEndpoint(coord: LatLng) {
     return `/solar/closest-building-insights?${new URLSearchParams(coord as any).toString()}`;

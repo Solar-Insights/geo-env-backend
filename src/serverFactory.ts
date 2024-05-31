@@ -3,16 +3,17 @@ import { Server } from "http";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
-import { PORT, BACKEND_URL, AUTH0_BASE_URL } from "@/config";
-import { errLogger, errResponder, failSafeHandler } from "@/middlewares/errorMapper";
-import healthRouter from "@/routes/health";
-import geoRouter from "@/routes/geo";
-import solarRouter from "@/routes/solar";
-import userRouter from "@/routes/user";
-import { userRequestLogger, userRequestBilling, userResponseHandler, userRequestDatabaseLogger } from "@/middlewares/responseHandlers";
+import { PORT, BACKEND_URL, AUTH0_BASE_URL } from "@/server/utils/env";
+import { errLogger, errResponder, failSafeHandler } from "@/server/middlewares/errorMappers";
+import healthRouter from "@/server/routes/health";
+import geoRouter from "@/server/routes/geo";
+import solarRouter from "@/server/routes/solar";
+import userRouter from "@/server/routes/user";
+import { userRequestLogger, userRequestBilling, userRequestDatabaseLogger } from "@/server/middlewares/postrequests";
+import { userResponseHandler } from "@/server/middlewares/responses";
 import { AddressInfo } from "net";
-import { existingSupabaseUser, respectsPricingTierQuota } from "@/middlewares/requestHandlers";
-import unsecuredRouter from "./routes/unsecured";
+import { existingSupabaseUser, respectsPricingTierQuota } from "@/server/middlewares/prerequests";
+import unsecuredRouter from "@/server/routes/unsecured";
 
 export class ServerFactory {
     app!: Express;
@@ -118,7 +119,7 @@ export class ServerFactory {
 
     public withRequestDatabaseLogger() {
         console.log("setting up request database logger..");
-        this.app.use(userRequestDatabaseLogger)
+        this.app.use(userRequestDatabaseLogger);
         return this;
     }
 

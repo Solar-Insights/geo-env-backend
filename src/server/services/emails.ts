@@ -1,15 +1,15 @@
-import { GMAIL_EMAIL, GMAIL_PASSWORD } from "@/config";
+import { GMAIL_EMAIL, GMAIL_PASSWORD } from "@/server/utils/env";
 import { createTransport } from "nodemailer";
-import { EmailOperationType } from "@/services/types";
+import { EmailOperationType } from "@/server/utils/types";
 import { NewOrganizationFormClass } from "@/dto/unsecured/newOrganizationForm";
 
 function createEmailTransporter(service: string, user: string, password: string) {
     return createTransport({
         service: service,
         auth: {
-          user: user,
-          pass: password,
-        },
+            user: user,
+            pass: password
+        }
     });
 }
 
@@ -27,7 +27,7 @@ export async function sendNewOrganizationRequestEmail(newOrganizationFormObject:
         to: GMAIL_EMAIL,
         subject: SUBJECT,
         text: CONTENT
-    }
+    };
 
     return createEmailTransporter(SENDER_SERVICE, GMAIL_EMAIL, GMAIL_PASSWORD)
         .sendMail(NEW_ORGANIZATION_REQUEST_EMAIL_OPTIONS)
@@ -37,5 +37,5 @@ export async function sendNewOrganizationRequestEmail(newOrganizationFormObject:
         .catch((error) => {
             console.log(error);
             throw error;
-        })
+        });
 }

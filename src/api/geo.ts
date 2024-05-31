@@ -1,7 +1,7 @@
-import { GOOGLE_KEY } from "@/config";
+import { GOOGLE_KEY } from "@/server/utils/env";
 import { LatLng, validCoordinates } from "geo-env-typing/geo";
 import { Client, GeocodeResponse, ReverseGeocodeResponse } from "@googlemaps/google-maps-services-js";
-import { makeCoordinatesRangeError } from "@/middlewares/customErrors";
+import { makeCoordinatesRangeError } from "@/server/utils/errors";
 
 const client = new Client({});
 

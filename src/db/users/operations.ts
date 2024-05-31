@@ -19,10 +19,11 @@ export async function getAllTheTeamUsers(teamId: string) {
 }
 
 export async function getTeamUserCount(teamId: string) {
-    const { count, error } = await supabase.from("users")
+    const { count, error } = await supabase
+        .from("users")
         .select("*", { count: "exact", head: true })
         .eq("team_id", teamId)
-        .eq("is_deleted", false)
+        .eq("is_deleted", false);
 
     new OperationValidator(null, error, count).validateCountRequest();
 
@@ -68,10 +69,7 @@ export async function updateUserByAuth0Id(user: UpdateUser, email: string) {
 }
 
 export async function removeUserByEmailFromActive(user: UpdateUser, email: string) {
-    const { data, error } = await supabase
-        .from("users")
-        .update(user)
-        .eq("email", email);
+    const { data, error } = await supabase.from("users").update(user).eq("email", email);
 
     new OperationValidator(data, error).validateUpdateRequest();
 }

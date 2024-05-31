@@ -1,5 +1,5 @@
 import { SupabaseUser } from "@/db/users/types";
-import { MyOrganizationMember } from "@/services/types";
+import { MyOrganizationMember } from "@/server/utils/types";
 
 export function databaseMemberToClientMember(user: SupabaseUser) {
     const member: MyOrganizationMember = {
