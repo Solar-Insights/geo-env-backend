@@ -1,7 +1,6 @@
 import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
-import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/api/apis/solar";
-import { ApiError } from "@/server/utils/errors";
+import { SolarApi } from "@/api/apis/solar";
 import { validateRequestCoordinates, authRequiredPermissions } from "@/server/middlewares/prerequests";
 import compression from "compression";
 
@@ -12,21 +11,19 @@ solarRouter.get(
     authRequiredPermissions(["read:get-solar-data"]),
     validateRequestCoordinates,
     async (req, res, next) => {
+        const solarApi = new SolarApi(req);
         const coord: Coordinates = {
             lat: Number(req.query.lat),
             lng: Number(req.query.lng)
         };
 
-        await getClosestBuildingInsights(coord)
-            .then((data) => {
+        await solarApi.getClosestBuildingInsights(coord)
+            .then((buildingInsights) => {
                 res.status(200).locals.data = {
-                    buildingInsights: data
+                    buildingInsights: buildingInsights
                 };
                 next();
             })
-            .catch((error) => {
-                next(new ApiError(req.url));
-            });
     }
 );
 
@@ -35,22 +32,20 @@ solarRouter.get(
     authRequiredPermissions(["read:get-solar-data"]),
     validateRequestCoordinates,
     async (req, res, next) => {
+        const solarApi = new SolarApi(req);
         const radius: number = Number(req.query.radius);
         const coord: Coordinates = {
             lat: Number(req.query.lat),
             lng: Number(req.query.lng)
         };
 
-        await getSolarLayers(coord, radius)
-            .then((data) => {
+        await solarApi.getSolarLayers(coord, radius)
+            .then((solarLayers) => {
                 res.status(200).locals.data = {
-                    solarLayers: data
+                    solarLayers: solarLayers
                 };
                 next();
             })
-            .catch((error) => {
-                next(new ApiError(req.url));
-            });
     }
 );
 
@@ -59,18 +54,16 @@ solarRouter.get(
     authRequiredPermissions(["read:get-solar-data"]),
     compression(),
     async (req, res, next) => {
+        const solarApi = new SolarApi(req);
         const url = decodeURIComponent(req.query.url as string);
 
-        await getGeotiff(url)
-            .then((data) => {
+        await solarApi.getGeotiff(url)
+            .then((geotiff) => {
                 res.status(200).locals.data = {
-                    geotiff: data
+                    geotiff: geotiff
                 };
                 next();
             })
-            .catch((error) => {
-                next(new ApiError(req.url));
-            });
     }
 );
 

@@ -3,63 +3,72 @@ import { GOOGLE_KEY } from "@/server/utils/env";
 import { LatLng } from "geo-env-typing/geo";
 import { BuildingInsights, SolarLayers } from "geo-env-typing/solar";
 import { makeGeotiff } from "@/server/services/solar";
+import { ApiGeneric } from "@/api/utils/apiGeneric";
+import { Request } from "express";
+import { ApiError } from "@/api/utils/errors";
 
-export async function getClosestBuildingInsights(coord: LatLng) {
-    // https://developers.google.com/maps/documentation/solar/reference/rest/v1/buildingInsights/findClosest
-    return await axios({
-        method: "get",
-        responseType: "json",
-        url: "https://solar.googleapis.com/v1/buildingInsights:findClosest",
-        params: {
-            key: GOOGLE_KEY,
-            "location.latitude": coord.lat.toFixed(5),
-            "location.longitude": coord.lng.toFixed(5)
-        }
-    })
-        .then((response) => {
-            return response.data as BuildingInsights;
-        })
-        .catch((error) => {
-            throw error;
-        });
-}
+export class SolarApi extends ApiGeneric {
+    public constructor(req: Request) {
+        super(req);
+    }
 
-export async function getSolarLayers(coord: LatLng, radius: number) {
-    // https://developers.google.com/maps/documentation/solar/data-layers
-    return await axios({
-        method: "get",
-        responseType: "json",
-        url: "https://solar.googleapis.com/v1/dataLayers:get",
-        params: {
-            key: GOOGLE_KEY,
-            "location.latitude": coord.lat.toFixed(5),
-            "location.longitude": coord.lng.toFixed(5),
-            radiusMeters: radius.toString(),
-            view: "FULL_LAYERS",
-            requiredQuality: "HIGH"
-        }
-    })
-        .then((response) => {
-            return response.data as SolarLayers;
+    public async getClosestBuildingInsights(coord: LatLng) {
+        // https://developers.google.com/maps/documentation/solar/reference/rest/v1/buildingInsights/findClosest
+        return await axios({
+            method: "get",
+            responseType: "json",
+            url: "https://solar.googleapis.com/v1/buildingInsights:findClosest",
+            params: {
+                key: GOOGLE_KEY,
+                "location.latitude": coord.lat.toFixed(5),
+                "location.longitude": coord.lng.toFixed(5)
+            }
         })
-        .catch((error) => {
-            throw error;
-        });
-}
+            .then((response) => {
+                return response.data as BuildingInsights;
+            })
+            .catch((error) => {
+                throw new ApiError(this.req.url);
+            });
+    }
 
-export async function getGeotiff(url: string) {
-    return await axios({
-        method: "get",
-        responseType: "arraybuffer",
-        url: url,
-        params: {
-            key: GOOGLE_KEY
-        }
-    })
-        .then(async (response) => {
-            return await makeGeotiff(response);
+    public async getSolarLayers(coord: LatLng, radius: number) {
+        // https://developers.google.com/maps/documentation/solar/data-layers
+        return await axios({
+            method: "get",
+            responseType: "json",
+            url: "https://solar.googleapis.com/v1/dataLayers:get",
+            params: {
+                key: GOOGLE_KEY,
+                "location.latitude": coord.lat.toFixed(5),
+                "location.longitude": coord.lng.toFixed(5),
+                radiusMeters: radius.toString(),
+                view: "FULL_LAYERS",
+                requiredQuality: "HIGH"
+            }
         })
-        .catch((error) => {
-            throw error;
-        });
+            .then((response) => {
+                return response.data as SolarLayers;
+            })
+            .catch((error) => {
+                throw new ApiError(this.req.url);
+            });
+    }
+
+    public async getGeotiff(url: string) {
+        return await axios({
+            method: "get",
+            responseType: "arraybuffer",
+            url: url,
+            params: {
+                key: GOOGLE_KEY
+            }
+        })
+            .then(async (response) => {
+                return await makeGeotiff(response);
+            })
+            .catch((error) => {
+                throw new ApiError(this.req.url);
+            });
+    }
 }

@@ -9,12 +9,13 @@ geoRouter.get("/geo/geocoding", authRequiredPermissions(["read:get-geo-data"]), 
     const geoApi = new GeoApi(req);
     const formattedAddress = req.query.address as string;
 
-    const coordinates: LatLng = await geoApi.getGeocoding(formattedAddress);
-
-    res.status(200).locals.data = {
-        coordinates: coordinates
-    };
-    next();
+    await geoApi.getGeocoding(formattedAddress)
+        .then((coordinates) => {
+            res.status(200).locals.data = {
+                coordinates: coordinates
+            };
+            next();
+        });
 });
 
 geoRouter.get(
@@ -28,12 +29,13 @@ geoRouter.get(
             lng: Number(req.query.lng)
         };
 
-        const address: String = await geoApi.getReverseGeocoding(coord);
-
-        res.status(200).locals.data = {
-            address: address
-        };
-        next();
+        await geoApi.getReverseGeocoding(coord)
+            .then((address) => {
+                res.status(200).locals.data = {
+                    address: address
+                };
+                next();
+            });
     }
 );
 
