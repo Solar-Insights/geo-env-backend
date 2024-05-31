@@ -4,7 +4,7 @@ import { DatabaseError } from "@/db/utils/errors";
 import { UnauthorizedError } from "express-oauth2-jwt-bearer";
 
 export const errLogger: ErrorRequestHandler = (err, req, res, next) => {
-    console.error(req.url, err);
+    console.error(err);
     next(err);
 };
 
@@ -16,5 +16,5 @@ export const errResponder: ErrorRequestHandler = (err, req, res, next) => {
 };
 
 export const failSafeHandler: ErrorRequestHandler = (err, req, res, next) => {
-    res.status(500).json(new UnresolvedError(req.url));
+    res.status(500).json(new UnresolvedError());
 };

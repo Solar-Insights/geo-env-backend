@@ -30,7 +30,7 @@ export class UserApi extends ApiGeneric {
                 return response.data.access_token as string;
             })
             .catch(() => {
-                throw new ApiError(this.req.url);;
+                throw new ApiError();;
             });
     }
 
@@ -59,7 +59,7 @@ export class UserApi extends ApiGeneric {
                 return response.data as Auth0User;
             })
             .catch(() => {
-                throw new ApiError(this.req.url);
+                throw new ApiError();
             });
     }
 
@@ -81,7 +81,7 @@ export class UserApi extends ApiGeneric {
             data: passwordResetData
         })
             .catch(() => {
-                throw new ApiError(this.req.url);
+                throw new ApiError();
             });
     }
 
@@ -102,7 +102,7 @@ export class UserApi extends ApiGeneric {
             data: rolesData
         })
             .catch(() => {
-                throw new ApiError(this.req.url);
+                throw new ApiError();
             });
     }
 
@@ -118,7 +118,7 @@ export class UserApi extends ApiGeneric {
             url: `${AUTH0_BASE_URL}/api/v2/users/${userId}`
         })
             .catch(() => {
-                throw new ApiError(this.req.url);
+                throw new ApiError();
             });
     }
 }

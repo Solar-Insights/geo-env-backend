@@ -13,8 +13,11 @@ import { InsertUser } from "@/db/users/types";
 import { UserApi } from "@/api/apis/user";
 import { roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
+import { ApiError } from "@/api/utils/errors";
 
 export async function getMyOrganizationDetails(userApi: UserApi, decodedAccessToken: CustomAuth0JwtPayload) {
+    throw new ApiError();
+
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
 
     const myOrganization = await getOrganizationById(requester.organization_id);

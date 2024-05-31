@@ -1,10 +1,9 @@
 import { ObjectValidationError } from "@/server/utils/errors";
 import { validateOrReject } from "class-validator";
-import { Request } from "express";
 
-export async function validate(object: any, className: string, req: Request) {
+export async function validate(object: any, className: string) {
     await validateOrReject(object)
         .catch(() => {
-            throw new ObjectValidationError(req.url, className);
+            throw new ObjectValidationError(className);
         })
 }

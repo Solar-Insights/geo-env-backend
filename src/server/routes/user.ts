@@ -7,7 +7,7 @@ import {
     getAllMyOrganizationMembers,
     getMyOrganizationDetails
 } from "@/server/services/users";
-import { getDecodedAccessTokenFromRequest } from "@/server/middlewares/postrequests";
+import { getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
 import { UserApi } from "@/api/apis/user";
 
 const userRouter = express.Router();

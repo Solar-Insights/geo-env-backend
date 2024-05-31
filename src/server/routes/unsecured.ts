@@ -1,8 +1,7 @@
 import express, { Request } from "express";
-import { validateOrReject } from "class-validator";
-import { EmailError, ObjectValidationError } from "@/server/utils/errors";
+import { EmailError } from "@/server/utils/errors";
 import { NewOrganizationFormClass } from "@/dto/unsecured/newOrganizationForm";
-import { getAccessPathFromRequest } from "@/server/middlewares/postrequests";
+import { getAccessPathFromRequest } from "@/server/utils/helpers";
 import { sendNewOrganizationRequestEmail } from "@/server/services/emails";
 import { validate } from "@/dto/validation/requestValidation";
 
@@ -18,7 +17,7 @@ unsecuredRouter.post("/unsecured/organization", async (req, res, next) => {
     unsecuredRequestLogger(req);
 
     const newOrganizationFormObject = new NewOrganizationFormClass(req.body);
-    await validate(newOrganizationFormObject, "NewOrganizationFormClass", req);
+    await validate(newOrganizationFormObject, "NewOrganizationFormClass");
 
     await sendNewOrganizationRequestEmail(newOrganizationFormObject)
         .then((logs: string) => {
@@ -27,7 +26,7 @@ unsecuredRouter.post("/unsecured/organization", async (req, res, next) => {
             res.status(201).json();
         })
         .catch((error) => {
-            next(new EmailError(req.url, "SENDING"));
+            next(new EmailError( "SENDING"));
         });
 });
 

@@ -34,7 +34,7 @@ export class GeoApi extends ApiGeneric {
                 }
             })
             .catch(() => {
-                throw new ApiError(this.req.url);
+                throw new ApiError();
             });
     }
 
@@ -50,7 +50,7 @@ export class GeoApi extends ApiGeneric {
                 return res.data.results[0].formatted_address;
             })
             .catch(() => {
-                throw new ApiError(this.req.url);
+                throw new ApiError();
             });
     }
 }

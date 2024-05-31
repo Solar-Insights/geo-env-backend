@@ -1,21 +1,18 @@
-import { EmailOperationType } from "@/server/utils/types";
+import { EmailOperationType, MonthlyQuotaField} from "@/server/utils/types";
 
 export type ErrorType = "api-error";
 
 export class ExpressError extends Error {
-    url: string;
     error: string;
     message: string;
     code: number;
 
-    constructor(
-        url: string,
+    public constructor(
         error: string,
         message: string = "The Express server encountered an error.",
         code: number
     ) {
         super();
-        this.url = url;
         this.error = error;
         this.message = message;
         this.code = code;
@@ -27,20 +24,25 @@ export class ExpressError extends Error {
 }
 
 export class UnresolvedError extends ExpressError {
-    constructor(url: string, message: string = "The request could not be resolved.") {
-        super(url, "UNRESOLVED_ERROR", message, 500);
+    public constructor(message: string = "The request could not be resolved.") {
+        super("UNRESOLVED_ERROR", message, 500);
     }
 }
 
 export class InvalidParameterError extends ExpressError {
-    constructor(url: string, message: string) {
-        super(url, "INVALID_PARAMETER_ERROR", message, 400);
+    public constructor(message: string = "The request had invalid parameters") {
+        super("INVALID_PARAMETER_ERROR", message, 400);
+    }
+
+    public forInvalidCoord() {
+        this.message = "Coordinates should respect a certain range, and be numbers. Longitudes range between -180 and 180, and latitudes range between -90 and 90."
+        return this;
     }
 }
 
 export class InvalidTokenError extends ExpressError {
-    constructor(url: string, message: string) {
-        super(url, "INVALID_TOKEN_ERROR", message, 401);
+    public constructor(message: string) {
+        super("INVALID_TOKEN_ERROR", message, 401);
     }
 }
 
@@ -57,14 +59,14 @@ export function rangeErrorToObject(rangeError: RangeError) {
 }
 
 export class ObjectValidationError extends ExpressError {
-    constructor(url: string, className: string) {
-        super(url, "INVALID_OBJECT_ERROR", `An error occured when validating an object of ${className}`, 400);
+    constructor(className: string) {
+        super("INVALID_OBJECT_ERROR", `An error occured when validating an object of ${className}`, 400);
     }
 }
 
 export class EmailError extends ExpressError {
-    constructor(url: string, emailOperationType: EmailOperationType) {
-        super(url, "EMAIL_ERROR", `An error occured when handling emails. Type: ${emailOperationType}`, 500);
+    constructor(emailOperationType: EmailOperationType) {
+        super("EMAIL_ERROR", `An error occured when handling emails. Type: ${emailOperationType}`, 500);
     }
 }
 
@@ -72,8 +74,8 @@ export class QuotaLimitReachedAlert extends ExpressError {
     quotaField: string;
     hard: boolean;
 
-    constructor(url: string, quotaField: string) {
-        super(url, "QUOTA_LIMIT_REACHED", `The organization has reached its soft quota limit for ${quotaField}`, 422);
+    constructor(quotaField: string) {
+        super("QUOTA_LIMIT_REACHED", `The organization has reached its soft quota limit for ${quotaField}`, 422);
         this.quotaField = quotaField;
         this.hard = false;
     }
@@ -83,9 +85,14 @@ export class QuotaLimitReachedError extends ExpressError {
     quotaField: string;
     hard: boolean;
 
-    constructor(url: string, quotaField: string) {
-        super(url, "QUOTA_LIMIT_REACHED", `The organization has reached its hard quota limit for ${quotaField}`, 422);
+    constructor(quotaField: string) {
+        super("QUOTA_LIMIT_REACHED", `The organization has reached its hard quota limit for ${quotaField}`, 422);
         this.quotaField = quotaField;
         this.hard = true;
     }
+}
+
+export function makeQuotaLimitReachedResponse(monthlyQuotaField: MonthlyQuotaField, hardLimit: boolean) {
+    if (hardLimit) return new QuotaLimitReachedError(monthlyQuotaField);
+    return new QuotaLimitReachedAlert(monthlyQuotaField);
 }

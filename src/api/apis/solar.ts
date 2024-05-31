@@ -28,7 +28,7 @@ export class SolarApi extends ApiGeneric {
                 return response.data as BuildingInsights;
             })
             .catch(() => {
-                throw new ApiError(this.req.url);
+                throw new ApiError();
             });
     }
 
@@ -51,7 +51,7 @@ export class SolarApi extends ApiGeneric {
                 return response.data as SolarLayers;
             })
             .catch(() => {
-                throw new ApiError(this.req.url);
+                throw new ApiError();
             });
     }
 
@@ -68,7 +68,7 @@ export class SolarApi extends ApiGeneric {
                 return await makeGeotiff(response);
             })
             .catch(() => {
-                throw new ApiError(this.req.url);
+                throw new ApiError();
             });
     }
 }

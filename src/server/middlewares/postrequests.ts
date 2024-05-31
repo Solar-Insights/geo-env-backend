@@ -1,5 +1,4 @@
-import { Request, RequestHandler } from "express";
-import { jwtDecode } from "jwt-decode";
+import { RequestHandler } from "express";
 import {
     CustomAuth0JwtPayload,
     MonthlyBillingField,
@@ -14,6 +13,8 @@ import { createRequest } from "@/db/requests/operations";
 import { getOrganizationByAccessToken } from "@/db/users/helpers";
 import { incrementLatestBillingField } from "@/db/billing/operations";
 import { monthlyQuotaFieldToMonthlyBillingFieldMap, routeToMonthlyQuotaFieldMap } from "@/server/utils/constants";
+import { getAccessPathFromRequest } from "@/server/utils/helpers";
+import { getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
 
 export const userRequestLogger: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
@@ -24,6 +25,7 @@ export const userRequestLogger: RequestHandler = async (req, res, next) => {
     console.log(`user id: ${decodedAccessToken.azp}`);
 
     next();
+    return;
 };
 
 export const userRequestDatabaseLogger: RequestHandler = async (req, res, next) => {
@@ -43,6 +45,7 @@ export const userRequestDatabaseLogger: RequestHandler = async (req, res, next) 
     console.log("**successfully logged to database");
 
     next();
+    return;
 };
 
 export const userRequestBilling: RequestHandler = async (req, res, next) => {
@@ -62,25 +65,5 @@ export const userRequestBilling: RequestHandler = async (req, res, next) => {
     console.log("**successfully added to monthly billing");
 
     next();
+    return;
 };
-
-export function getDecodedAccessTokenFromRequest(req: Request) {
-    const accessToken = getAccessTokenFromRequest(req)!;
-    const decodedAccessToken: CustomAuth0JwtPayload = jwtDecode(accessToken);
-    return decodedAccessToken;
-}
-
-function getAccessTokenFromRequest(req: Request) {
-    const authorization = req.headers.authorization;
-    const bearerString = "Bearer ";
-    if (authorization === undefined || !authorization.startsWith(bearerString)) {
-        return null;
-    }
-
-    const accessToken = authorization.slice(bearerString.length);
-    return accessToken;
-}
-
-export function getAccessPathFromRequest(req: Request) {
-    return `${req.method} ${req.path}`;
-}
