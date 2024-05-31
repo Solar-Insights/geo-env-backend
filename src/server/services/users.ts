@@ -16,7 +16,7 @@ import {
     getManagementAPIToken,
     manuallyCreateAuth0User,
     sendEmailForPasswordReset
-} from "@/api/user";
+} from "@/api/apis/user";
 import { roleIds } from "@/server/utils/constants";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {

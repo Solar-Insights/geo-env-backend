@@ -32,15 +32,6 @@ export class UnresolvedError extends ExpressError {
     }
 }
 
-export class ApiError extends ExpressError {
-    constructor(
-        url: string,
-        message: string = "The request could not be resolved as the API endpoint encountered an error."
-    ) {
-        super(url, "API_ERROR", message, 500);
-    }
-}
-
 export class InvalidParameterError extends ExpressError {
     constructor(url: string, message: string) {
         super(url, "INVALID_PARAMETER_ERROR", message, 400);

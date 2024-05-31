@@ -1,6 +1,6 @@
 import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
-import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/api/solar";
+import { getClosestBuildingInsights, getSolarLayers, getGeotiff } from "@/api/apis/solar";
 import { ApiError } from "@/server/utils/errors";
 import { validateRequestCoordinates, authRequiredPermissions } from "@/server/middlewares/prerequests";
 import compression from "compression";

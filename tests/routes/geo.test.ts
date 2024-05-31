@@ -12,7 +12,7 @@ import { makeCoordinatesRangeError } from "@/server/utils/errors";
 const app = serverFactory.app;
 const token = await getAuthTokenForTest();
 
-const geo = await import("@/api/geo");
+const geo = await import("@/api/apis/geo");
 vi.mock("@/api/geo");
 
 const WHITE_HOUSE_ADDRESS = "The White House";

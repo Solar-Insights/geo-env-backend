@@ -1,24 +1,20 @@
 import express from "express";
-import { Coordinates } from "geo-env-typing/geo";
-import { getGeocoding, getReverseGeocoding } from "@/api/geo";
-import { ApiError } from "@/server/utils/errors";
+import { Coordinates, LatLng } from "geo-env-typing/geo";
+import { GeoApi } from "@/api/apis/geo";
 import { validateRequestCoordinates, authRequiredPermissions } from "@/server/middlewares/prerequests";
 
 const geoRouter = express.Router();
 
 geoRouter.get("/geo/geocoding", authRequiredPermissions(["read:get-geo-data"]), async (req, res, next) => {
+    const geoApi = new GeoApi(req);
     const formattedAddress = req.query.address as string;
 
-    await getGeocoding(formattedAddress)
-        .then((data) => {
-            res.status(200).locals.data = {
-                coordinates: data
-            };
-            next();
-        })
-        .catch((error) => {
-            next(new ApiError(req.url));
-        });
+    const coordinates: LatLng = await geoApi.getGeocoding(formattedAddress);
+
+    res.status(200).locals.data = {
+        coordinates: coordinates
+    };
+    next();
 });
 
 geoRouter.get(
@@ -26,21 +22,18 @@ geoRouter.get(
     authRequiredPermissions(["read:get-geo-data"]),
     validateRequestCoordinates,
     async (req, res, next) => {
+        const geoApi = new GeoApi(req);
         const coord: Coordinates = {
             lat: Number(req.query.lat),
             lng: Number(req.query.lng)
         };
 
-        await getReverseGeocoding(coord)
-            .then((data) => {
-                res.status(200).locals.data = {
-                    address: data
-                };
-                next();
-            })
-            .catch((error) => {
-                next(new ApiError(req.url));
-            });
+        const address: String = await geoApi.getReverseGeocoding(coord);
+
+        res.status(200).locals.data = {
+            address: address
+        };
+        next();
     }
 );
 
