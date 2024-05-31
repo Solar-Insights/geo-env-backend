@@ -16,8 +16,6 @@ import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } f
 import { ApiError } from "@/api/utils/errors";
 
 export async function getMyOrganizationDetails(userApi: UserApi, decodedAccessToken: CustomAuth0JwtPayload) {
-    throw new ApiError();
-
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
 
     const myOrganization = await getOrganizationById(requester.organization_id);

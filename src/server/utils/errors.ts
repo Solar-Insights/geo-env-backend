@@ -93,6 +93,6 @@ export class QuotaLimitReachedError extends ExpressError {
 }
 
 export function makeQuotaLimitReachedResponse(monthlyQuotaField: MonthlyQuotaField, hardLimit: boolean) {
-    if (hardLimit) return new QuotaLimitReachedError(monthlyQuotaField);
-    return new QuotaLimitReachedAlert(monthlyQuotaField);
+    if (hardLimit) throw new QuotaLimitReachedError(monthlyQuotaField);
+    else throw new QuotaLimitReachedAlert(monthlyQuotaField);
 }

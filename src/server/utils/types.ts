@@ -70,3 +70,8 @@ export type MonthlyBillingField = "max_members_count" | "building_insights_reque
 export type MonthlyQuotaFieldToMonthlyBillingFieldMap = {
     [key in MonthlyQuotaField]: MonthlyBillingField;
 };
+
+export type MyOrganizationDetails = {
+    admins: MyOrganizationMember[],
+    name: string,
+};

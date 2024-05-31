@@ -3,6 +3,7 @@ import { Coordinates } from "geo-env-typing/geo";
 import { SolarApi } from "@/api/apis/solar";
 import { validateRequestCoordinates, authRequiredPermissions } from "@/server/middlewares/prerequests";
 import compression from "compression";
+import { BuildingInsights, SolarLayers, GeoTiff } from "geo-env-typing/solar";
 
 const solarRouter = express.Router();
 
@@ -17,13 +18,13 @@ solarRouter.get(
             lng: Number(req.query.lng)
         };
 
-        await solarApi.getClosestBuildingInsights(coord)
-            .then((buildingInsights) => {
-                res.status(200).locals.data = {
-                    buildingInsights: buildingInsights
-                };
-                next();
-            })
+        const buildingInsights: BuildingInsights = await solarApi.getClosestBuildingInsights(coord)
+
+        res.status(200).locals.data = {
+            buildingInsights: buildingInsights
+        };
+        next();
+        return;
     }
 );
 
@@ -39,13 +40,13 @@ solarRouter.get(
             lng: Number(req.query.lng)
         };
 
-        await solarApi.getSolarLayers(coord, radius)
-            .then((solarLayers) => {
-                res.status(200).locals.data = {
-                    solarLayers: solarLayers
-                };
-                next();
-            })
+        const solarLayers: SolarLayers = await solarApi.getSolarLayers(coord, radius)
+
+        res.status(200).locals.data = {
+            solarLayers: solarLayers
+        };
+        next();
+        return;
     }
 );
 
@@ -57,13 +58,12 @@ solarRouter.get(
         const solarApi = new SolarApi(req);
         const url = decodeURIComponent(req.query.url as string);
 
-        await solarApi.getGeotiff(url)
-            .then((geotiff) => {
-                res.status(200).locals.data = {
-                    geotiff: geotiff
-                };
-                next();
-            })
+        const geotiff: GeoTiff = await solarApi.getGeotiff(url)
+
+        res.status(200).locals.data = {
+            geotiff: geotiff
+        };
+        next();
     }
 );
 

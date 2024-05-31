@@ -1,6 +1,6 @@
 import express from "express";
 import { authRequiredPermissions } from "@/server/middlewares/prerequests";
-import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "@/server/utils/types";
+import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationDetails, MyOrganizationMember } from "@/server/utils/types";
 import {
     addMemberToMyOrganization,
     deleteMyOrganizationMember,
@@ -19,13 +19,13 @@ userRouter.get(
         const userApi = new UserApi(req);
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-        await getMyOrganizationDetails(userApi, decodedAccessToken)
-            .then((myOrganization) => {
-                res.status(200).locals.data = {
-                    myOrganization: myOrganization
-                };
-                next();
-            })
+        const myOrganization: MyOrganizationDetails =  await getMyOrganizationDetails(userApi, decodedAccessToken)
+
+        res.status(200).locals.data = {
+            myOrganization: myOrganization
+        };
+        next();
+        return;
     }
 );
 
@@ -36,13 +36,13 @@ userRouter.get(
         const userApi = new UserApi(req);
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-        await getAllMyOrganizationMembers(userApi, decodedAccessToken)
-            .then((myOrganizationMembers) => {
-                res.status(200).locals.data = {
-                    myOrganizationMembers: myOrganizationMembers
-                };
-                next();
-            })
+        const myOrganizationMembers: MyOrganizationMember[] = await getAllMyOrganizationMembers(userApi, decodedAccessToken)
+
+        res.status(200).locals.data = {
+            myOrganizationMembers: myOrganizationMembers
+        };
+        next();
+        return;
     }
 );
 
@@ -54,13 +54,13 @@ userRouter.post(
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
         const body: CreateMyOrganizationMemberPayload = req.body;
 
-        await addMemberToMyOrganization(userApi, decodedAccessToken, body)
-            .then((myOrganizationMember) => {
-                res.status(201).locals.data = {
-                    myOrganizationMember: myOrganizationMember
-                };
-                next();
-            })
+        const myOrganizationMember: MyOrganizationMember = await addMemberToMyOrganization(userApi, decodedAccessToken, body)
+
+        res.status(201).locals.data = {
+            myOrganizationMember: myOrganizationMember
+        };
+        next();
+        return;
     }
 );
 
@@ -73,10 +73,10 @@ userRouter.delete(
         const body: MyOrganizationMember = req.body.myOrganizationMember;
 
         await deleteMyOrganizationMember(userApi, decodedAccessToken, body)
-            .then(() => {
-                res.status(204);
-                next();
-            })
+
+        res.status(204);
+        next();
+        return;
     }
 );
 

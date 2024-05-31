@@ -48,8 +48,7 @@ export const validateRequestCoordinates: RequestHandler = (req, res, next) => {
     };
 
     if (!validCoordinates(coord)) {
-        next(new InvalidParameterError().forInvalidCoord());
-        return;
+        throw new InvalidParameterError().forInvalidCoord();
     }
 
     next();
@@ -77,7 +76,7 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
         organizationLatestBilling[monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField]];
 
     if (organizationCurrentValue >= monthlyQuotaFieldDetailed.value) {
-        next(makeQuotaLimitReachedResponse(monthlyQuotaField, monthlyQuotaFieldDetailed.hard));
+        makeQuotaLimitReachedResponse(monthlyQuotaField, monthlyQuotaFieldDetailed.hard);
         return;
     }
 

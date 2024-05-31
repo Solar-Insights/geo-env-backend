@@ -20,14 +20,8 @@ unsecuredRouter.post("/unsecured/organization", async (req, res, next) => {
     await validate(newOrganizationFormObject, "NewOrganizationFormClass");
 
     await sendNewOrganizationRequestEmail(newOrganizationFormObject)
-        .then((logs: string) => {
-            console.log(logs);
 
-            res.status(201).json();
-        })
-        .catch((error) => {
-            next(new EmailError( "SENDING"));
-        });
+    res.status(201).json();
 });
 
 export default unsecuredRouter;
