@@ -61,9 +61,11 @@ export async function getAllTheOrganizationAdmins(organizationId: string) {
 }
 
 export async function createUser(user: InsertUser) {
-    const { data, error } = await supabase.from("users").insert(user);
+    const { data, error } = await supabase.from("users").insert(user).select();
 
-    new OperationValidator(data, error).validateCreateRequest();
+    new OperationValidator(data, error).validateGetSingleItemRequest();
+
+    return data![0];
 }
 
 export async function updateUserByAuth0Id(user: UpdateUser, email: string) {

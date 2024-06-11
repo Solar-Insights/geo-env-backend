@@ -1,7 +1,6 @@
 import {
     getAllTheOrganizationAdmins,
     getAllOrganizationUsers,
-    getUserByEmail,
     createUser,
     removeUserByEmailFromActive,
     getSpecificMemberOfTheOrganization
@@ -89,9 +88,9 @@ export async function addMemberToMyOrganization(
         name: newUser.nickname,
         organization_id: requester.organization_id
     };
-    await createUser(newMember);
+    
+    const newlyCreatedMember = await createUser(newMember);
 
-    const newlyCreatedMember = await getUserByEmail(organizationMemberPayload.email);
     const newlyCreatedMemberDTO = databaseMemberToClientMember(newlyCreatedMember);
     return newlyCreatedMemberDTO;
 }
