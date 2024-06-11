@@ -16,7 +16,7 @@ import {
     monthlyQuotaFieldToMonthlyBillingFieldMap,
     pricingTiersQuotas
 } from "@/server/utils/constants";
-import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
+import { getLatestBillingByOrganizationId, getLatestBillingForOrganizationQuota } from "@/db/billing/operations";
 
 export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
@@ -58,22 +58,20 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
 
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     const organization = await getOrganizationByAccessToken(decodedAccessToken);
-    const organizationLatestBilling = await getLatestBillingByOrganizationId(organization.id);
-
-    // TEMPORARY: Probably needs to create an object for max type of values, or maybe a current / max number in the db?
-    organizationLatestBilling.max_members_count = await getOrganizationUserCount(organization.id);
 
     const quotaRoute = getAccessPathFromRequest(req) as RoutesAffectingQuotas;
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
     const monthlyQuotaFieldDetailed: MonthlyQuotaFieldDetailed =
         pricingTiersQuotas[organization.pricing_tier][monthlyQuotaField];
 
-    // Then verification should be made client side
-    if (monthlyQuotaFieldDetailed.hard === false) {
+    // Then verification should be made client side if needed
+    if (!monthlyQuotaFieldDetailed.hard) {
+        console.log("you have reached a soft limit: client should let you, but with a warning if needed");
         next();
         return;
     }
 
+    const organizationLatestBilling = await getLatestBillingForOrganizationQuota(organization.id);
     const organizationCurrentValue: number =
         organizationLatestBilling[monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField]];
 

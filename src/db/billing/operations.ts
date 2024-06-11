@@ -17,6 +17,15 @@ export async function getLatestBillingByOrganizationId(organizationId: string) {
     return data![0];
 }
 
+export async function getLatestBillingForOrganizationQuota(organizationId: string) {
+    const latestBilling: SupabaseBilling = await getLatestBillingByOrganizationId(organizationId);
+
+    // TEMPORARY: Probably needs to create an object for max type of values, or maybe a current / max number in the db?
+    latestBilling.max_members_count = await getOrganizationUserCount(organizationId);
+
+    return latestBilling;
+}
+
 export async function updateBillingById(billing: UpdateBilling, id: string) {
     const { data, error } = await supabase.from("billing").update(billing).eq("id", id);
 
