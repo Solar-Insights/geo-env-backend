@@ -1,10 +1,5 @@
 import { getOrganizationUserCount, getUserByEmail } from "@/db/users/operations";
-import {
-    InvalidParameterError,
-    makeQuotaLimitReachedResponse,
-    QuotaLimitReachedAlert,
-    QuotaLimitReachedError
-} from "@/server/utils/errors";
+import { InvalidParameterError, QuotaLimitReachedError } from "@/server/utils/errors";
 import {
     CustomAuth0JwtPayload,
     MonthlyQuotaField,
@@ -72,12 +67,18 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
     const monthlyQuotaFieldDetailed: MonthlyQuotaFieldDetailed =
         pricingTiersQuotas[organization.pricing_tier][monthlyQuotaField];
+
+    // Then verification should be made client side
+    if (monthlyQuotaFieldDetailed.hard === false) {
+        next();
+        return;
+    }
+
     const organizationCurrentValue: number =
         organizationLatestBilling[monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField]];
 
     if (organizationCurrentValue >= monthlyQuotaFieldDetailed.value) {
-        makeQuotaLimitReachedResponse(monthlyQuotaField, monthlyQuotaFieldDetailed.hard);
-        return;
+        throw new QuotaLimitReachedError(monthlyQuotaField);
     }
 
     next();
