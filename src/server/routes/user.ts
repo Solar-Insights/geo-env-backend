@@ -3,6 +3,7 @@ import { authRequiredPermissions } from "@/server/middlewares/prerequests";
 import {
     CreateMyOrganizationMemberPayload,
     CustomAuth0JwtPayload,
+    MyOrganizationAdminDetails,
     MyOrganizationDetails,
     MyOrganizationMember
 } from "@/server/utils/types";
@@ -34,12 +35,12 @@ userRouter.get(
 );
 
 userRouter.get(
-    "/user/my-organization/admin-data",
+    "/user/my-organization/admin-details",
     authRequiredPermissions(["read:admin-user-management", "read:admin-billing-management"]),
     async (req, res, next) => {
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-        const organizationAdminDetails = await getMyOrganizationAdminDetails(decodedAccessToken);
+        const organizationAdminDetails: MyOrganizationAdminDetails = await getMyOrganizationAdminDetails(decodedAccessToken);
 
         res.status(200).locals.data = organizationAdminDetails;
         next();

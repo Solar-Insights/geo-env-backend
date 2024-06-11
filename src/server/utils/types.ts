@@ -18,10 +18,6 @@ export type MyOrganizationMember = {
     avatar: string;
 };
 
-export type MyOrganizationBilling = {
-    
-}
-
 export type CreateMyOrganizationMemberPayload = {
     email: string;
     name: string;
@@ -78,4 +74,13 @@ export type MonthlyQuotaFieldToMonthlyBillingFieldMap = {
 export type MyOrganizationDetails = {
     admins: MyOrganizationMember[];
     name: string;
+};
+
+export type MyOrganizationBillingRecap = {
+    [key in MonthlyBillingField]: number
+}
+
+export type MyOrganizationAdminDetails = {
+    myOrganizationMembers: MyOrganizationMember[];
+    myOrganizationBillingRecap: MyOrganizationBillingRecap
 };

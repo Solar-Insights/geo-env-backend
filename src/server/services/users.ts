@@ -6,13 +6,14 @@ import {
     removeUserByEmailFromActive,
     getSpecificMemberOfTheOrganization
 } from "@/db/users/operations";
-import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "../utils/types";
+import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationBillingRecap, MyOrganizationMember } from "@/server/utils/types";
 import { getOrganizationById } from "@/db/organizations/operations";
 import { databaseMemberToClientMember } from "@/dto/users/users";
 import { InsertUser, SupabaseUser } from "@/db/users/types";
 import { UserApi } from "@/api/apis/user";
 import { roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
+import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
@@ -34,12 +35,12 @@ export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0Jw
 
 export async function getMyOrganizationAdminDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester: SupabaseUser = await getRequesterFromDecodedAccessToken(decodedAccessToken);
-    const myOrganizationMembers = await getAllMyOrganizationMembers(requester);
-    const myOrganizationBilling = await getMyOrganizationBilling(requester);
+    const myOrganizationMembers: MyOrganizationMember[] = await getAllMyOrganizationMembers(requester);
+    const myOrganizationBillingRecap: MyOrganizationBillingRecap = await getMyOrganizationBillingRecap(requester);
 
     return {
         myOrganizationMembers: myOrganizationMembers,
-        myOrganizationBilling: myOrganizationBilling
+        myOrganizationBillingRecap: myOrganizationBillingRecap
     }
 }
 
@@ -56,8 +57,13 @@ async function getAllMyOrganizationMembers(requester: SupabaseUser) {
     return membersDTO;
 }
 
-async function getMyOrganizationBilling(requester: SupabaseUser) {
+async function getMyOrganizationBillingRecap(requester: SupabaseUser) {
+    const latestBilling = await getLatestBillingByOrganizationId(requester.organization_id);
 
+    return {
+        building_insights_requests: latestBilling.building_insights_requests,
+        max_members_count: latestBilling.max_members_count
+    };
 }
 
 export async function addMemberToMyOrganization(
