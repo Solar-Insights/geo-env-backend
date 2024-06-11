@@ -76,9 +76,16 @@ export type MyOrganizationDetails = {
     name: string;
 };
 
-export type MyOrganizationBillingRecap = {
-    [key in MonthlyBillingField]: number
-}
+export type MyOrganizationBillingRecap = 
+    { 
+        [key in MonthlyBillingField]: number 
+    } &
+    {
+        [key in MonthlyQuotaField]: number
+    } &
+    { 
+        pricingTier: PricingTier
+    };
 
 export type MyOrganizationAdminDetails = {
     myOrganizationMembers: MyOrganizationMember[];

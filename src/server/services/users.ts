@@ -10,7 +10,7 @@ import { getOrganizationById } from "@/db/organizations/operations";
 import { databaseMemberToClientMember } from "@/dto/users/users";
 import { InsertUser, SupabaseUser } from "@/db/users/types";
 import { UserApi } from "@/api/apis/user";
-import { roleIds } from "@/server/utils/constants";
+import { pricingTiersQuotas, roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
 import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
 
@@ -56,12 +56,17 @@ async function getAllMyOrganizationMembers(requester: SupabaseUser) {
     return membersDTO;
 }
 
-async function getMyOrganizationBillingRecap(requester: SupabaseUser) {
+async function getMyOrganizationBillingRecap(requester: SupabaseUser) : Promise<MyOrganizationBillingRecap> {
     const latestBilling = await getLatestBillingByOrganizationId(requester.organization_id);
-
+    const org = await getOrganizationById(requester.organization_id);
+    const orgPricingTierQuota = pricingTiersQuotas[org.pricing_tier];
+    
     return {
         building_insights_requests: latestBilling.building_insights_requests,
-        max_members_count: latestBilling.max_members_count
+        max_members_count: latestBilling.max_members_count,
+        max_building_insights_requests: orgPricingTierQuota.max_building_insights_requests.value,
+        max_free_members_count: orgPricingTierQuota.max_free_members_count.value,
+        pricingTier: org.pricing_tier
     };
 }
 
