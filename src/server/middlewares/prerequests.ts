@@ -66,7 +66,7 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
 
     // Then verification should be made client side if needed
     if (!monthlyQuotaFieldDetailed.hard) {
-        console.log("you have reached a soft limit: client should let you, but with a warning if needed");
+        console.log("soft limit: client should inform the user, if necessary, of the billing");
         next();
         return;
     }

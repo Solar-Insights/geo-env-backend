@@ -47,12 +47,12 @@ export const pricingTiersQuotas: PricingTierQuotas = {
     },
     pro: {
         max_free_members_count: {
-            value: 8,
+            value: 2,
             hard: false
         },
         max_building_insights_requests: {
             value: SOLAR_INSIGHTS_INFINITY,
-            hard: true
+            hard: false
         }
     },
     enterprise: {
@@ -62,7 +62,7 @@ export const pricingTiersQuotas: PricingTierQuotas = {
         },
         max_building_insights_requests: {
             value: SOLAR_INSIGHTS_INFINITY,
-            hard: true
+            hard: false
         }
     }
 };

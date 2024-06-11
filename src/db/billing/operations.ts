@@ -21,6 +21,7 @@ export async function getLatestBillingForOrganizationQuota(organizationId: strin
     const latestBilling: SupabaseBilling = await getLatestBillingByOrganizationId(organizationId);
 
     // TEMPORARY: Probably needs to create an object for max type of values, or maybe a current / max number in the db?
+    // Because a billing for organization quota should check current values, not the billing values
     latestBilling.max_members_count = await getOrganizationUserCount(organizationId);
 
     return latestBilling;
