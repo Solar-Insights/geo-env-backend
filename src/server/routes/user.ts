@@ -9,8 +9,8 @@ import {
 import {
     addMemberToMyOrganization,
     deleteMyOrganizationMember,
-    getAllMyOrganizationMembers,
-    getMyOrganizationDetails
+    getMyOrganizationDetails,
+    getMyOrganizationAdminDetails
 } from "@/server/services/users";
 import { getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
 import { UserApi } from "@/api/apis/user";
@@ -21,10 +21,9 @@ userRouter.get(
     "/user/my-organization",
     authRequiredPermissions(["read:basic-user-management"]),
     async (req, res, next) => {
-        const userApi = new UserApi(req);
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-        const myOrganization: MyOrganizationDetails = await getMyOrganizationDetails(userApi, decodedAccessToken);
+        const myOrganization: MyOrganizationDetails = await getMyOrganizationDetails(decodedAccessToken);
 
         res.status(200).locals.data = {
             myOrganization: myOrganization
@@ -35,20 +34,14 @@ userRouter.get(
 );
 
 userRouter.get(
-    "/user/my-organization/members",
-    authRequiredPermissions(["read:admin-user-management"]),
+    "/user/my-organization/admin-data",
+    authRequiredPermissions(["read:admin-user-management", "read:admin-billing-management"]),
     async (req, res, next) => {
-        const userApi = new UserApi(req);
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-        const myOrganizationMembers: MyOrganizationMember[] = await getAllMyOrganizationMembers(
-            userApi,
-            decodedAccessToken
-        );
+        const organizationAdminDetails = await getMyOrganizationAdminDetails(decodedAccessToken);
 
-        res.status(200).locals.data = {
-            myOrganizationMembers: myOrganizationMembers
-        };
+        res.status(200).locals.data = organizationAdminDetails;
         next();
         return;
     }

@@ -9,13 +9,12 @@ import {
 import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationMember } from "../utils/types";
 import { getOrganizationById } from "@/db/organizations/operations";
 import { databaseMemberToClientMember } from "@/dto/users/users";
-import { InsertUser } from "@/db/users/types";
+import { InsertUser, SupabaseUser } from "@/db/users/types";
 import { UserApi } from "@/api/apis/user";
 import { roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
-import { ApiError } from "@/api/utils/errors";
 
-export async function getMyOrganizationDetails(userApi: UserApi, decodedAccessToken: CustomAuth0JwtPayload) {
+export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
 
     const myOrganization = await getOrganizationById(requester.organization_id);
@@ -33,9 +32,18 @@ export async function getMyOrganizationDetails(userApi: UserApi, decodedAccessTo
     };
 }
 
-export async function getAllMyOrganizationMembers(userApi: UserApi, decodedAccessToken: CustomAuth0JwtPayload) {
-    const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
+export async function getMyOrganizationAdminDetails(decodedAccessToken: CustomAuth0JwtPayload) {
+    const requester: SupabaseUser = await getRequesterFromDecodedAccessToken(decodedAccessToken);
+    const myOrganizationMembers = await getAllMyOrganizationMembers(requester);
+    const myOrganizationBilling = await getMyOrganizationBilling(requester);
 
+    return {
+        myOrganizationMembers: myOrganizationMembers,
+        myOrganizationBilling: myOrganizationBilling
+    }
+}
+
+async function getAllMyOrganizationMembers(requester: SupabaseUser) {
     const myOrganizationMembers = await getAllOrganizationUsers(requester.organization_id);
 
     const membersDTO: MyOrganizationMember[] = [];
@@ -46,6 +54,10 @@ export async function getAllMyOrganizationMembers(userApi: UserApi, decodedAcces
     });
 
     return membersDTO;
+}
+
+async function getMyOrganizationBilling(requester: SupabaseUser) {
+
 }
 
 export async function addMemberToMyOrganization(

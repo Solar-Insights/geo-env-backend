@@ -18,6 +18,10 @@ export type MyOrganizationMember = {
     avatar: string;
 };
 
+export type MyOrganizationBilling = {
+    
+}
+
 export type CreateMyOrganizationMemberPayload = {
     email: string;
     name: string;
