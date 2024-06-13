@@ -84,7 +84,8 @@ export type MyOrganizationBillingRecap =
         [key in MonthlyQuotaField]: number
     } &
     { 
-        pricingTier: PricingTier
+        pricingTier: PricingTier,
+        billingDate: string
     };
 
 export type MyOrganizationAdminDetails = {

@@ -66,7 +66,8 @@ async function getMyOrganizationBillingRecap(requester: SupabaseUser) : Promise<
         max_members_count: latestBilling.max_members_count,
         max_building_insights_requests: orgPricingTierQuota.max_building_insights_requests.value,
         max_free_members_count: orgPricingTierQuota.max_free_members_count.value,
-        pricingTier: org.pricing_tier
+        pricingTier: org.pricing_tier,
+        billingDate: latestBilling.billing_date
     };
 }
 
