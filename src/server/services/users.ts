@@ -47,8 +47,7 @@ async function getAllMyOrganizationMembers(requester: SupabaseUser) {
     const myOrganizationMembers = await getAllOrganizationUsers(requester.organization_id);
 
     const membersDTO: MyOrganizationMember[] = [];
-    myOrganizationMembers?.forEach((member) => {
-        if (organizationMembersAreIdentical(requester, member)) return;
+    myOrganizationMembers.forEach((member) => {
         const singleMemberDTO = databaseMemberToClientMember(member);
         membersDTO.push(singleMemberDTO);
     });
