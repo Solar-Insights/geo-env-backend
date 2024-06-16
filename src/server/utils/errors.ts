@@ -67,17 +67,6 @@ export class EmailError extends ExpressError {
     }
 }
 
-export class QuotaLimitReachedAlert extends ExpressError {
-    quotaField: string;
-    hard: boolean;
-
-    constructor(quotaField: string) {
-        super("QUOTA_LIMIT_REACHED", `The organization has reached its soft quota limit for ${quotaField}`, 422);
-        this.quotaField = quotaField;
-        this.hard = false;
-    }
-}
-
 export class QuotaLimitReachedError extends ExpressError {
     quotaField: string;
     hard: boolean;

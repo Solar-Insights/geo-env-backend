@@ -58,7 +58,8 @@ export class UserApi extends ApiGeneric {
             .then((response) => {
                 return response.data as Auth0User;
             })
-            .catch(() => {
+            .catch((error) => {
+                console.log(error.response.data)
                 throw new ApiError();
             });
     }
@@ -79,7 +80,8 @@ export class UserApi extends ApiGeneric {
             responseType: "json",
             url: `${AUTH0_BASE_URL}/dbconnections/change_password`,
             data: passwordResetData
-        }).catch(() => {
+        }).catch((error) => {
+            console.log(error.response.data)
             throw new ApiError();
         });
     }
@@ -99,7 +101,8 @@ export class UserApi extends ApiGeneric {
             responseType: "json",
             url: `${AUTH0_BASE_URL}/api/v2/users/${userId}/roles`,
             data: rolesData
-        }).catch(() => {
+        }).catch((error) => {
+            console.log(error.response.data)
             throw new ApiError();
         });
     }
@@ -114,7 +117,8 @@ export class UserApi extends ApiGeneric {
             },
             responseType: "json",
             url: `${AUTH0_BASE_URL}/api/v2/users/${userId}`
-        }).catch(() => {
+        }).catch((error) => {
+            console.log(error.response.data)
             throw new ApiError();
         });
     }
