@@ -14,7 +14,6 @@ import { pricingTiersQuotas, roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
 import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
 import { createDeletedUser } from "@/db/delete_users/operations";
-import { InsertDeletedUsers } from "@/db/delete_users/types";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
@@ -113,10 +112,10 @@ export async function deleteMyOrganizationMember(
 
     if (organizationMembersAreIdentical(requester, memberToRemove)) return;
 
+    await userApi.deleteAuth0User(managementAPIToken, memberToRemove.auth0_id);
+
     memberToRemove.is_deleted = true;
     await removeUserByEmailFromActive(memberToRemove, memberToRemove.email);
 
     await createDeletedUser(databaseMemberToDeletedMember(memberToRemove));
-
-    await userApi.deleteAuth0User(managementAPIToken, memberToRemove.auth0_id);
 }
