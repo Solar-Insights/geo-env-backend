@@ -1,5 +1,6 @@
 import { SupabaseUser } from "@/db/users/types";
 import { MyOrganizationMember } from "@/server/utils/types";
+import { InsertDeletedUsers } from "@/db/delete_users/types";
 
 export function databaseMemberToClientMember(user: SupabaseUser) {
     const member: MyOrganizationMember = {
@@ -10,4 +11,13 @@ export function databaseMemberToClientMember(user: SupabaseUser) {
     };
 
     return member;
+}
+
+export function databaseMemberToDeletedMember(user: SupabaseUser) {
+    const deletedMember: InsertDeletedUsers = {
+        auth0_id: user.auth0_id,
+        email: user.email
+    };
+
+    return deletedMember;
 }

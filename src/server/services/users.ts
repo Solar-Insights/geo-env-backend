@@ -7,12 +7,14 @@ import {
 } from "@/db/users/operations";
 import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationBillingRecap, MyOrganizationMember } from "@/server/utils/types";
 import { getOrganizationById } from "@/db/organizations/operations";
-import { databaseMemberToClientMember } from "@/dto/users/users";
+import { databaseMemberToClientMember, databaseMemberToDeletedMember } from "@/dto/users/users";
 import { InsertUser, SupabaseUser } from "@/db/users/types";
 import { UserApi } from "@/api/apis/user";
 import { pricingTiersQuotas, roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
 import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
+import { createDeletedUser } from "@/db/delete_users/operations";
+import { InsertDeletedUsers } from "@/db/delete_users/types";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
@@ -113,6 +115,8 @@ export async function deleteMyOrganizationMember(
 
     memberToRemove.is_deleted = true;
     await removeUserByEmailFromActive(memberToRemove, memberToRemove.email);
+
+    await createDeletedUser(databaseMemberToDeletedMember(memberToRemove));
 
     await userApi.deleteAuth0User(managementAPIToken, memberToRemove.auth0_id);
 }
