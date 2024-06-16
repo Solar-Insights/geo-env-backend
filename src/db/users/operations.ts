@@ -69,13 +69,13 @@ export async function createUser(user: InsertUser) {
 }
 
 export async function updateUserByAuth0Id(user: UpdateUser, email: string) {
-    const { data, error } = await supabase.from("users").update(user).eq("email", email);
+    const { data, error } = await supabase.from("users").update(user).eq("email", email).eq("is_delete", false);
 
     new OperationValidator(data, error).validateUpdateRequest();
 }
 
 export async function removeUserByEmailFromActive(user: UpdateUser, email: string) {
-    const { data, error } = await supabase.from("users").update(user).eq("email", email);
+    const { data, error } = await supabase.from("users").update(user).eq("email", email).eq("is_deleted", false);
 
     new OperationValidator(data, error).validateUpdateRequest();
 }
