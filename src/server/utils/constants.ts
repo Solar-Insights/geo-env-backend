@@ -21,46 +21,13 @@ export const roleIds = {
 };
 
 export const routeToMonthlyQuotaFieldMap: RouteToMonthlyQuotaFieldMap = {
-    "POST /user/my-organization/members": "max_free_members_count",
+    "POST /user/my-organization/members": "max_members_count",
     "GET /solar/closest-building-insights": "max_building_insights_requests"
 };
 
 export const monthlyQuotaFieldToMonthlyBillingFieldMap: MonthlyQuotaFieldToMonthlyBillingFieldMap = {
-    max_free_members_count: "members_count",
+    max_members_count: "members_count",
     max_building_insights_requests: "building_insights_requests"
 };
 
 export const SOLAR_INSIGHTS_INFINITY = 2147483647;
-
-export const pricingTiersQuotas: PricingTierQuotas = {
-    starter: {
-        max_free_members_count: {
-            value: 1,
-            hard: true
-        },
-        max_building_insights_requests: {
-            value: 100,
-            hard: true
-        }
-    },
-    pro: {
-        max_free_members_count: {
-            value: 2,
-            hard: true
-        },
-        max_building_insights_requests: {
-            value: SOLAR_INSIGHTS_INFINITY,
-            hard: false
-        }
-    },
-    enterprise: {
-        max_free_members_count: {
-            value: 16,
-            hard: true
-        },
-        max_building_insights_requests: {
-            value: SOLAR_INSIGHTS_INFINITY,
-            hard: false
-        }
-    }
-};

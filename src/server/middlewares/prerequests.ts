@@ -2,6 +2,7 @@ import { getUserByEmail } from "@/db/users/operations";
 import { InvalidParameterError, QuotaLimitReachedError } from "@/server/utils/errors";
 import {
     CustomAuth0JwtPayload,
+    MonthlyBillingField,
     MonthlyQuotaField,
     MonthlyQuotaFieldDetailed,
     RoutesAffectingQuotas
@@ -11,11 +12,7 @@ import { claimIncludes } from "express-oauth2-jwt-bearer";
 import { Coordinates, validCoordinates } from "geo-env-typing/geo";
 import { getAccessPathFromRequest, getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
 import { getOrganizationByAccessToken } from "@/db/users/helpers";
-import {
-    routeToMonthlyQuotaFieldMap,
-    monthlyQuotaFieldToMonthlyBillingFieldMap,
-    pricingTiersQuotas
-} from "@/server/utils/constants";
+import { routeToMonthlyQuotaFieldMap, monthlyQuotaFieldToMonthlyBillingFieldMap } from "@/server/utils/constants";
 import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
 
 export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
@@ -55,27 +52,19 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
         next();
         return;
     }
-
+    
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     const organization = await getOrganizationByAccessToken(decodedAccessToken);
+    const organizationLatestBilling = await getLatestBillingByOrganizationId(organization.id);
 
     const quotaRoute = getAccessPathFromRequest(req) as RoutesAffectingQuotas;
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
-    const monthlyQuotaFieldDetailed: MonthlyQuotaFieldDetailed =
-        pricingTiersQuotas[organization.pricing_tier][monthlyQuotaField];
+    const monthlyBillingField: MonthlyBillingField = monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField];
 
-    // Then verification should be made client side if needed
-    if (!monthlyQuotaFieldDetailed.hard) {
-        console.log("soft limit: client should inform the user, if necessary, of the billing");
-        next();
-        return;
-    }
+    const maxValue = organizationLatestBilling[monthlyQuotaField];
+    const currentValue = organizationLatestBilling[monthlyBillingField];
 
-    const organizationLatestBilling = await getLatestBillingByOrganizationId(organization.id);
-    const organizationCurrentValue: number =
-        organizationLatestBilling[monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField]];
-
-    if (organizationCurrentValue >= monthlyQuotaFieldDetailed.value) {
+    if (maxValue >= currentValue) {
         throw new QuotaLimitReachedError(monthlyQuotaField);
     }
 
