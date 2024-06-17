@@ -1,5 +1,4 @@
 import { supabase } from "@/db/init";
-import { SupabaseQuotas } from "@/db/quotas/types";
 import { OperationValidator } from "@/db/utils/validator";
 import { PricingTier } from "@/server/utils/types";
 

@@ -1,4 +1,4 @@
-import { getOrganizationUserCount, getUserByEmail } from "@/db/users/operations";
+import { getUserByEmail } from "@/db/users/operations";
 import { InvalidParameterError, QuotaLimitReachedError } from "@/server/utils/errors";
 import {
     CustomAuth0JwtPayload,
@@ -16,7 +16,7 @@ import {
     monthlyQuotaFieldToMonthlyBillingFieldMap,
     pricingTiersQuotas
 } from "@/server/utils/constants";
-import { getLatestBillingForOrganizationQuota } from "@/db/billing/operations";
+import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
 
 export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
@@ -71,7 +71,7 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
         return;
     }
 
-    const organizationLatestBilling = await getLatestBillingForOrganizationQuota(organization.id);
+    const organizationLatestBilling = await getLatestBillingByOrganizationId(organization.id);
     const organizationCurrentValue: number =
         organizationLatestBilling[monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField]];
 

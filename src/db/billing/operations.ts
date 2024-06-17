@@ -2,7 +2,6 @@ import { supabase } from "@/db/init";
 import { OperationValidator } from "@/db/utils/validator";
 import { MonthlyBillingField } from "@/server/utils/types";
 import { SupabaseBilling, UpdateBilling, InsertBilling } from "@/db/billing/types";
-import { getOrganizationUserCount } from "@/db/users/operations";
 import { generateRandomUuid } from "@/db/utils/helpers";
 
 export async function autocreateNewBilling(oldBilling: SupabaseBilling) {
@@ -37,16 +36,6 @@ export async function getLatestBillingByOrganizationId(organizationId: string) {
 
     if (latestBillingDate > now) return latestBilling // request made before billing date
     return await autocreateNewBilling(latestBilling) // request made after 
-}
-
-export async function getLatestBillingForOrganizationQuota(organizationId: string) {
-    const latestBilling: SupabaseBilling = await getLatestBillingByOrganizationId(organizationId);
-
-    // TEMPORARY: Probably needs to create an object for max type of values, or maybe a current / max number in the db?
-    // Because a billing for organization quota should check current values, not the billing values
-    latestBilling.max_members_count = await getOrganizationUserCount(organizationId);
-
-    return latestBilling;
 }
 
 export async function updateBillingById(billing: UpdateBilling, id: string) {
