@@ -11,9 +11,11 @@ export async function getRequestById(id: string) {
 }
 
 export async function createRequest(request: InsertRequest) {
-    const { data, error } = await supabase.from("requests").insert(request);
+    const { data, error } = await supabase.from("requests").insert(request).select();
 
     new OperationValidator(data, error).validateCreateRequest();
+
+    return data![0];
 }
 
 export async function updateRequestById(request: UpdateRequest, id: string) {

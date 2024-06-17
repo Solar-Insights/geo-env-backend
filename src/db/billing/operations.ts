@@ -1,9 +1,27 @@
 import { supabase } from "@/db/init";
 import { OperationValidator } from "@/db/utils/validator";
 import { MonthlyBillingField } from "@/server/utils/types";
-import { SupabaseBilling, UpdateBilling } from "@/db/billing/types";
+import { SupabaseBilling, UpdateBilling, InsertBilling } from "@/db/billing/types";
 import { maximumMonthlyBillingFields } from "@/server/utils/constants";
 import { getOrganizationUserCount } from "@/db/users/operations";
+import { generateRandomUuid } from "@/db/utils/helpers";
+
+export async function autocreateNewBilling(oldBilling: SupabaseBilling) {
+    const newBillingDate = new Date(oldBilling.billing_date);
+    newBillingDate.setMonth(newBillingDate.getMonth() + 1);
+
+    const newBilling: InsertBilling = {
+        organization_id: oldBilling.organization_id,
+        id: generateRandomUuid(),
+        billing_date: newBillingDate.toISOString().substring(0, 10)
+    }
+
+    const { data, error } = await supabase.from("billing").insert(newBilling).select();
+
+    new OperationValidator(data, error).validateGetSingleItemRequest();
+
+    return data![0];
+}
 
 export async function getLatestBillingByOrganizationId(organizationId: string) {
     const { data, error } = await supabase
@@ -14,7 +32,12 @@ export async function getLatestBillingByOrganizationId(organizationId: string) {
 
     new OperationValidator(data, error).validateGetSingleOrMoreItemRequest();
 
-    return data![0];
+    const latestBilling = data![0];
+    const latestBillingDate = new Date(latestBilling.billing_date); // YYYY-MM-DD format in DB
+    const now = new Date();
+
+    if (latestBillingDate > now) return latestBilling // request made before billing date
+    return await autocreateNewBilling(latestBilling) // request made after 
 }
 
 export async function getLatestBillingForOrganizationQuota(organizationId: string) {

@@ -16,7 +16,7 @@ import {
     monthlyQuotaFieldToMonthlyBillingFieldMap,
     pricingTiersQuotas
 } from "@/server/utils/constants";
-import { getLatestBillingByOrganizationId, getLatestBillingForOrganizationQuota } from "@/db/billing/operations";
+import { getLatestBillingForOrganizationQuota } from "@/db/billing/operations";
 
 export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;

@@ -11,9 +11,11 @@ export async function getOrganizationById(id: string) {
 }
 
 export async function createOrganization(organization: InsertOrganization) {
-    const { data, error } = await supabase.from("organizations").insert(organization);
+    const { data, error } = await supabase.from("organizations").insert(organization).select();
 
     new OperationValidator(data, error).validateCreateRequest();
+
+    return data![0];
 }
 
 export async function updateOrganizationById(organization: UpdateOrganization, id: string) {
