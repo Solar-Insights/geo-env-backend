@@ -13,7 +13,7 @@ export async function getOrganizationById(id: string) {
 export async function createOrganization(organization: InsertOrganization) {
     const { data, error } = await supabase.from("organizations").insert(organization).select();
 
-    new OperationValidator(data, error).validateCreateRequest();
+    new OperationValidator(data, error).validateGetSingleItemRequest();
 
     return data![0];
 }

@@ -84,10 +84,6 @@ export class OperationValidator {
         this.expectsOnlyOneItem();
     }
 
-    public validateCreateRequest() {
-        this.expectsNullData();
-    }
-
     public validateUpdateRequest() {
         this.expectsNullData();
     }

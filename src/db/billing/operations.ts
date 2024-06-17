@@ -29,7 +29,7 @@ export async function getLatestBillingByOrganizationId(organizationId: string) {
         .select()
         .eq("organization_id", organizationId)
         .order("billing_date", { ascending: false });
-
+    
     new OperationValidator(data, error).validateGetSingleOrMoreItemRequest();
 
     const latestBilling = data![0];
