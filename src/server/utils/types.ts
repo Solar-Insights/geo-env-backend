@@ -63,9 +63,26 @@ export type RouteToMonthlyQuotaFieldMap = {
 
 export type RoutesAffectingQuotas = "GET /solar/closest-building-insights" | "POST /user/my-organization/members";
 
+export type MonthlyFreeField = "max_free_members_count" | "max_free_building_insights_requests";
+
 export type MonthlyQuotaField = "max_members_count" | "max_building_insights_requests";
 
 export type MonthlyBillingField = "members_count" | "building_insights_requests";
+
+export type MyOrganizationBillingRecap = 
+    { 
+        [key in MonthlyBillingField]: number 
+    } &
+    {
+        [key in MonthlyQuotaField]: number
+    } &
+    {
+        [key in MonthlyFreeField]: number
+    } &
+    { 
+        pricingTier: PricingTier,
+        billingDate: string
+    };
 
 export type MonthlyQuotaFieldToMonthlyBillingFieldMap = {
     [key in MonthlyQuotaField]: MonthlyBillingField;
@@ -75,18 +92,6 @@ export type MyOrganizationDetails = {
     admins: MyOrganizationMember[];
     name: string;
 };
-
-export type MyOrganizationBillingRecap = 
-    { 
-        [key in MonthlyBillingField]: number 
-    } &
-    {
-        [key in MonthlyQuotaField]: number
-    } &
-    { 
-        pricingTier: PricingTier,
-        billingDate: string
-    };
 
 export type MyOrganizationAdminDetails = {
     myOrganizationMembers: MyOrganizationMember[];

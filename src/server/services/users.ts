@@ -62,9 +62,11 @@ async function getMyOrganizationBillingRecap(requester: SupabaseUser) : Promise<
     
     return {
         building_insights_requests: latestBilling.building_insights_requests,
-        members_count: latestBilling.members_count,
         max_building_insights_requests: latestBilling.max_building_insights_requests,
+        max_free_building_insights_requests: latestBilling.max_free_building_insights_requests,
+        members_count: latestBilling.members_count,
         max_members_count: latestBilling.max_members_count,
+        max_free_members_count: latestBilling.max_free_members_count,
         pricingTier: org.pricing_tier,
         billingDate: latestBilling.billing_date
     };
