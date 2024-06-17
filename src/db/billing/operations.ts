@@ -3,6 +3,7 @@ import { OperationValidator } from "@/db/utils/validator";
 import { MonthlyBillingField } from "@/server/utils/types";
 import { SupabaseBilling, UpdateBilling, InsertBilling } from "@/db/billing/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
+import { getOrganizationUserCount } from "@/db/users/operations";
 
 export async function autocreateNewBilling(oldBilling: SupabaseBilling) {
     const newBillingDate = new Date(oldBilling.billing_date);
@@ -11,8 +12,12 @@ export async function autocreateNewBilling(oldBilling: SupabaseBilling) {
     const newBilling: InsertBilling = {
         organization_id: oldBilling.organization_id,
         id: generateRandomUuid(),
-        billing_date: newBillingDate.toISOString().substring(0, 10)
-    }
+        billing_date: newBillingDate.toISOString().substring(0, 10),
+        building_insights_requests: 0,
+        members_count: await getOrganizationUserCount(oldBilling.organization_id),
+        max_building_insights_requests: oldBilling.max_building_insights_requests,
+        max_members_count: oldBilling.max_members_count
+    };
 
     const { data, error } = await supabase.from("billing").insert(newBilling).select();
 
