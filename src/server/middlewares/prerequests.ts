@@ -64,7 +64,7 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
     const maxValue = organizationLatestBilling[monthlyQuotaField];
     const currentValue = organizationLatestBilling[monthlyBillingField];
 
-    if (maxValue >= currentValue) {
+    if (currentValue >= maxValue) {
         throw new QuotaLimitReachedError(monthlyQuotaField);
     }
 
