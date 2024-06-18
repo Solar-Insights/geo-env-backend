@@ -15,7 +15,7 @@ export async function autocreateNewBilling(oldBilling: SupabaseBilling) {
         billing_date: newBillingDate.toISOString().substring(0, 10),
         building_insights_requests: 0,
         max_building_insights_requests: oldBilling.max_building_insights_requests,
-        max_free_building_insights_requests: oldBilling.max_building_insights_requests,
+        max_free_building_insights_requests: oldBilling.max_free_building_insights_requests,
         members_count: await getOrganizationUserCount(oldBilling.organization_id),
         max_members_count: oldBilling.max_members_count,
         max_free_members_count: oldBilling.max_free_members_count

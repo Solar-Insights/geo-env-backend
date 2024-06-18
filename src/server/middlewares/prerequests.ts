@@ -4,7 +4,6 @@ import {
     CustomAuth0JwtPayload,
     MonthlyBillingField,
     MonthlyQuotaField,
-    MonthlyQuotaFieldDetailed,
     RoutesAffectingQuotas
 } from "@/server/utils/types";
 import { RequestHandler } from "express";
