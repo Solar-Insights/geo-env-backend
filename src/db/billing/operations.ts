@@ -58,3 +58,11 @@ export async function incrementLatestBillingField(organizationId: string, billin
     
     await updateBillingById(latestBilling, latestBilling.id);
 }
+
+export async function decrementLatestBillingField(organizationId: string, billingField: MonthlyBillingField) {
+    const latestBilling: SupabaseBilling = await getLatestBillingByOrganizationId(organizationId);
+
+    latestBilling[billingField] -= 1;
+    
+    await updateBillingById(latestBilling, latestBilling.id);
+}
