@@ -40,7 +40,8 @@ userRouter.get(
     async (req, res, next) => {
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
 
-        const organizationAdminDetails: MyOrganizationAdminDetails = await getMyOrganizationAdminDetails(decodedAccessToken);
+        const organizationAdminDetails: MyOrganizationAdminDetails =
+            await getMyOrganizationAdminDetails(decodedAccessToken);
 
         res.status(200).locals.data = organizationAdminDetails;
         next();

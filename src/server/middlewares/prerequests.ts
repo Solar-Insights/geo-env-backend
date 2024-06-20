@@ -51,7 +51,7 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
         next();
         return;
     }
-    
+
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     const organization = await getOrganizationByAccessToken(decodedAccessToken);
     const organizationLatestBilling = await getLatestBillingByOrganizationId(organization.id);

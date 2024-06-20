@@ -5,7 +5,12 @@ import {
     removeUserByEmailFromActive,
     getSpecificMemberOfTheOrganization
 } from "@/db/users/operations";
-import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, MyOrganizationBillingRecap, MyOrganizationMember } from "@/server/utils/types";
+import {
+    CreateMyOrganizationMemberPayload,
+    CustomAuth0JwtPayload,
+    MyOrganizationBillingRecap,
+    MyOrganizationMember
+} from "@/server/utils/types";
 import { getOrganizationById } from "@/db/organizations/operations";
 import { databaseMemberToClientMember, databaseMemberToDeletedMember } from "@/dto/users/users";
 import { InsertUser, SupabaseUser } from "@/db/users/types";
@@ -41,7 +46,7 @@ export async function getMyOrganizationAdminDetails(decodedAccessToken: CustomAu
     return {
         myOrganizationMembers: myOrganizationMembers,
         myOrganizationBillingRecap: myOrganizationBillingRecap
-    }
+    };
 }
 
 async function getAllMyOrganizationMembers(requester: SupabaseUser) {
@@ -56,10 +61,10 @@ async function getAllMyOrganizationMembers(requester: SupabaseUser) {
     return membersDTO;
 }
 
-async function getMyOrganizationBillingRecap(requester: SupabaseUser) : Promise<MyOrganizationBillingRecap> {
+async function getMyOrganizationBillingRecap(requester: SupabaseUser): Promise<MyOrganizationBillingRecap> {
     const latestBilling = await getLatestBillingByOrganizationId(requester.organization_id);
     const org = await getOrganizationById(requester.organization_id);
-    
+
     return {
         building_insights_requests: latestBilling.building_insights_requests,
         max_building_insights_requests: latestBilling.max_building_insights_requests,
@@ -95,7 +100,7 @@ export async function addMemberToMyOrganization(
         name: newUser.nickname,
         organization_id: requester.organization_id
     };
-    
+
     const newlyCreatedMember = await createUser(newMember);
 
     const newlyCreatedMemberDTO = databaseMemberToClientMember(newlyCreatedMember);

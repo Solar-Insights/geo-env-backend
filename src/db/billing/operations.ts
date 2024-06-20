@@ -34,15 +34,15 @@ export async function getLatestBillingByOrganizationId(organizationId: string) {
         .select()
         .eq("organization_id", organizationId)
         .order("billing_date", { ascending: false });
-    
+
     new OperationValidator(data, error).validateGetSingleOrMoreItemRequest();
 
     const latestBilling = data![0];
     const latestBillingDate = new Date(latestBilling.billing_date); // YYYY-MM-DD format in DB
     const now = new Date();
 
-    if (latestBillingDate > now) return latestBilling // request made before billing date
-    return await autocreateNewBilling(latestBilling) // request made after 
+    if (latestBillingDate > now) return latestBilling; // request made before billing date
+    return await autocreateNewBilling(latestBilling); // request made after
 }
 
 export async function updateBillingById(billing: UpdateBilling, id: string) {
@@ -55,7 +55,7 @@ export async function incrementLatestBillingField(organizationId: string, billin
     const latestBilling: SupabaseBilling = await getLatestBillingByOrganizationId(organizationId);
 
     latestBilling[billingField] += 1;
-    
+
     await updateBillingById(latestBilling, latestBilling.id);
 }
 
@@ -63,6 +63,6 @@ export async function decrementLatestBillingField(organizationId: string, billin
     const latestBilling: SupabaseBilling = await getLatestBillingByOrganizationId(organizationId);
 
     latestBilling[billingField] -= 1;
-    
+
     await updateBillingById(latestBilling, latestBilling.id);
 }
