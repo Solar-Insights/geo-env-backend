@@ -14,6 +14,7 @@ import { userResponseHandler } from "@/server/middlewares/responses";
 import { AddressInfo } from "net";
 import { existingSupabaseUser, respectsPricingTierQuota } from "@/server/middlewares/prerequests";
 import unsecuredRouter from "@/server/routes/unsecured";
+import helmet from "helmet";
 
 export class ServerFactory {
     app!: Express;
@@ -64,6 +65,9 @@ export class ServerFactory {
     }
 
     public withDefaultMiddlewares() {
+        console.log("setting up helmet..");
+        this.app.use(helmet());
+        
         console.log("setting up cors..");
         this.app.use(cors());
 
