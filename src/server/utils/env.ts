@@ -13,5 +13,7 @@ export const AUTH0_CLIENT_SECRET: string = process.env.AUTH0_CLIENT_SECRET as st
 export const SUPABASE_URL = process.env.SUPABASE_URL as string;
 export const SUPABASE_KEY = process.env.SUPABASE_KEY as string;
 
-export const GMAIL_EMAIL = process.env.GMAIL_EMAIL as string;
+export const GMAIL_SENDER = process.env.GMAIL_SENDER as string;
 export const GMAIL_PASSWORD = process.env.GMAIL_PASSWORD as string;
+
+export const EMAIL_RECEIVER = process.env.EMAIL_RECEIVER as string;

@@ -1,4 +1,4 @@
-import { GMAIL_EMAIL, GMAIL_PASSWORD } from "@/server/utils/env";
+import { GMAIL_SENDER, GMAIL_PASSWORD, EMAIL_RECEIVER } from "@/server/utils/env";
 import { createTransport } from "nodemailer";
 import { EmailOperationType } from "@/server/utils/types";
 import { NewOrganizationFormClass } from "@/dto/unsecured/newOrganizationForm";
@@ -26,16 +26,16 @@ export async function sendNewOrganizationRequestEmail(newOrganizationFormObject:
     const CONTENT = JSON.stringify(newOrganizationFormObject, null, 4);
 
     const NEW_ORGANIZATION_REQUEST_EMAIL_OPTIONS = {
-        from: GMAIL_EMAIL,
-        to: GMAIL_EMAIL,
+        from: GMAIL_SENDER,
+        to: EMAIL_RECEIVER,
         subject: SUBJECT,
         text: CONTENT
     };
 
-    return createEmailTransporter(SENDER_SERVICE, GMAIL_EMAIL, GMAIL_PASSWORD)
+    return createEmailTransporter(SENDER_SERVICE, GMAIL_SENDER, GMAIL_PASSWORD)
         .sendMail(NEW_ORGANIZATION_REQUEST_EMAIL_OPTIONS)
         .then(() => {
-            emailLogger(GMAIL_EMAIL, GMAIL_EMAIL, "SENDING");
+            emailLogger(GMAIL_SENDER, EMAIL_RECEIVER, "SENDING");
         })
         .catch((error) => {
             throw new EmailError("SENDING");
