@@ -20,3 +20,7 @@ export const SUPABASE_KEY = process.env.SUPABASE_KEY as string; // Credential fo
 export const GMAIL_SENDER = process.env.GMAIL_SENDER as string; // Sender to send emails from
 export const GMAIL_SENDER_PASSWORD = process.env.GMAIL_SENDER_PASSWORD as string; // Password for sender
 export const EMAIL_RECEIVER = process.env.EMAIL_RECEIVER as string; // Receiver to emails sent from the server
+
+// Stripe
+export const STRIPE_PUBLIC_KEY: string = process.env.STRIPE_PUBLIC_KEY as string;
+export const STRIPE_PRIVATE_KEY: string = process.env.STRIPE_PRIVATE_KEY as string;
