@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "@googlemaps/google-maps-services-js": "^3.3.42",
+        "@stripe/stripe-js": "^4.1.0",
         "@supabase/supabase-js": "^2.43.0",
         "body-parser": "^1.20.2",
         "class-validator": "^0.14.1",
