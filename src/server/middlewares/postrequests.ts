@@ -15,6 +15,7 @@ import { incrementLatestBillingField } from "@/db/billing/operations";
 import { monthlyQuotaFieldToMonthlyBillingFieldMap, routeToMonthlyQuotaFieldMap } from "@/server/utils/constants";
 import { getAccessPathFromRequest } from "@/server/utils/helpers";
 import { getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
+import { makeStripeMeterEvent } from "@/stripe/meterevents";
 
 export const userRequestLogger: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
@@ -44,6 +45,9 @@ export const userRequestDatabaseLogger: RequestHandler = async (req, res, next) 
 
     console.log("**successfully logged to database");
 
+    // Used to ID Stripe meter events
+    res.locals.request_id = request.id;
+
     next();
     return;
 };
@@ -56,11 +60,14 @@ export const userRequestBilling: RequestHandler = async (req, res, next) => {
 
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     const organization = await getOrganizationByAccessToken(decodedAccessToken);
+    const stripeCustomerId = organization.customer_id;
+    const requestId: string = res.locals.request_id;
 
     const quotaRoute = getAccessPathFromRequest(req) as RoutesAffectingQuotas;
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
     const monthlyBillingField: MonthlyBillingField = monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField];
     await incrementLatestBillingField(organization.id, monthlyBillingField);
+    await makeStripeMeterEvent(stripeCustomerId, requestId, monthlyBillingField);
 
     console.log("**successfully added to monthly billing");
 

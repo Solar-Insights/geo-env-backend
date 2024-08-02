@@ -1,4 +1,3 @@
 /*
-    Run using npx tsx src/billing/billingscript.ts
+    Run using npx tsx src/stripe/billingscript.ts
 */
-
