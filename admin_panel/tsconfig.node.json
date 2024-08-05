@@ -3,7 +3,8 @@
       "composite": true,
       "baseUrl": ".",
       "paths": {
-          "@/*": ["./src/*"]
+          "@/*": ["./src/*"],
+          "#/*": ["../src/*"]
       },
       "types": ["node", "vuetify"],
       "skipLibCheck": true,

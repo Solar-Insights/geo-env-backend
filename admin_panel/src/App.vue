@@ -8,6 +8,7 @@
 
 <script setup lang="ts">
 import { useRoute } from "vue-router";
+import {} from "#/server/services/solar";
 
 const currentRoute = useRoute();
 </script>
