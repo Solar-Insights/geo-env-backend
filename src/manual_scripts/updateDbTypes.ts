@@ -1,5 +1,5 @@
 /*
-    npx tsx src/manual_scripts/updateDbTypes.ts
+1. Run: npx tsx src/manual_scripts/updateDbTypes.ts
 */
 
 import { exec } from "node:child_process";

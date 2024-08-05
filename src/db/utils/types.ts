@@ -11,7 +11,6 @@ export type Database = {
     Tables: {
       billing: {
         Row: {
-          billed: boolean
           billing_date: string
           building_insights_requests: number
           id: string
@@ -21,10 +20,8 @@ export type Database = {
           max_members_count: number
           members_count: number
           organization_id: string
-          paid: boolean
         }
         Insert: {
-          billed?: boolean
           billing_date: string
           building_insights_requests: number
           id: string
@@ -34,10 +31,8 @@ export type Database = {
           max_members_count: number
           members_count: number
           organization_id: string
-          paid?: boolean
         }
         Update: {
-          billed?: boolean
           billing_date?: string
           building_insights_requests?: number
           id?: string
@@ -47,7 +42,6 @@ export type Database = {
           max_members_count?: number
           members_count?: number
           organization_id?: string
-          paid?: boolean
         }
         Relationships: [
           {

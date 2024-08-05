@@ -5,6 +5,14 @@ import { SupabaseBilling, UpdateBilling, InsertBilling } from "@/db/billing/type
 import { generateRandomUuid } from "@/db/utils/helpers";
 import { getOrganizationUserCount } from "@/db/users/operations";
 
+export async function createBilling(billing: InsertBilling) {
+    const { data, error } = await supabase.from("billing").insert(billing).select();
+
+    new OperationValidator(data, error).validateGetSingleItemRequest();
+
+    return data![0];
+}
+
 export async function autocreateNewBilling(oldBilling: SupabaseBilling) {
     const newBillingDate = new Date(oldBilling.billing_date);
     newBillingDate.setMonth(newBillingDate.getMonth() + 1);
