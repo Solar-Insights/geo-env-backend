@@ -41,6 +41,7 @@ export type NewOrganizationForm = {
     name: string;
     contactEmail: string;
     pricingTier: PricingTier;
+    modifiyingExistingPlan: boolean;
     additionalNotes: string;
 };
 
