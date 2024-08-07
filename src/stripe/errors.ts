@@ -5,7 +5,7 @@ export class StripeError extends Error {
 
     constructor(
         error: string,
-        message: string = "An error was encountered during a request made to stripe.",
+        message: string = "An error was encountered during a request made to Stripe.",
         code: number = 500
     ) {
         super();
@@ -16,5 +16,17 @@ export class StripeError extends Error {
 
     public toObject() {
         return JSON.stringify(this);
+    }
+}
+
+export class StripeCustomerSubscriptionError extends StripeError {
+    constructor(message: string, error: string = "STRIPE_CUSTOMER_SUBSCRIPTION_ERROR") {
+        super((error = error), (message = message));
+    }
+}
+
+export class StripeCustomerError extends StripeError {
+    constructor(message: string, error: string = "STRIPE_CUSTOMER_ERROR") {
+        super((error = error), (message = message));
     }
 }
