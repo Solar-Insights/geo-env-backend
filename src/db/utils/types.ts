@@ -205,7 +205,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "users_team_id_fkey"
+            foreignKeyName: "users_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"

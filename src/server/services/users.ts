@@ -12,13 +12,12 @@ import {
     MyOrganizationMember
 } from "@/server/utils/types";
 import { getOrganizationById } from "@/db/organizations/operations";
-import { databaseMemberToClientMember, databaseMemberToDeletedMember } from "@/dto/users/users";
+import { databaseMemberToClientMember } from "@/dto/users/users";
 import { InsertUser, SupabaseUser } from "@/db/users/types";
 import { UserApi } from "@/api/apis/user";
 import { roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
 import { decrementLatestBillingField, getLatestBillingByOrganizationId } from "@/db/billing/operations";
-import { createDeletedUser } from "@/db/delete_users/operations";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
@@ -123,5 +122,4 @@ export async function deleteMyOrganizationMember(
     memberToRemove.is_deleted = true;
     await removeUserByEmailFromActive(memberToRemove, memberToRemove.email);
     await decrementLatestBillingField(requester.organization_id, "members_count");
-    await createDeletedUser(databaseMemberToDeletedMember(memberToRemove));
 }
