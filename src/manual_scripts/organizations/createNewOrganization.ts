@@ -1,25 +1,27 @@
 /*
-1. Create Stripe Customer
-2. Add Products to Stripe Customer 
-3. Run: npx tsx src/manual_scripts/createNewOrganization.ts
+1. Create Stripe Customer (Company name as Name if org, otherwise full name. If org, put contact person name in Description)
+2. Create Subscription with products for new Customer
+3. npx tsx src/manual_scripts/organizations/createNewOrganization.ts
 */
 
-import { createOrganization } from "@/db/organizations/operations";
-import { createBilling } from "@/db/billing/operations";
+import { createOrganization, deleteOrganizationById } from "@/db/organizations/operations";
+import { createBilling, deleteBillingById } from "@/db/billing/operations";
 import { InsertOrganization } from "@/db/organizations/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
-import { CreateMyOrganizationMemberPayload, CustomAuth0JwtPayload, PricingTier } from "@/server/utils/types";
+import { PricingTier } from "@/server/utils/types";
 import { InsertBilling } from "@/db/billing/types";
 import { SOLAR_INSIGHTS_INFINITY } from "@/server/utils/constants";
 import { UserApi } from "@/api/apis/user";
-import { addMemberToMyOrganization } from "@/server/services/users";
+import { addFirstMemberToOrganization } from "@/server/services/users";
 import { getCustomerByEmail } from "@/stripe/customers/operations";
 
-const ORGANIZATION_NAME = "";
+const ORGANIZATION_NAME = "Test org";
 const PRICING_TIER: PricingTier = "starter";
-const FIRST_USER_EMAIL = "";
-const FIRST_USER_NAME = "";
+const FIRST_USER_EMAIL = "mathisbeaudoin15@hotmail.com";
+const FIRST_USER_NAME = "Test contact";
 const FIRST_USER_PHONE_NUMBER = "";
+
+// --------------------------------------------
 
 function pricingTierToMaxBuildingInsightsRequests(pricingTier: PricingTier) {
     switch (pricingTier) {
@@ -45,23 +47,9 @@ function pricingTierToMaxFreeMembersCount(pricingTier: PricingTier) {
 
 // --------------------------------------------
 
-async function createFirstUser() {
+async function createFirstUser(organizationId: string) {
     const userApi = new UserApi(undefined as any);
-    const body: CreateMyOrganizationMemberPayload = {
-        email: FIRST_USER_EMAIL,
-        name: FIRST_USER_NAME
-    };
-    const decodedAccessToken: CustomAuth0JwtPayload = {
-        permissions: "",
-        email: FIRST_USER_EMAIL,
-        azp: ""
-    };
-
-    await addMemberToMyOrganization(
-        userApi,
-        decodedAccessToken,
-        body
-    );
+    return await addFirstMemberToOrganization(userApi, FIRST_USER_EMAIL, FIRST_USER_NAME, organizationId)
 }
 
 const newOrganization: InsertOrganization = {
@@ -86,6 +74,14 @@ const firstBilling: InsertBilling = {
     billing_date: new Date().toISOString().substring(0, 10)
 };
 
-await createOrganization(newOrganization);
-await createBilling(firstBilling);
-await createFirstUser();
+try {
+    await createOrganization(newOrganization);
+    await createBilling(firstBilling);
+    const firstUser = await createFirstUser(newOrganization.id)
+    console.log(`\n- NEW ORGANIZATION WITH ID:\n${newOrganization.id}\n`);
+    console.log(`\n- NEW USER WITH ID:\n${firstUser.auth0_id}\n`)
+} catch (error) {
+    console.log(error);
+    await deleteOrganizationById(newOrganization.id);
+    await deleteBillingById(firstBilling.id);
+}

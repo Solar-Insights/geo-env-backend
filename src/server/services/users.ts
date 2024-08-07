@@ -106,6 +106,29 @@ export async function addMemberToMyOrganization(
     return newlyCreatedMemberDTO;
 }
 
+export async function addFirstMemberToOrganization(userApi: UserApi, email: string, name: string, organizationId: string) {
+    const managementAPIToken = await userApi.getManagementAPIToken();
+
+    const newUser = await userApi.manuallyCreateAuth0User(
+        managementAPIToken,
+        email,
+        name
+    );
+    await userApi.sendEmailForPasswordReset(newUser.email);
+    await userApi.assignRolesToUser(managementAPIToken, newUser.user_id, [roleIds["OrgAdmin"], roleIds["OrgMember"]]);
+
+    const firstUser: InsertUser = {
+        auth0_id: newUser.user_id,
+        avatar: newUser.picture,
+        email: newUser.email,
+        name: newUser.nickname,
+        organization_id: organizationId,
+        is_admin: true
+    };
+
+    return await createUser(firstUser);
+}
+
 export async function deleteMyOrganizationMember(
     userApi: UserApi,
     decodedAccessToken: CustomAuth0JwtPayload,

@@ -13,6 +13,12 @@ export async function createBilling(billing: InsertBilling) {
     return data![0];
 }
 
+export async function deleteBillingById(id: string) {
+    const { data, error } = await supabase.from("billing").delete().eq("id", id);
+
+    new OperationValidator(data, error).validateDeleteRequest();
+}
+
 export async function autocreateNewBilling(oldBilling: SupabaseBilling) {
     const newBillingDate = new Date(oldBilling.billing_date);
     newBillingDate.setMonth(newBillingDate.getMonth() + 1);

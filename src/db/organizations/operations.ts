@@ -18,6 +18,12 @@ export async function createOrganization(organization: InsertOrganization) {
     return data![0];
 }
 
+export async function deleteOrganizationById(id: string) {
+    const { data, error } = await supabase.from("organizations").delete().eq("id", id);
+
+    new OperationValidator(data, error).validateDeleteRequest();
+}
+
 export async function updateOrganizationById(organization: UpdateOrganization, id: string) {
     const { data, error } = await supabase.from("organizations").update(organization).eq("id", id);
 
