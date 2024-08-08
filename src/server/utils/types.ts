@@ -74,12 +74,13 @@ export type MonthlyBillingPrice = "members_price" | "building_insights_requests_
 
 export type MonthlyPlanInfo = "plan_count" | "plan_price"; 
 
+// PRICES FIELDS IN CENTS
 export type BillingInfoFromInvoice = {
-    [key in MonthlyBillingField]: number;
+    [key in MonthlyBillingField]: number | null;
 } & {
-    [key in MonthlyBillingPrice]: number
+    [key in MonthlyBillingPrice]: number | null
 } & {
-    [key in MonthlyPlanInfo]: number
+    [key in MonthlyPlanInfo]: number | null
 } & {
     periodStart: string;
     periodEnd: string;

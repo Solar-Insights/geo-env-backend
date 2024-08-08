@@ -2,9 +2,8 @@
 1. npx tsx src/manual_scripts/test.ts
 */
 
-import { getCustomerByEmail, getCustomerUpcomingInvoice } from "@/stripe/customers/operations";
+import { getMyOrganizationBillingRecap } from "@/server/services/users"
 
-const customer = await getCustomerByEmail("mathisbeaudoin15@hotmail.com");
-const invoice = await getCustomerUpcomingInvoice(customer);
-
-console.log(invoice.lines.data)
+console.log(await getMyOrganizationBillingRecap({
+    "organization_id": "229c4f8b-0500-42b0-bae4-0e043a8e6ba1" 
+} as any))

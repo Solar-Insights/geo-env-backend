@@ -62,7 +62,7 @@ async function getAllMyOrganizationMembers(requester: SupabaseUser) {
     return membersDTO;
 }
 
-async function getMyOrganizationBillingRecap(requester: SupabaseUser): Promise<MyOrganizationBillingRecap> {
+export async function getMyOrganizationBillingRecap(requester: SupabaseUser): Promise<MyOrganizationBillingRecap> {
     const latestBilling = await getLatestBillingByOrganizationId(requester.organization_id);
 
     const org = await getOrganizationById(requester.organization_id);

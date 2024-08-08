@@ -37,12 +37,12 @@ export function stripeUpcomingInvoiceToNeededInfo(invoice: Stripe.UpcomingInvoic
         periodStart: epochTimeToDate(invoice.period_start),
         periodEnd: epochTimeToDate(invoice.period_end),
         dueDate: epochTimeToDate(invoice.due_date),
-        building_insights_requests: NaN,
-        building_insights_requests_price: NaN,
-        members_count: NaN,
-        members_price: NaN,
-        plan_count: NaN,
-        plan_price: NaN,
+        building_insights_requests: null,
+        building_insights_requests_price: null,
+        members_count: null,
+        members_price: null,
+        plan_count: null,
+        plan_price: null,
     };
     
     invoice.lines.data.forEach((line) => {
@@ -52,8 +52,8 @@ export function stripeUpcomingInvoiceToNeededInfo(invoice: Stripe.UpcomingInvoic
         }
 
         const productId = linePrice.product as string;
-        const productQuantity = line.quantity === null ? 0 : line.quantity;
-        const productUnitPrice = linePrice.unit_amount === null ? 0 : linePrice.unit_amount;
+        const productQuantity = line.quantity;
+        const productUnitPrice = linePrice.unit_amount;
 
         if (productId === SOLAR_REQUESTS_ID) {
             billingInfo.building_insights_requests = productQuantity;
