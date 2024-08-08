@@ -29,3 +29,13 @@ export const monthlyQuotaFieldToMonthlyBillingFieldMap: MonthlyQuotaFieldToMonth
 };
 
 export const SOLAR_INSIGHTS_INFINITY = 2147483647;
+
+export const STRIPE_IDS = {
+    "prod_QV09EbwcXFbDNi": "solar_requests"
+}
+
+export const PLAN_IDS = ["prod_QUzwdWLycoc5TO", "prod_QUdsMKTfR6ktYd", "prod_QUdtyopu6WAWdT"];
+
+export const ADDITIONAL_USERS_ID = "prod_QcVT3e1sheDCre";
+
+export const SOLAR_REQUESTS_ID = "prod_QV09EbwcXFbDNi";

@@ -70,16 +70,31 @@ export type MonthlyQuotaField = "max_members_count" | "max_building_insights_req
 
 export type MonthlyBillingField = "members_count" | "building_insights_requests";
 
-export type MyOrganizationBillingRecap = {
+export type MonthlyBillingPrice = "members_price" | "building_insights_requests_price";
+
+export type MonthlyPlanInfo = "plan_count" | "plan_price"; 
+
+export type BillingInfoFromInvoice = {
     [key in MonthlyBillingField]: number;
 } & {
+    [key in MonthlyBillingPrice]: number
+} & {
+    [key in MonthlyPlanInfo]: number
+} & {
+    periodStart: string;
+    periodEnd: string;
+    dueDate: string;
+};
+
+export type MyOrganizationBillingRecap = {
     [key in MonthlyQuotaField]: number;
 } & {
     [key in MonthlyFreeField]: number;
 } & {
-    pricingTier: PricingTier;
-    billingDate: string;
-};
+    pricingTier: PricingTier
+} & BillingInfoFromInvoice ;
+
+
 
 export type MonthlyQuotaFieldToMonthlyBillingFieldMap = {
     [key in MonthlyQuotaField]: MonthlyBillingField;
