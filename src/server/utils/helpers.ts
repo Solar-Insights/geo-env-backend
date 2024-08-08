@@ -32,32 +32,40 @@ export function epochTimeToDate(epochTime: EpochTimeStamp | null) {
     return new Date(epochTimeInMilli).toISOString().substring(0, 10);
 }
 
-export function stripeInvoiceToNeededInfo(invoice: Stripe.UpcomingInvoice): BillingInfoFromInvoice {
+export function stripeUpcomingInvoiceToNeededInfo(invoice: Stripe.UpcomingInvoice): BillingInfoFromInvoice {
     const billingInfo: BillingInfoFromInvoice = {
         periodStart: epochTimeToDate(invoice.period_start),
         periodEnd: epochTimeToDate(invoice.period_end),
         dueDate: epochTimeToDate(invoice.due_date),
-        building_insights_requests: 0,
-        building_insights_requests_price: 0,
-        members_count: 0,
-        members_price: 0,
-        plan_count: 0,
-        plan_price: 0,
+        building_insights_requests: NaN,
+        building_insights_requests_price: NaN,
+        members_count: NaN,
+        members_price: NaN,
+        plan_count: NaN,
+        plan_price: NaN,
     };
     
     invoice.lines.data.forEach((line) => {
-        const lineProductId = line.plan!.product as string;
-        if (lineProductId === SOLAR_REQUESTS_ID) {
-            billingInfo.building_insights_requests;
-            billingInfo.building_insights_requests_price;
+        const linePrice = line.price;
+        if (linePrice === null) {
+            return;
+        }
+
+        const productId = linePrice.product as string;
+        const productQuantity = line.quantity === null ? 0 : line.quantity;
+        const productUnitPrice = linePrice.unit_amount === null ? 0 : linePrice.unit_amount;
+
+        if (productId === SOLAR_REQUESTS_ID) {
+            billingInfo.building_insights_requests = productQuantity;
+            billingInfo.building_insights_requests_price = productUnitPrice;
         } 
-        else if (lineProductId === ADDITIONAL_USERS_ID) {
-            billingInfo.members_count;
-            billingInfo.members_price;
+        else if (productId === ADDITIONAL_USERS_ID) {
+            billingInfo.members_count = productQuantity;
+            billingInfo.members_price = productUnitPrice;
         } 
-        else if (PLAN_IDS.includes(lineProductId)) {
-            billingInfo.plan_count;
-            billingInfo.plan_price
+        else if (PLAN_IDS.includes(productId)) {
+            billingInfo.plan_count = productQuantity;
+            billingInfo.plan_price = productUnitPrice;
         }
     })
 

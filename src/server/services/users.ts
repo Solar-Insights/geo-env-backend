@@ -19,7 +19,7 @@ import { roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
 import { decrementLatestBillingField, getLatestBillingByOrganizationId } from "@/db/billing/operations";
 import { getCustomerByEmail, getCustomerUpcomingInvoice } from "@/stripe/customers/operations";
-import { epochTimeToDate, stripeInvoiceToNeededInfo } from "@/server/utils/helpers";
+import { stripeUpcomingInvoiceToNeededInfo } from "@/server/utils/helpers";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
@@ -68,16 +68,14 @@ async function getMyOrganizationBillingRecap(requester: SupabaseUser): Promise<M
     const org = await getOrganizationById(requester.organization_id);
     const customer = await getCustomerByEmail(org.contact_email);
     const upcomingInvoice = await getCustomerUpcomingInvoice(customer);
-    const billingInfo = stripeInvoiceToNeededInfo(upcomingInvoice);
+    const billingInfo = stripeUpcomingInvoiceToNeededInfo(upcomingInvoice);
 
     return {
         max_building_insights_requests: latestBilling.max_building_insights_requests,
         max_free_building_insights_requests: latestBilling.max_free_building_insights_requests,
         max_members_count: latestBilling.max_members_count,
         max_free_members_count: latestBilling.max_free_members_count,
-
         pricingTier: org.pricing_tier,
-
         ...billingInfo
     };
 }
