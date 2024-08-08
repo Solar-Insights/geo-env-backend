@@ -19,12 +19,6 @@ export class StripeError extends Error {
     }
 }
 
-export class StripeCustomerSubscriptionError extends StripeError {
-    constructor(message: string, error: string = "STRIPE_CUSTOMER_SUBSCRIPTION_ERROR") {
-        super((error = error), (message = message));
-    }
-}
-
 export class StripeCustomerError extends StripeError {
     constructor(message: string, error: string = "STRIPE_CUSTOMER_ERROR") {
         super((error = error), (message = message));
