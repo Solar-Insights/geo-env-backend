@@ -17,9 +17,9 @@ import { InsertUser, SupabaseUser } from "@/db/users/types";
 import { UserApi } from "@/api/apis/user";
 import { roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
-import { decrementLatestBillingField, getLatestBillingByOrganizationId } from "@/db/billing/operations";
+import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
 import { getCustomerByEmail, getCustomerUpcomingInvoice } from "@/stripe/customers/operations";
-import { stripeUpcomingInvoiceToNeededInfo } from "@/server/utils/helpers";
+import { getCurrentValueForQuotaField, stripeUpcomingInvoiceToNeededInfo } from "@/server/utils/helpers";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
@@ -71,10 +71,10 @@ export async function getMyOrganizationBillingRecap(requester: SupabaseUser): Pr
     const billingInfo = stripeUpcomingInvoiceToNeededInfo(upcomingInvoice);
 
     return {
+        building_insights_requests: await getCurrentValueForQuotaField(org, "building_insights_requests"),
         max_building_insights_requests: latestBilling.max_building_insights_requests,
-        max_free_building_insights_requests: latestBilling.max_free_building_insights_requests,
+        members_count: await getCurrentValueForQuotaField(org, "members_count"),
         max_members_count: latestBilling.max_members_count,
-        max_free_members_count: latestBilling.max_free_members_count,
         pricingTier: org.pricing_tier,
         ...billingInfo
     };
@@ -148,5 +148,4 @@ export async function deleteMyOrganizationMember(
 
     memberToRemove.is_deleted = true;
     await removeUserByEmailFromActive(memberToRemove, memberToRemove.email);
-    await decrementLatestBillingField(requester.organization_id, "members_count");
 }

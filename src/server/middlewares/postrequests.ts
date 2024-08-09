@@ -11,7 +11,6 @@ import { InsertRequest } from "@/db/requests/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
 import { createRequest } from "@/db/requests/operations";
 import { getOrganizationByAccessToken } from "@/db/users/helpers";
-import { incrementLatestBillingField } from "@/db/billing/operations";
 import { monthlyQuotaFieldToMonthlyBillingFieldMap, routeToMonthlyQuotaFieldMap } from "@/server/utils/constants";
 import { getAccessPathFromRequest } from "@/server/utils/helpers";
 import { getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
@@ -66,7 +65,7 @@ export const userRequestBilling: RequestHandler = async (req, res, next) => {
     const quotaRoute = getAccessPathFromRequest(req) as RoutesAffectingQuotas;
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
     const monthlyBillingField: MonthlyBillingField = monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField];
-    await incrementLatestBillingField(organization.id, monthlyBillingField);
+
     await makeStripeMeterEvent(stripeCustomerId, requestId, monthlyBillingField);
 
     console.log("**successfully added to monthly billing");

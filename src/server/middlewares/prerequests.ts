@@ -9,7 +9,7 @@ import {
 import { RequestHandler } from "express";
 import { claimIncludes } from "express-oauth2-jwt-bearer";
 import { Coordinates, validCoordinates } from "geo-env-typing/geo";
-import { getAccessPathFromRequest, getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
+import { getAccessPathFromRequest, getCurrentValueForQuotaField, getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
 import { getOrganizationByAccessToken } from "@/db/users/helpers";
 import { routeToMonthlyQuotaFieldMap, monthlyQuotaFieldToMonthlyBillingFieldMap } from "@/server/utils/constants";
 import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
@@ -61,7 +61,7 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
     const monthlyBillingField: MonthlyBillingField = monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField];
 
     const maxValue = organizationLatestBilling[monthlyQuotaField];
-    const currentValue = organizationLatestBilling[monthlyBillingField];
+    const currentValue = await getCurrentValueForQuotaField(organization, monthlyBillingField);
 
     if (currentValue >= maxValue) {
         throw new QuotaLimitReachedError(monthlyQuotaField);

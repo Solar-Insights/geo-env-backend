@@ -1,8 +1,11 @@
 import { Request } from "express";
 import { jwtDecode } from "jwt-decode";
-import { BillingInfoFromInvoice, CustomAuth0JwtPayload } from "@/server/utils/types";
+import { BillingInfoFromInvoice, CustomAuth0JwtPayload, MonthlyBillingField } from "@/server/utils/types";
 import Stripe from "stripe";
-import { USERS_ID, PLAN_ID, SOLAR_REQUESTS_ID } from "@/server/utils/constants";
+import { USERS_ID, PLAN_ID, SOLAR_REQUESTS_ID, SOLAR_INSIGHTS_NEGATIVE_INFINITY } from "@/server/utils/constants";
+import { getOrganizationUserCount } from "@/db/users/operations";
+import { getCustomerByEmail, getCustomerCurrentNumberOfRequests } from "@/stripe/customers/operations";
+import { SupabaseOrganization } from "@/db/organizations/types";
 
 export function getAccessPathFromRequest(req: Request) {
     return `${req.method} ${req.path}`;
@@ -32,19 +35,27 @@ export function epochTimeToDate(epochTime: EpochTimeStamp | null) {
     return new Date(epochTimeInMilli).toISOString().substring(0, 10);
 }
 
+export async function getCurrentValueForQuotaField(organization: SupabaseOrganization, monthlyBillingField: MonthlyBillingField) {
+    switch (monthlyBillingField) {
+        case "building_insights_requests":
+            const ourCustomer = await getCustomerByEmail(organization.contact_email);
+            return await getCustomerCurrentNumberOfRequests(ourCustomer);
+        case "members_count":
+            return await getOrganizationUserCount(organization.id);
+    }
+}
+
 export function stripeUpcomingInvoiceToNeededInfo(invoice: Stripe.UpcomingInvoice): BillingInfoFromInvoice {
     const billingInfo: BillingInfoFromInvoice = {
         periodStart: epochTimeToDate(invoice.period_start),
         periodEnd: epochTimeToDate(invoice.period_end),
         dueDate: epochTimeToDate(invoice.due_date),
-        building_insights_requests: NaN,
-        building_insights_requests_unit_price_in_cents: NaN,
-        members_count: NaN,
-        members_unit_price_in_cents: NaN,
-        additional_members_count: NaN,
-        additional_members_unit_price_in_cents: NaN,
-        plan_count: NaN,
-        plan_unit_price_in_cents: NaN,
+        building_insights_requests_unit_price_in_cents: SOLAR_INSIGHTS_NEGATIVE_INFINITY,
+        max_free_building_insights_requests: 0, // default value
+        members_unit_price_in_cents: 500, // default value
+        max_free_members_count: 0, // default value
+        plan_count: SOLAR_INSIGHTS_NEGATIVE_INFINITY,
+        plan_unit_price_in_cents: SOLAR_INSIGHTS_NEGATIVE_INFINITY,
     };
 
     invoice.lines.data.forEach((line) => {
@@ -57,16 +68,18 @@ export function stripeUpcomingInvoiceToNeededInfo(invoice: Stripe.UpcomingInvoic
 
         const productId = linePricing.product as string;
         if (productId === SOLAR_REQUESTS_ID) {
-            billingInfo.building_insights_requests = lineQuantity;
-            billingInfo.building_insights_requests_unit_price_in_cents = linePricing.unit_amount!;
+            if (line.unit_amount_excluding_tax === "0") {
+                billingInfo.max_free_building_insights_requests = lineQuantity;
+            } else {
+                const tempo = Number(line.unit_amount_excluding_tax);
+                billingInfo.building_insights_requests_unit_price_in_cents = tempo === 0 ? 25 : tempo;
+            }
         } 
         else if (productId === USERS_ID) {
             if (line.unit_amount_excluding_tax === "0") {
-                billingInfo.members_count = lineQuantity;
-                billingInfo.members_unit_price_in_cents = Number(line.unit_amount_excluding_tax);
+                billingInfo.max_free_members_count = lineQuantity;
             } else {
-                billingInfo.additional_members_count = lineQuantity;
-                billingInfo.additional_members_unit_price_in_cents = Number(line.unit_amount_excluding_tax);
+                billingInfo.members_unit_price_in_cents = Number(line.unit_amount_excluding_tax);
             }
         } 
         else if (productId === PLAN_ID) {

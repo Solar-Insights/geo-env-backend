@@ -1,6 +1,5 @@
 import { supabase } from "@/db/init";
 import { OperationValidator } from "@/db/utils/validator";
-import { MonthlyBillingField } from "@/server/utils/types";
 import { SupabaseBilling, UpdateBilling, InsertBilling } from "@/db/billing/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
 import { getOrganizationUserCount } from "@/db/users/operations";
@@ -63,20 +62,4 @@ export async function updateBillingById(billing: UpdateBilling, id: string) {
     const { data, error } = await supabase.from("billing").update(billing).eq("id", id);
 
     new OperationValidator(data, error).validateUpdateRequest();
-}
-
-export async function incrementLatestBillingField(organizationId: string, billingField: MonthlyBillingField) {
-    const latestBilling: SupabaseBilling = await getLatestBillingByOrganizationId(organizationId);
-
-    latestBilling[billingField] += 1;
-
-    await updateBillingById(latestBilling, latestBilling.id);
-}
-
-export async function decrementLatestBillingField(organizationId: string, billingField: MonthlyBillingField) {
-    const latestBilling: SupabaseBilling = await getLatestBillingByOrganizationId(organizationId);
-
-    latestBilling[billingField] -= 1;
-
-    await updateBillingById(latestBilling, latestBilling.id);
 }
