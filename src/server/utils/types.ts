@@ -70,17 +70,20 @@ export type MonthlyQuotaField = "max_members_count" | "max_building_insights_req
 
 export type MonthlyBillingField = "members_count" | "building_insights_requests";
 
-export type MonthlyBillingPrice = "members_price" | "building_insights_requests_price";
+export type MonthlyBillingPrice = "members_unit_price_in_cents" | "building_insights_requests_unit_price_in_cents";
 
-export type MonthlyPlanInfo = "plan_count" | "plan_price"; 
+export type MonthlyPlanInfo = "plan_count" | "plan_unit_price_in_cents"; 
 
-// PRICES FIELDS IN CENTS
+export type MonthlyAdditionalMembersInfo = "additional_members_count" | "additional_members_unit_price_in_cents";
+
 export type BillingInfoFromInvoice = {
-    [key in MonthlyBillingField]: number | null;
+    [key in MonthlyBillingField]: number;
 } & {
-    [key in MonthlyBillingPrice]: number | null
+    [key in MonthlyBillingPrice]: number
 } & {
-    [key in MonthlyPlanInfo]: number | null
+    [key in MonthlyAdditionalMembersInfo]: number
+} & {
+    [key in MonthlyPlanInfo]: number
 } & {
     periodStart: string;
     periodEnd: string;

@@ -2,7 +2,7 @@ import { Request } from "express";
 import { jwtDecode } from "jwt-decode";
 import { BillingInfoFromInvoice, CustomAuth0JwtPayload } from "@/server/utils/types";
 import Stripe from "stripe";
-import { ADDITIONAL_USERS_ID, PLAN_IDS, SOLAR_REQUESTS_ID } from "@/server/utils/constants";
+import { USERS_ID, PLAN_ID, SOLAR_REQUESTS_ID } from "@/server/utils/constants";
 
 export function getAccessPathFromRequest(req: Request) {
     return `${req.method} ${req.path}`;
@@ -37,38 +37,43 @@ export function stripeUpcomingInvoiceToNeededInfo(invoice: Stripe.UpcomingInvoic
         periodStart: epochTimeToDate(invoice.period_start),
         periodEnd: epochTimeToDate(invoice.period_end),
         dueDate: epochTimeToDate(invoice.due_date),
-        building_insights_requests: null,
-        building_insights_requests_price: null,
-        members_count: null,
-        members_price: null,
-        plan_count: null,
-        plan_price: null,
+        building_insights_requests: NaN,
+        building_insights_requests_unit_price_in_cents: NaN,
+        members_count: NaN,
+        members_unit_price_in_cents: NaN,
+        additional_members_count: NaN,
+        additional_members_unit_price_in_cents: NaN,
+        plan_count: NaN,
+        plan_unit_price_in_cents: NaN,
     };
-    
+
     invoice.lines.data.forEach((line) => {
-        const linePrice = line.price;
-        if (linePrice === null) {
+        const linePricing = line.price;
+        const lineQuantity = line.quantity;
+        
+        if (linePricing === null || lineQuantity === null) {
             return;
         }
 
-        const productId = linePrice.product as string;
-        const productQuantity = line.quantity;
-        const productUnitPrice = linePrice.unit_amount;
-
+        const productId = linePricing.product as string;
         if (productId === SOLAR_REQUESTS_ID) {
-            billingInfo.building_insights_requests = productQuantity;
-            billingInfo.building_insights_requests_price = productUnitPrice;
+            billingInfo.building_insights_requests = lineQuantity;
+            billingInfo.building_insights_requests_unit_price_in_cents = linePricing.unit_amount!;
         } 
-        else if (productId === ADDITIONAL_USERS_ID) {
-            billingInfo.members_count = productQuantity;
-            billingInfo.members_price = productUnitPrice;
+        else if (productId === USERS_ID) {
+            if (line.unit_amount_excluding_tax === "0") {
+                billingInfo.members_count = lineQuantity;
+                billingInfo.members_unit_price_in_cents = Number(line.unit_amount_excluding_tax);
+            } else {
+                billingInfo.additional_members_count = lineQuantity;
+                billingInfo.additional_members_unit_price_in_cents = Number(line.unit_amount_excluding_tax);
+            }
         } 
-        else if (PLAN_IDS.includes(productId)) {
-            billingInfo.plan_count = productQuantity;
-            billingInfo.plan_price = productUnitPrice;
+        else if (productId === PLAN_ID) {
+            billingInfo.plan_count = lineQuantity;
+            billingInfo.plan_unit_price_in_cents = linePricing.unit_amount!;
         }
     })
 
     return billingInfo;
 }
-
