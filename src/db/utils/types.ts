@@ -12,35 +12,23 @@ export type Database = {
       billing: {
         Row: {
           billing_date: string
-          building_insights_requests: number
           id: string
           max_building_insights_requests: number
-          max_free_building_insights_requests: number
-          max_free_members_count: number
           max_members_count: number
-          members_count: number
           organization_id: string
         }
         Insert: {
           billing_date: string
-          building_insights_requests: number
           id: string
           max_building_insights_requests: number
-          max_free_building_insights_requests: number
-          max_free_members_count: number
           max_members_count: number
-          members_count: number
           organization_id: string
         }
         Update: {
           billing_date?: string
-          building_insights_requests?: number
           id?: string
           max_building_insights_requests?: number
-          max_free_building_insights_requests?: number
-          max_free_members_count?: number
           max_members_count?: number
-          members_count?: number
           organization_id?: string
         }
         Relationships: [
@@ -50,32 +38,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
-          },
-        ]
-      }
-      deleted_users: {
-        Row: {
-          auth0_id: string
-          deleted_at: string
-          email: string
-        }
-        Insert: {
-          auth0_id: string
-          deleted_at?: string
-          email: string
-        }
-        Update: {
-          auth0_id?: string
-          deleted_at?: string
-          email?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "deleted_users_auth0_id_fkey"
-            columns: ["auth0_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["auth0_id"]
           },
         ]
       }

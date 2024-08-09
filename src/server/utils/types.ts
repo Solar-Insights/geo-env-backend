@@ -74,16 +74,12 @@ export type MonthlyBillingPrice = "members_unit_price_in_cents" | "building_insi
 
 export type MonthlyPlanInfo = "plan_count" | "plan_unit_price_in_cents"; 
 
-export type MonthlyAdditionalMembersInfo = "additional_members_count" | "additional_members_unit_price_in_cents";
-
 export type BillingInfoFromInvoice = {
-    [key in MonthlyBillingField]: number;
-} & {
     [key in MonthlyBillingPrice]: number
 } & {
-    [key in MonthlyAdditionalMembersInfo]: number
-} & {
     [key in MonthlyPlanInfo]: number
+} & {
+    [key in MonthlyFreeField]: number;
 } & {
     periodStart: string;
     periodEnd: string;
@@ -93,12 +89,10 @@ export type BillingInfoFromInvoice = {
 export type MyOrganizationBillingRecap = {
     [key in MonthlyQuotaField]: number;
 } & {
-    [key in MonthlyFreeField]: number;
+    [key in MonthlyBillingField]: number;
 } & {
     pricingTier: PricingTier
-} & BillingInfoFromInvoice ;
-
-
+} & BillingInfoFromInvoice;
 
 export type MonthlyQuotaFieldToMonthlyBillingFieldMap = {
     [key in MonthlyQuotaField]: MonthlyBillingField;

@@ -30,8 +30,10 @@ export const monthlyQuotaFieldToMonthlyBillingFieldMap: MonthlyQuotaFieldToMonth
 
 export const SOLAR_INSIGHTS_INFINITY = 2147483647;
 
+export const SOLAR_INSIGHTS_NEGATIVE_INFINITY = -2147483647;
+
 export const PLAN_ID = "prod_Qcu70SZjhtBcnP";
 
 export const USERS_ID = "prod_Qcu56v9n9Y7MBI";
 
-export const SOLAR_REQUESTS_ID = "prod_QV09EbwcXFbDNi";
+export const SOLAR_REQUESTS_ID = "prod_QdFAko4wWVZjZn";
