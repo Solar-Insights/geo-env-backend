@@ -64,12 +64,8 @@ const newOrganization: InsertOrganization = {
 
 const firstBilling: InsertBilling = {
     id: generateRandomUuid(),
-    building_insights_requests: 0,
     max_building_insights_requests: pricingTierToMaxBuildingInsightsRequests(PRICING_TIER),
-    max_free_building_insights_requests: 0,
-    members_count: 1,
     max_members_count: pricingTierToMaxFreeMembersCount(PRICING_TIER),
-    max_free_members_count: pricingTierToMaxFreeMembersCount(PRICING_TIER),
     organization_id: newOrganization.id,
     billing_date: new Date().toISOString().substring(0, 10)
 };
