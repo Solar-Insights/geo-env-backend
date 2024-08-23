@@ -26,3 +26,10 @@ export async function createCustomerSubscription(ourCustomer: Stripe.Customer, p
         metadata: quotas
     });
 }
+
+export async function deleteCustomerSubscription(subscriptionId: string) {
+    stripe.subscriptions.cancel(subscriptionId, {
+        invoice_now: false,
+        prorate: true
+    })
+}

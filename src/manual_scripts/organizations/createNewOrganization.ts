@@ -1,7 +1,6 @@
 /*
 1. Create Stripe Customer (Company name as Name if org, otherwise full name. If org, put contact person name in Description)
-2. Create Subscription with products for new Customer
-3. npx tsx src/manual_scripts/organizations/createNewOrganization.ts
+2. npx tsx src/manual_scripts/organizations/createNewOrganization.ts
 */
 
 import { createOrganization, deleteOrganizationById } from "@/db/organizations/operations";
@@ -18,6 +17,7 @@ import { getProductPrices } from "@/stripe/products/operations";
 import { StripePriceName, StripeProductInfos } from "@/stripe/utils/types";
 import { SupabaseUser } from "@/db/users/types";
 import { epochTimeToDate } from "@/server/utils/helpers";
+import { OrganizationCreationObject } from "../types";
 
 const ORGANIZATION_NAME = "Test org";
 const PRICING_TIER: PricingTier = "starter";
@@ -80,12 +80,17 @@ try {
     await createOrganization(newOrganization);
     firstUser = await createFirstUser(newOrganization.id)
     const subscription = await createSubscription();
-    console.log(`\n- NEW ORGANIZATION WITH ID:\n${newOrganization.id}\n`);
-    console.log(`- NEW USER WITH ID:\n${firstUser.auth0_id}\n`);
-    console.log(`- NEW STRIPE SUBSCRIPTION STARTING ON ${epochTimeToDate(subscription.start_date)} WITH ID\n ${subscription.id}\n`)
+
+    console.log("\n- NEWLY CREATED STRIPE & SUPABASE ITEMS");
+    const organizationCreationObject: OrganizationCreationObject = {
+        organizationId: newOrganization.id,
+        userId: firstUser.auth0_id,
+        subscriptionId: subscription.id
+    };
+    console.log(`${organizationCreationObject};\n`);
 } catch (error) {
     console.log(error);
-    console.log(`\nEXECUTING DELETION PROTOCOL`);
+    console.log(`\nEXECUTING ERROR FALLBACK PROTOCOL\n`);
     await deleteOrganizationById(newOrganization.id);
     await deleteFirstUser(firstUser);
 }
