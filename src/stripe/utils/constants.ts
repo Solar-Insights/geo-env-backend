@@ -1,4 +1,10 @@
-import { StripeProductInfos } from "@/stripe/utils/types";
+import { StripePriceNameToPlanMap, StripeProductInfos } from "@/stripe/utils/types";
+
+export const stripePriceNameToPlanMap: StripePriceNameToPlanMap = {
+    starter: "Starter Plan",
+    pro: "Pro Plan",
+    enterprise: "Enterprise Plan"
+};
 
 export function getProductIds(): StripeProductInfos {
     return {

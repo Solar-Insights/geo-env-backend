@@ -1,9 +1,28 @@
 /*
 1. npx tsx src/manual_scripts/test.ts
 */
+import { getProductPrices } from "@/stripe/products/operations";
+import { getProductIds } from "@/stripe/utils/constants";
+import { StripePriceName, StripeProductInfos } from "@/stripe/utils/types";
 
-import { getMyOrganizationBillingRecap } from "@/server/services/users"
+// const EMAIL = "mathisbeaudoin15@hotmail.com"
+// const customer = await getCustomerByEmail(EMAIL);
+// const invoice = await getCustomerUpcomingInvoice(customer);
+// console.log(invoice)
 
-await getMyOrganizationBillingRecap({
-    "organization_id": "229c4f8b-0500-42b0-bae4-0e043a8e6ba1" 
-} as any)
+async function createProductsPriceIdsObject() {
+    const productIds = getProductIds();
+
+    for (const [productName, product] of Object.entries(productIds)) {
+        const productPrices = await getProductPrices(product.id);
+        productPrices.data.forEach((productPrice) => {
+            const planName: StripePriceName = productPrice.nickname as StripePriceName;
+            console.log(planName)
+            productIds[productName as keyof StripeProductInfos][planName] = productPrice.id;
+        })
+    }
+
+    return productIds;
+}
+
+console.log(await createProductsPriceIdsObject())

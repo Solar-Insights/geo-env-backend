@@ -5,7 +5,7 @@
 */
 
 import { createOrganization, deleteOrganizationById } from "@/db/organizations/operations";
-import { createBilling, deleteBillingById } from "@/db/billing/operations";
+import { createBilling } from "@/db/billing/operations";
 import { InsertOrganization } from "@/db/organizations/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
 import { PricingTier } from "@/server/utils/types";
@@ -14,7 +14,12 @@ import { getQuotaByPricingTier } from "@/db/quotas/operations";
 import { UserApi } from "@/api/apis/user";
 import { addFirstMemberToOrganization } from "@/server/services/users";
 import { getCustomerByEmail } from "@/stripe/customers/operations";
-import { getProductIds } from "@/stripe/utils/constants";
+import { getProductIds, stripePriceNameToPlanMap } from "@/stripe/utils/constants";
+import { createCustomerSubscription } from "@/stripe/subscriptions/operations";
+import { getProductPrices } from "@/stripe/products/operations";
+import { StripePriceName, StripeProductInfos } from "@/stripe/utils/types";
+import { SupabaseUser } from "@/db/users/types";
+import { epochTimeToDate } from "@/server/utils/helpers";
 
 const ORGANIZATION_NAME = "Test org";
 const PRICING_TIER: PricingTier = "starter";
@@ -29,9 +34,33 @@ async function createFirstUser(organizationId: string) {
     return await addFirstMemberToOrganization(userApi, FIRST_USER_EMAIL, FIRST_USER_NAME, organizationId)
 }
 
-function createProductsPriceIdsObject() {
+async function deleteFirstUser(organizationId: string, firstUser: SupabaseUser | undefined) {
+    if (!firstUser) return;
+
+    const userApi = new UserApi(undefined as any);
+    const managementAPIToken = await userApi.getManagementAPIToken();
+    await userApi.deleteAuth0User(managementAPIToken, firstUser.auth0_id);
+}
+
+async function createProductsPriceIdsObject() {
     const productIds = getProductIds();
 
+    for (const [productName, product] of Object.entries(productIds)) {
+        const productPrices = await getProductPrices(product.id);
+        productPrices.data.forEach((productPrice) => {
+            const planName: StripePriceName = productPrice.nickname as StripePriceName;
+            productIds[productName as keyof StripeProductInfos][planName] = productPrice.id;
+        })
+    }
+
+    return productIds;
+}
+
+async function createSubscription() {
+    const user = await getCustomerByEmail(FIRST_USER_EMAIL);
+    const productPriceIds = await createProductsPriceIdsObject();
+    const quotas = await getQuotaByPricingTier(PRICING_TIER);
+    return await createCustomerSubscription(user, stripePriceNameToPlanMap[PRICING_TIER], quotas, productPriceIds);
 }
 
 const newOrganization: InsertOrganization = {
@@ -54,14 +83,18 @@ const firstBilling: InsertBilling = {
     billing_date: new Date().toISOString().substring(0, 10)
 };
 
+let firstUser: SupabaseUser | undefined;
+
 try {
     await createOrganization(newOrganization);
     await createBilling(firstBilling);
-    const firstUser = await createFirstUser(newOrganization.id)
-    console.log(`\n- NEW ORGANIZATION WITH ID:\n${newOrganization.id}\n`);
-    console.log(`\n- NEW USER WITH ID:\n${firstUser.auth0_id}\n`)
+    firstUser = await createFirstUser(newOrganization.id)
+    const subscription = await createSubscription();
+    console.log(`- NEW ORGANIZATION WITH ID:\n${newOrganization.id}\n`);
+    console.log(`- NEW USER WITH ID:\n${firstUser.auth0_id}\n`);
+    console.log(`- NEW STRIPE SUBSCRIPTION STARTING ON ${epochTimeToDate(subscription.start_date)} WITH ID\n ${subscription.id}\n`)
 } catch (error) {
     console.log(error);
     await deleteOrganizationById(newOrganization.id);
-    await deleteBillingById(firstBilling.id);
+    await deleteFirstUser(newOrganization.id, firstUser);
 }
