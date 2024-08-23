@@ -32,7 +32,7 @@ async function createFirstUser(organizationId: string) {
     return await addFirstMemberToOrganization(userApi, FIRST_USER_EMAIL, FIRST_USER_NAME, organizationId)
 }
 
-async function deleteFirstUser(organizationId: string, firstUser: SupabaseUser | undefined) {
+async function deleteFirstUser(firstUser: SupabaseUser | undefined) {
     if (!firstUser) return;
 
     const userApi = new UserApi(undefined as any);
@@ -80,11 +80,13 @@ try {
     await createOrganization(newOrganization);
     firstUser = await createFirstUser(newOrganization.id)
     const subscription = await createSubscription();
-    console.log(`- NEW ORGANIZATION WITH ID:\n${newOrganization.id}\n`);
+    console.log(`\n- NEW ORGANIZATION WITH ID:\n${newOrganization.id}\n`);
     console.log(`- NEW USER WITH ID:\n${firstUser.auth0_id}\n`);
     console.log(`- NEW STRIPE SUBSCRIPTION STARTING ON ${epochTimeToDate(subscription.start_date)} WITH ID\n ${subscription.id}\n`)
+    throw new Error();
 } catch (error) {
     console.log(error);
+    console.log(`\nEXECUTING DELETION PROTOCOL`);
     await deleteOrganizationById(newOrganization.id);
-    await deleteFirstUser(newOrganization.id, firstUser);
+    await deleteFirstUser(firstUser);
 }
