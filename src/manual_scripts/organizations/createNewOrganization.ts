@@ -83,7 +83,6 @@ try {
     console.log(`\n- NEW ORGANIZATION WITH ID:\n${newOrganization.id}\n`);
     console.log(`- NEW USER WITH ID:\n${firstUser.auth0_id}\n`);
     console.log(`- NEW STRIPE SUBSCRIPTION STARTING ON ${epochTimeToDate(subscription.start_date)} WITH ID\n ${subscription.id}\n`)
-    throw new Error();
 } catch (error) {
     console.log(error);
     console.log(`\nEXECUTING DELETION PROTOCOL`);
