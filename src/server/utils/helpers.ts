@@ -4,7 +4,8 @@ import { BillingInfoFromInvoice, CustomAuth0JwtPayload, MonthlyBillingField } fr
 import Stripe from "stripe";
 import { USERS_ID, PLAN_ID, SOLAR_REQUESTS_ID, SOLAR_INSIGHTS_NEGATIVE_INFINITY } from "@/server/utils/constants";
 import { getOrganizationUserCount } from "@/db/users/operations";
-import { getCustomerByEmail, getCustomerCurrentNumberOfRequests } from "@/stripe/customers/operations";
+import { getCustomerByEmail } from "@/stripe/customers/operations";
+import { getCustomerCurrentNumberOfRequests } from "@/stripe/invoices/operations";
 import { SupabaseOrganization } from "@/db/organizations/types";
 
 export function getAccessPathFromRequest(req: Request) {

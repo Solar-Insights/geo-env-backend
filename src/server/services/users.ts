@@ -18,7 +18,8 @@ import { UserApi } from "@/api/apis/user";
 import { roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
 import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
-import { getCustomerByEmail, getCustomerUpcomingInvoice } from "@/stripe/customers/operations";
+import { getCustomerByEmail } from "@/stripe/customers/operations";
+import { getCustomerUpcomingInvoice } from "@/stripe/invoices/operations";
 import { getCurrentValueForQuotaField, stripeUpcomingInvoiceToNeededInfo } from "@/server/utils/helpers";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
