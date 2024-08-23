@@ -10,10 +10,11 @@ import { InsertOrganization } from "@/db/organizations/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
 import { PricingTier } from "@/server/utils/types";
 import { InsertBilling } from "@/db/billing/types";
-import { SOLAR_INSIGHTS_INFINITY } from "@/server/utils/constants";
+import { getQuotaByPricingTier } from "@/db/quotas/operations";
 import { UserApi } from "@/api/apis/user";
 import { addFirstMemberToOrganization } from "@/server/services/users";
 import { getCustomerByEmail } from "@/stripe/customers/operations";
+import { getProductIds } from "@/stripe/utils/constants";
 
 const ORGANIZATION_NAME = "Test org";
 const PRICING_TIER: PricingTier = "starter";
@@ -23,33 +24,14 @@ const FIRST_USER_PHONE_NUMBER = "";
 
 // --------------------------------------------
 
-function pricingTierToMaxBuildingInsightsRequests(pricingTier: PricingTier) {
-    switch (pricingTier) {
-        case "starter":
-            return 100;
-        case "pro":
-            return SOLAR_INSIGHTS_INFINITY;
-        case "enterprise":
-            return SOLAR_INSIGHTS_INFINITY;
-    }
-}
-
-function pricingTierToMaxFreeMembersCount(pricingTier: PricingTier) {
-    switch (pricingTier) {
-        case "starter":
-            return 1;
-        case "pro":
-            return 4;
-        case "enterprise":
-            return 8;
-    }
-}
-
-// --------------------------------------------
-
 async function createFirstUser(organizationId: string) {
     const userApi = new UserApi(undefined as any);
     return await addFirstMemberToOrganization(userApi, FIRST_USER_EMAIL, FIRST_USER_NAME, organizationId)
+}
+
+function createProductsPriceIdsObject() {
+    const productIds = getProductIds();
+
 }
 
 const newOrganization: InsertOrganization = {
@@ -62,10 +44,12 @@ const newOrganization: InsertOrganization = {
     pricing_tier: PRICING_TIER
 };
 
+const quotas = await getQuotaByPricingTier(PRICING_TIER);
+
 const firstBilling: InsertBilling = {
     id: generateRandomUuid(),
-    max_building_insights_requests: pricingTierToMaxBuildingInsightsRequests(PRICING_TIER),
-    max_members_count: pricingTierToMaxFreeMembersCount(PRICING_TIER),
+    max_building_insights_requests: quotas.max_members_count,
+    max_members_count: quotas.max_members_count,
     organization_id: newOrganization.id,
     billing_date: new Date().toISOString().substring(0, 10)
 };
