@@ -79,3 +79,9 @@ export async function removeUserByEmailFromActive(user: UpdateUser, email: strin
 
     new OperationValidator(data, error).validateUpdateRequest();
 }
+
+export async function deleteUserById(id: string) {
+    const { data, error } = await supabase.from("users").delete().eq("id", id)
+
+    new OperationValidator(data, error).validateDeleteRequest();
+}

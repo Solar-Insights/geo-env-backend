@@ -2,7 +2,6 @@ import { supabase } from "@/db/init";
 import { OperationValidator } from "@/db/utils/validator";
 import { SupabaseBilling, UpdateBilling, InsertBilling } from "@/db/billing/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
-import { getOrganizationUserCount } from "@/db/users/operations";
 
 export async function createBilling(billing: InsertBilling) {
     const { data, error } = await supabase.from("billing").insert(billing).select();
