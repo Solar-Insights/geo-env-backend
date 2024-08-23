@@ -9,10 +9,9 @@ import {
 import { RequestHandler } from "express";
 import { claimIncludes } from "express-oauth2-jwt-bearer";
 import { Coordinates, validCoordinates } from "geo-env-typing/geo";
-import { getAccessPathFromRequest, getCurrentValueForQuotaField, getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
+import { getAccessPathFromRequest, getCurrentAndLimitValuesForBillingField, getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
 import { getOrganizationByAccessToken } from "@/db/users/helpers";
 import { routeToMonthlyQuotaFieldMap, monthlyQuotaFieldToMonthlyBillingFieldMap } from "@/server/utils/constants";
-import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
 
 export const existingSupabaseUser: RequestHandler = async (req, res, next) => {
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
@@ -54,16 +53,14 @@ export const respectsPricingTierQuota: RequestHandler = async (req, res, next) =
 
     const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
     const organization = await getOrganizationByAccessToken(decodedAccessToken);
-    const organizationLatestBilling = await getLatestBillingByOrganizationId(organization.id);
 
     const quotaRoute = getAccessPathFromRequest(req) as RoutesAffectingQuotas;
     const monthlyQuotaField: MonthlyQuotaField = routeToMonthlyQuotaFieldMap[quotaRoute];
     const monthlyBillingField: MonthlyBillingField = monthlyQuotaFieldToMonthlyBillingFieldMap[monthlyQuotaField];
 
-    const maxValue = organizationLatestBilling[monthlyQuotaField];
-    const currentValue = await getCurrentValueForQuotaField(organization, monthlyBillingField);
+    const billingFieldValues = await getCurrentAndLimitValuesForBillingField(organization, monthlyBillingField);
 
-    if (currentValue >= maxValue) {
+    if (billingFieldValues.currentValue >= billingFieldValues.limitValue) {
         throw new QuotaLimitReachedError(monthlyQuotaField);
     }
 

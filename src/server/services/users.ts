@@ -17,10 +17,9 @@ import { InsertUser, SupabaseUser } from "@/db/users/types";
 import { UserApi } from "@/api/apis/user";
 import { roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
-import { getLatestBillingByOrganizationId } from "@/db/billing/operations";
-import { getCustomerByEmail } from "@/stripe/customers/operations";
+import { getCustomerById } from "@/stripe/customers/operations";
 import { getCustomerUpcomingInvoice } from "@/stripe/invoices/operations";
-import { getCurrentValueForQuotaField, stripeUpcomingInvoiceToNeededInfo } from "@/server/utils/helpers";
+import { getCurrentValueForBillingField, getLimitValueForBillingField, stripeUpcomingInvoiceToNeededInfo } from "@/server/utils/helpers";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
@@ -64,18 +63,16 @@ async function getAllMyOrganizationMembers(requester: SupabaseUser) {
 }
 
 export async function getMyOrganizationBillingRecap(requester: SupabaseUser): Promise<MyOrganizationBillingRecap> {
-    const latestBilling = await getLatestBillingByOrganizationId(requester.organization_id);
-
     const org = await getOrganizationById(requester.organization_id);
-    const customer = await getCustomerByEmail(org.contact_email);
+    const customer = await getCustomerById(org.customer_id);
     const upcomingInvoice = await getCustomerUpcomingInvoice(customer);
     const billingInfo = stripeUpcomingInvoiceToNeededInfo(upcomingInvoice);
 
     return {
-        building_insights_requests: await getCurrentValueForQuotaField(org, "building_insights_requests"),
-        max_building_insights_requests: latestBilling.max_building_insights_requests,
-        members_count: await getCurrentValueForQuotaField(org, "members_count"),
-        max_members_count: latestBilling.max_members_count,
+        building_insights_requests: await getCurrentValueForBillingField(upcomingInvoice, org.id, "building_insights_requests"),
+        max_building_insights_requests: getLimitValueForBillingField(upcomingInvoice, "building_insights_requests"),
+        members_count: await getCurrentValueForBillingField(upcomingInvoice, org.id, "members_count"),
+        max_members_count: getLimitValueForBillingField(upcomingInvoice, "members_count"),
         pricingTier: org.pricing_tier,
         ...billingInfo
     };

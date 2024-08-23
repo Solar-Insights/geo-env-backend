@@ -1,11 +1,11 @@
 import { Request } from "express";
 import { jwtDecode } from "jwt-decode";
-import { BillingInfoFromInvoice, CustomAuth0JwtPayload, MonthlyBillingField } from "@/server/utils/types";
+import { BillingInfoFromInvoice, CurrentAndLimitValuesResponse, CustomAuth0JwtPayload, MonthlyBillingField } from "@/server/utils/types";
 import Stripe from "stripe";
-import { USERS_ID, PLAN_ID, SOLAR_REQUESTS_ID, SOLAR_INSIGHTS_NEGATIVE_INFINITY } from "@/server/utils/constants";
+import { USERS_ID, PLAN_ID, SOLAR_REQUESTS_ID, SOLAR_INSIGHTS_NEGATIVE_INFINITY, monthlyBillingFieldToMonthlyQuotaFieldMap } from "@/server/utils/constants";
 import { getOrganizationUserCount } from "@/db/users/operations";
-import { getCustomerByEmail } from "@/stripe/customers/operations";
-import { getCustomerCurrentNumberOfRequests } from "@/stripe/invoices/operations";
+import { getCustomerById } from "@/stripe/customers/operations";
+import { getCustomerCurrentNumberOfRequestsFromInvoice, getCustomerUpcomingInvoice } from "@/stripe/invoices/operations";
 import { SupabaseOrganization } from "@/db/organizations/types";
 
 export function getAccessPathFromRequest(req: Request) {
@@ -36,14 +36,30 @@ export function epochTimeToDate(epochTime: EpochTimeStamp | null) {
     return new Date(epochTimeInMilli).toISOString().substring(0, 10);
 }
 
-export async function getCurrentValueForQuotaField(organization: SupabaseOrganization, monthlyBillingField: MonthlyBillingField) {
+export async function getCurrentValueForBillingField(upcomingInvoice: Stripe.UpcomingInvoice, organizationId: string, monthlyBillingField: MonthlyBillingField) {
     switch (monthlyBillingField) {
         case "building_insights_requests":
-            const ourCustomer = await getCustomerByEmail(organization.contact_email);
-            return await getCustomerCurrentNumberOfRequests(ourCustomer);
+            return await getCustomerCurrentNumberOfRequestsFromInvoice(upcomingInvoice);
         case "members_count":
-            return await getOrganizationUserCount(organization.id);
+            return await getOrganizationUserCount(organizationId);
     }
+}
+
+export function getLimitValueForBillingField(upcomingInvoice: Stripe.UpcomingInvoice, monthlyBillingField: MonthlyBillingField) {
+    const subscriptionMetadata = upcomingInvoice.subscription_details!.metadata!;
+    const quotafield = monthlyBillingFieldToMonthlyQuotaFieldMap[monthlyBillingField]
+    
+    return Number(subscriptionMetadata[quotafield]);
+}
+
+export async function getCurrentAndLimitValuesForBillingField(organization: SupabaseOrganization, monthlyBillingField: MonthlyBillingField): Promise<CurrentAndLimitValuesResponse> {
+    const customer = await getCustomerById(organization.customer_id);
+    const upcomingInvoice = await getCustomerUpcomingInvoice(customer);
+
+    return {
+        currentValue: await getCurrentValueForBillingField(upcomingInvoice, organization.id, monthlyBillingField),
+        limitValue: getLimitValueForBillingField(upcomingInvoice, monthlyBillingField)
+    };
 }
 
 export function stripeUpcomingInvoiceToNeededInfo(invoice: Stripe.UpcomingInvoice): BillingInfoFromInvoice {

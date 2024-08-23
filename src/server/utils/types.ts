@@ -98,6 +98,10 @@ export type MonthlyQuotaFieldToMonthlyBillingFieldMap = {
     [key in MonthlyQuotaField]: MonthlyBillingField;
 };
 
+export type MonthlyBillingFieldToMonthlyQuotaFieldMap = {
+    [key in MonthlyBillingField]: MonthlyQuotaField;
+};
+
 export type MyOrganizationDetails = {
     admins: MyOrganizationMember[];
     name: string;
@@ -107,3 +111,8 @@ export type MyOrganizationAdminDetails = {
     myOrganizationMembers: MyOrganizationMember[];
     myOrganizationBillingRecap: MyOrganizationBillingRecap;
 };
+
+export type CurrentAndLimitValuesResponse = {
+    currentValue: number,
+    limitValue: number
+}

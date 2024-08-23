@@ -1,6 +1,7 @@
 import {
     RouteToMonthlyQuotaFieldMap,
     MonthlyQuotaFieldToMonthlyBillingFieldMap,
+    MonthlyBillingFieldToMonthlyQuotaFieldMap,
 } from "@/server/utils/types";
 
 export const binaryPalette = ["212121", "B3E5FC"];
@@ -26,6 +27,11 @@ export const routeToMonthlyQuotaFieldMap: RouteToMonthlyQuotaFieldMap = {
 export const monthlyQuotaFieldToMonthlyBillingFieldMap: MonthlyQuotaFieldToMonthlyBillingFieldMap = {
     max_members_count: "members_count",
     max_building_insights_requests: "building_insights_requests"
+};
+
+export const monthlyBillingFieldToMonthlyQuotaFieldMap: MonthlyBillingFieldToMonthlyQuotaFieldMap = {
+    members_count: "max_members_count",
+    building_insights_requests: "max_building_insights_requests"
 };
 
 export const SOLAR_INSIGHTS_INFINITY = 2147483647;

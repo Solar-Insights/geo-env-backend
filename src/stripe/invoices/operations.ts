@@ -6,9 +6,7 @@ export async function getCustomerUpcomingInvoice(ourCustomer: Stripe.Customer) {
     return await stripe.invoices.retrieveUpcoming({ customer: ourCustomer.id })
 }
 
-export async function getCustomerCurrentNumberOfRequests(ourCustomer: Stripe.Customer) {
-    const upcomingInvoice = await getCustomerUpcomingInvoice(ourCustomer);
-
+export async function getCustomerCurrentNumberOfRequestsFromInvoice(upcomingInvoice: Stripe.UpcomingInvoice) {
     let numberOfRequests: number = 0;
     
     upcomingInvoice.lines.data.forEach((line) => {

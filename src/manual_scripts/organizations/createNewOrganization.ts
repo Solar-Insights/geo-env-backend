@@ -5,11 +5,9 @@
 */
 
 import { createOrganization, deleteOrganizationById } from "@/db/organizations/operations";
-import { createBilling } from "@/db/billing/operations";
 import { InsertOrganization } from "@/db/organizations/types";
 import { generateRandomUuid } from "@/db/utils/helpers";
 import { PricingTier } from "@/server/utils/types";
-import { InsertBilling } from "@/db/billing/types";
 import { getQuotaByPricingTier } from "@/db/quotas/operations";
 import { UserApi } from "@/api/apis/user";
 import { addFirstMemberToOrganization } from "@/server/services/users";
@@ -75,19 +73,11 @@ const newOrganization: InsertOrganization = {
 
 const quotas = await getQuotaByPricingTier(PRICING_TIER);
 
-const firstBilling: InsertBilling = {
-    id: generateRandomUuid(),
-    max_building_insights_requests: quotas.max_members_count,
-    max_members_count: quotas.max_members_count,
-    organization_id: newOrganization.id,
-    billing_date: new Date().toISOString().substring(0, 10)
-};
 
 let firstUser: SupabaseUser | undefined;
 
 try {
     await createOrganization(newOrganization);
-    await createBilling(firstBilling);
     firstUser = await createFirstUser(newOrganization.id)
     const subscription = await createSubscription();
     console.log(`- NEW ORGANIZATION WITH ID:\n${newOrganization.id}\n`);
