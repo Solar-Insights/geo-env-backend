@@ -7,9 +7,9 @@ import { deleteOrganizationById } from "@/db/organizations/operations";
 import { deleteCustomerSubscription } from "@/stripe/subscriptions/operations";
 
 const ORGANIZATION_CREATION_OBJECT = {
-    organizationId: '818e84bb-57f2-4ff5-85d0-5cd288882074',
-    userId: 'auth0|66c9087714891ef799cc9af1',
-    subscriptionId: 'sub_1Pr5fA2N0m3s9Bb1QO5oCvZ6'
+    organizationId: '89b80a13-f1f7-4124-9127-9a17a9710e66',
+    userId: 'auth0|66c90dc7048b91de0386b3df',
+    subscriptionId: 'sub_1Pr6172N0m3s9Bb1j6OUFSG8'
 };
 
 // --------------------------------------------

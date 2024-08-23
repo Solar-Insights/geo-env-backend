@@ -16,13 +16,12 @@ import { createCustomerSubscription } from "@/stripe/subscriptions/operations";
 import { getProductPrices } from "@/stripe/products/operations";
 import { StripePriceName, StripeProductInfos } from "@/stripe/utils/types";
 import { SupabaseUser } from "@/db/users/types";
-import { epochTimeToDate } from "@/server/utils/helpers";
-import { OrganizationCreationObject } from "../types";
+import { OrganizationCreationObject } from "@/manual_scripts/types";
 
-const ORGANIZATION_NAME = "Test org";
-const PRICING_TIER: PricingTier = "starter";
+const ORGANIZATION_NAME = "Solar Insights";
+const PRICING_TIER: PricingTier = "pro";
 const FIRST_USER_EMAIL = "mathisbeaudoin15@hotmail.com";
-const FIRST_USER_NAME = "Test contact";
+const FIRST_USER_NAME = "Mathis Beaudoin";
 const FIRST_USER_PHONE_NUMBER = "";
 
 // --------------------------------------------
@@ -87,7 +86,8 @@ try {
         userId: firstUser.auth0_id,
         subscriptionId: subscription.id
     };
-    console.log(`${organizationCreationObject};\n`);
+    console.log(organizationCreationObject);
+    console.log("");
 } catch (error) {
     console.log(error);
     console.log(`\nEXECUTING ERROR FALLBACK PROTOCOL\n`);
