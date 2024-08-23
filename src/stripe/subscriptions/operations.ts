@@ -4,7 +4,7 @@ import { MonthlyQuotaField } from "@/server/utils/types";
 import { StripePriceName, StripeProductInfos, StripeProductName } from "@/stripe/utils/types";
 
 type Quotas = {
-    [key in MonthlyQuotaField]: number
+    [key in MonthlyQuotaField]: number;
 };
 
 function determineDefaultQuantityForProduct(productName: StripeProductName, quotas: Quotas) {
@@ -19,7 +19,12 @@ function determineDefaultQuantityForProduct(productName: StripeProductName, quot
     }
 }
 
-export async function createCustomerSubscription(ourCustomer: Stripe.Customer, plan: StripePriceName, quotas: Quotas, productInfos: StripeProductInfos) {
+export async function createCustomerSubscription(
+    ourCustomer: Stripe.Customer,
+    plan: StripePriceName,
+    quotas: Quotas,
+    productInfos: StripeProductInfos
+) {
     const items: Stripe.SubscriptionCreateParams.Item[] = [];
 
     Object.entries(productInfos).forEach(([productName, productInfo]) => {
@@ -41,10 +46,9 @@ export async function createCustomerSubscription(ourCustomer: Stripe.Customer, p
     });
 }
 
-
 export async function deleteCustomerSubscription(subscriptionId: string) {
     stripe.subscriptions.cancel(subscriptionId, {
         invoice_now: false,
         prorate: true
-    })
+    });
 }

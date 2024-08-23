@@ -14,7 +14,7 @@ export const AUTH0_CLIENT_SECRET: string = process.env.AUTH0_CLIENT_SECRET as st
 
 // Database
 export const SUPABASE_URL = process.env.SUPABASE_URL as string; // DB url endpoint
-export const SUPABASE_KEY = process.env.SUPABASE_KEY as string; // Credential for DB usage 
+export const SUPABASE_KEY = process.env.SUPABASE_KEY as string; // Credential for DB usage
 
 // Email
 export const GMAIL_SENDER = process.env.GMAIL_SENDER as string; // Sender to send emails from

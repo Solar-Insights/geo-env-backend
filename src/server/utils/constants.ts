@@ -1,7 +1,7 @@
 import {
     RouteToMonthlyQuotaFieldMap,
     MonthlyQuotaFieldToMonthlyBillingFieldMap,
-    MonthlyBillingFieldToMonthlyQuotaFieldMap,
+    MonthlyBillingFieldToMonthlyQuotaFieldMap
 } from "@/server/utils/types";
 
 export const binaryPalette = ["212121", "B3E5FC"];

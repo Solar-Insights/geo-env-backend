@@ -67,7 +67,7 @@ export class ServerFactory {
     public withDefaultMiddlewares() {
         console.log("setting up helmet..");
         this.app.use(helmet());
-        
+
         console.log("setting up cors..");
         this.app.use(cors());
 

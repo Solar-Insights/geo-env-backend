@@ -1,5 +1,5 @@
 export type OrganizationCreationObject = {
-    organizationId: string,
-    userId: string,
-    subscriptionId: string
+    organizationId: string;
+    userId: string;
+    subscriptionId: string;
 };

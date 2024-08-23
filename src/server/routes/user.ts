@@ -55,7 +55,7 @@ userRouter.post(
     async (req, res, next) => {
         const userApi = new UserApi(req);
         const decodedAccessToken: CustomAuth0JwtPayload = getDecodedAccessTokenFromRequest(req)!;
-        
+
         const body: CreateMyOrganizationMemberPayload = req.body;
 
         const myOrganizationMember: MyOrganizationMember = await addMemberToMyOrganization(

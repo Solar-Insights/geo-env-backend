@@ -28,7 +28,7 @@ const FIRST_USER_PHONE_NUMBER = "";
 
 async function createFirstUser(organizationId: string) {
     const userApi = new UserApi(undefined as any);
-    return await addFirstMemberToOrganization(userApi, FIRST_USER_EMAIL, FIRST_USER_NAME, organizationId)
+    return await addFirstMemberToOrganization(userApi, FIRST_USER_EMAIL, FIRST_USER_NAME, organizationId);
 }
 
 async function deleteFirstUser(firstUser: SupabaseUser | undefined) {
@@ -47,7 +47,7 @@ async function createProductsPriceIdsObject() {
         productPrices.data.forEach((productPrice) => {
             const planName: StripePriceName = productPrice.nickname as StripePriceName;
             productIds[productName as keyof StripeProductInfos][planName] = productPrice.id;
-        })
+        });
     }
 
     return productIds;
@@ -72,12 +72,11 @@ const newOrganization: InsertOrganization = {
 
 const quotas = await getQuotaByPricingTier(PRICING_TIER);
 
-
 let firstUser: SupabaseUser | undefined;
 
 try {
     await createOrganization(newOrganization);
-    firstUser = await createFirstUser(newOrganization.id)
+    firstUser = await createFirstUser(newOrganization.id);
     const subscription = await createSubscription();
 
     console.log("\n- NEWLY CREATED STRIPE & SUPABASE ITEMS");

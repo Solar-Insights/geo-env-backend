@@ -19,7 +19,11 @@ import { roleIds } from "@/server/utils/constants";
 import { getRequesterFromDecodedAccessToken, organizationMembersAreIdentical } from "@/db/users/helpers";
 import { getCustomerById } from "@/stripe/customers/operations";
 import { getCustomerUpcomingInvoice } from "@/stripe/invoices/operations";
-import { getCurrentValueForBillingField, getLimitValueForBillingField, stripeUpcomingInvoiceToNeededInfo } from "@/server/utils/helpers";
+import {
+    getCurrentValueForBillingField,
+    getLimitValueForBillingField,
+    stripeUpcomingInvoiceToNeededInfo
+} from "@/server/utils/helpers";
 
 export async function getMyOrganizationDetails(decodedAccessToken: CustomAuth0JwtPayload) {
     const requester = await getRequesterFromDecodedAccessToken(decodedAccessToken);
@@ -69,7 +73,11 @@ export async function getMyOrganizationBillingRecap(requester: SupabaseUser): Pr
     const billingInfo = stripeUpcomingInvoiceToNeededInfo(upcomingInvoice);
 
     return {
-        building_insights_requests: await getCurrentValueForBillingField(upcomingInvoice, org.id, "building_insights_requests"),
+        building_insights_requests: await getCurrentValueForBillingField(
+            upcomingInvoice,
+            org.id,
+            "building_insights_requests"
+        ),
         max_building_insights_requests: getLimitValueForBillingField(upcomingInvoice, "building_insights_requests"),
         members_count: await getCurrentValueForBillingField(upcomingInvoice, org.id, "members_count"),
         max_members_count: getLimitValueForBillingField(upcomingInvoice, "members_count"),
@@ -108,14 +116,15 @@ export async function addMemberToMyOrganization(
     return newlyCreatedMemberDTO;
 }
 
-export async function addFirstMemberToOrganization(userApi: UserApi, email: string, name: string, organizationId: string) {
+export async function addFirstMemberToOrganization(
+    userApi: UserApi,
+    email: string,
+    name: string,
+    organizationId: string
+) {
     const managementAPIToken = await userApi.getManagementAPIToken();
 
-    const newUser = await userApi.manuallyCreateAuth0User(
-        managementAPIToken,
-        email,
-        name
-    );
+    const newUser = await userApi.manuallyCreateAuth0User(managementAPIToken, email, name);
     await userApi.sendEmailForPasswordReset(newUser.email);
     await userApi.assignRolesToUser(managementAPIToken, newUser.user_id, [roleIds["OrgAdmin"], roleIds["OrgMember"]]);
 

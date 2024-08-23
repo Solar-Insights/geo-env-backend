@@ -7,14 +7,12 @@ import { deleteOrganizationById } from "@/db/organizations/operations";
 import { deleteCustomerSubscription } from "@/stripe/subscriptions/operations";
 
 const ORGANIZATION_CREATION_OBJECT = {
-    organizationId: '78cfb07b-42f4-4779-8aa5-faa3b26e071a',
-    userId: 'auth0|66c9128d45cd9dba24055ecc',
-    subscriptionId: 'sub_1Pr6Ko2N0m3s9Bb16sDnLBgU'
+    organizationId: "78cfb07b-42f4-4779-8aa5-faa3b26e071a",
+    userId: "auth0|66c9128d45cd9dba24055ecc",
+    subscriptionId: "sub_1Pr6Ko2N0m3s9Bb16sDnLBgU"
 };
 
 // --------------------------------------------
-
-
 
 // --------------------------------------------
 
@@ -30,4 +28,3 @@ try {
     console.log(error);
     console.log(`\nCOULD NOT RUN DELETION ON OBJECTS\n`);
 }
-

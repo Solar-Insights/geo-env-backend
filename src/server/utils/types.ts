@@ -72,12 +72,12 @@ export type MonthlyBillingField = "members_count" | "building_insights_requests"
 
 export type MonthlyBillingPrice = "members_unit_price_in_cents" | "building_insights_requests_unit_price_in_cents";
 
-export type MonthlyPlanInfo = "plan_count" | "plan_unit_price_in_cents"; 
+export type MonthlyPlanInfo = "plan_count" | "plan_unit_price_in_cents";
 
 export type BillingInfoFromInvoice = {
-    [key in MonthlyBillingPrice]: number
+    [key in MonthlyBillingPrice]: number;
 } & {
-    [key in MonthlyPlanInfo]: number
+    [key in MonthlyPlanInfo]: number;
 } & {
     [key in MonthlyFreeField]: number;
 } & {
@@ -91,7 +91,7 @@ export type MyOrganizationBillingRecap = {
 } & {
     [key in MonthlyBillingField]: number;
 } & {
-    pricingTier: PricingTier
+    pricingTier: PricingTier;
 } & BillingInfoFromInvoice;
 
 export type MonthlyQuotaFieldToMonthlyBillingFieldMap = {
@@ -113,6 +113,6 @@ export type MyOrganizationAdminDetails = {
 };
 
 export type CurrentAndLimitValuesResponse = {
-    currentValue: number,
-    limitValue: number
-}
+    currentValue: number;
+    limitValue: number;
+};
