@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Server
+export const NODE_ENV: string = process.env.NODE_ENV as string; // Current env. production | development 
 export const GOOGLE_KEY: string = process.env.GOOGLE_KEY as string; // API Key
 export const PORT: number = Number(process.env.PORT) || 0; // Server port
 
