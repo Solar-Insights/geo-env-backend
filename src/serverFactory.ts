@@ -15,6 +15,7 @@ import { AddressInfo } from "net";
 import { existingSupabaseUser, respectsPricingTierQuota } from "@/server/middlewares/prerequests";
 import unsecuredRouter from "@/server/routes/unsecured";
 import helmet from "helmet";
+import compression from "compression";
 
 export class ServerFactory {
     app!: Express;
@@ -73,6 +74,9 @@ export class ServerFactory {
 
         console.log("setting up body parser..");
         this.app.use(bodyParser.json());
+
+        console.log("setting up compression");
+        this.app.use(compression());
 
         return this;
     }

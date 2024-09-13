@@ -2,7 +2,6 @@ import express from "express";
 import { Coordinates } from "geo-env-typing/geo";
 import { SolarApi } from "@/api/apis/solar";
 import { validateRequestCoordinates, authRequiredPermissions } from "@/server/middlewares/prerequests";
-import compression from "compression";
 import { BuildingInsights, SolarLayers, GeoTiff } from "geo-env-typing/solar";
 
 const solarRouter = express.Router();
@@ -53,7 +52,6 @@ solarRouter.get(
 solarRouter.get(
     "/solar/geotiff",
     authRequiredPermissions(["read:get-solar-data"]),
-    compression(),
     async (req, res, next) => {
         const solarApi = new SolarApi(req);
         const url = decodeURIComponent(req.query.url as string);
