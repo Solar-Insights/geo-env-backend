@@ -1,5 +1,4 @@
 import express, { Request } from "express";
-import { EmailError } from "@/server/utils/errors";
 import { NewOrganizationFormClass } from "@/dto/unsecured/newOrganizationForm";
 import { getAccessPathFromRequest } from "@/server/utils/helpers";
 import { sendNewOrganizationRequestEmail } from "@/server/services/emails";

@@ -12,8 +12,7 @@ import { generateRandomUuid } from "@/db/utils/helpers";
 import { createRequest } from "@/db/requests/operations";
 import { getOrganizationByAccessToken } from "@/db/users/helpers";
 import { monthlyQuotaFieldToMonthlyBillingFieldMap, routeToMonthlyQuotaFieldMap } from "@/server/utils/constants";
-import { getAccessPathFromRequest } from "@/server/utils/helpers";
-import { getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
+import { getAccessPathFromRequest, getDecodedAccessTokenFromRequest } from "@/server/utils/helpers";
 import { makeStripeMeterEvent } from "@/stripe/meterevents";
 
 export const userRequestLogger: RequestHandler = async (req, res, next) => {
