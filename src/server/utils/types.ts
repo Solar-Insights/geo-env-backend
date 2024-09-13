@@ -1,5 +1,7 @@
 import { JwtPayload } from "jwt-decode";
 
+export type nodeEnv = "production" | "development";
+
 export interface CustomAuth0JwtPayload extends JwtPayload {
     permissions: String[] | String;
     email: string;

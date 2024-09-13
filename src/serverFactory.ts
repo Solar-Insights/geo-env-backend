@@ -3,7 +3,7 @@ import { Server } from "http";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
-import { PORT, BACKEND_URL, AUTH0_BASE_URL } from "@/server/utils/env";
+import { PORT, BACKEND_URL, AUTH0_BASE_URL, NODE_ENV } from "@/server/utils/env";
 import { errLogger, errResponder, failSafeHandler } from "@/server/middlewares/errorMappers";
 import healthRouter from "@/server/routes/health";
 import geoRouter from "@/server/routes/geo";
@@ -29,9 +29,16 @@ export class ServerFactory {
         return new ServerFactory();
     }
 
-    public createApp() {
+    public async createApp() {
         console.log("creating app..");
         this.app = express();
+
+        if (NODE_ENV === "development") {
+            const monitor = await import("express-status-monitor")
+            console.log(`setting up express-status monitore at http://localhost:${this.port}/status`)
+            this.app.use(monitor.default());
+        }
+        
         return this;
     }
 

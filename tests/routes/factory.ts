@@ -1,7 +1,8 @@
 import { ServerFactory } from "@/serverFactory";
 
-export const serverFactory: ServerFactory = ServerFactory.createFactory()
-    .createApp()
+export const serverFactory: ServerFactory = await ServerFactory.createFactory().createApp();
+
+serverFactory
     .withDefaultMiddlewares()
     .withAuth()
     .withAllRouters()
